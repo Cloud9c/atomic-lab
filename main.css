@@ -20,11 +20,9 @@
 html, body {
     margin: 0;
     font-family: 'Open Sans', sans-serif;
-    box-sizing: border-box;
     counter-reset: element;
     overflow: hidden;
     cursor: url(assets/cursor-auto.png), auto;
-    box-sizing: border-box;
 }
 
 :focus { outline: none; }
