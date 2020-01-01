@@ -48,15 +48,17 @@
       #reaction-rate {
         background: #364F6B;
         margin: 16px auto 0 auto;
-        padding: 10px;
+        padding: 15px 10px;
         border-radius: 5px;
       }
 
-      #reaction-rate span {
+      .slider-text {
         color: white;
         line-height: 0.75em;
-        display: inline-block;
+        height: 12px;
+        display: flex;
         font-size: 16px;
+        margin: auto;
       }
 
       #slider {
@@ -110,48 +112,48 @@
           animation: swing 0.5s;
       }
 
-    #hotbar {
-      position: fixed;
-        bottom: 0;
-        z-index: 1;
-        left: 0;
-        right: 0;
-        width: fit-content;
-        margin-left: auto;
-        margin-right: auto;
-        display: flex;
-        padding: 10px 10px;
-        background: #364f6b;
-        border-top-right-radius: 25px;
-        border-top-left-radius: 25px;
-        border-top: 5px solid #000;
-        border-right: 5px solid #000;
-        border-left: 5px solid #000;
-    }
+      #hotbar {
+        position: fixed;
+          bottom: 0;
+          z-index: 1;
+          left: 0;
+          right: 0;
+          width: fit-content;
+          margin-left: auto;
+          margin-right: auto;
+          display: flex;
+          padding: 10px 10px;
+          background: #364f6b;
+          border-top-right-radius: 25px;
+          border-top-left-radius: 25px;
+          border-top: 5px solid #000;
+          border-right: 5px solid #000;
+          border-left: 5px solid #000;
+      }
 
-    .slot {
-        width: 75px;
-        height: 75px;
-        background: white;
-        border-radius: 50%;
-        margin: 0 5px;
-        position: relative;
-        z-index: 2;
-        display: flex;
-    }
-
-    @media all and (max-width: 850px) {
       .slot {
-        width: 50px;
-        height: 50px;
+          width: 75px;
+          height: 75px;
+          background: white;
+          border-radius: 50%;
+          margin: 0 5px;
+          position: relative;
+          z-index: 2;
+          display: flex;
       }
-    }
 
-    @media all and (max-width: 650px) {
-      .slot:nth-child(n+7) {
-        display: none;
+      @media all and (max-width: 850px) {
+        .slot {
+          width: 50px;
+          height: 50px;
+        }
       }
-    }
+
+      @media all and (max-width: 650px) {
+        .slot:nth-child(n+7) {
+          display: none;
+        }
+      }
     </style>
   </head>
   <body translate="no" overlay="off">
@@ -532,13 +534,13 @@
         </svg>
       </div>
       <div id="reaction-rate" title="Reaction Rate">
-        <span>1.5x</span>
+        <div class="slider-text">1.5x</div>
 
         <div id="slider">
           <div id="slider-thumb"></div>
         </div>
 
-        <span>0.5x</span>            
+        <div class="slider-text">0.5x</div>            
       </div>
     </div>
     <div id="hotbar" tabindex="1">
@@ -557,6 +559,7 @@
         <li id="menu-option"></li>
       </ul>
     </div>
+    
     <noscript id="deferred-styles">
       <link rel="stylesheet" type="text/css" href="main.css"/>
     </noscript>
