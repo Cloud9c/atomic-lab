@@ -6,7 +6,153 @@
     <title>Atomic Lab</title>
     <link rel="shortcut icon" href="favicon.png" type="image/x-icon">
     <link href="https://fonts.googleapis.com/css?family=Open+Sans|Open+Sans+Condensed:300&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="main.css" type="text/css">
+    <style>
+      #rack-dialog {
+          position: absolute;
+          width: 100%;
+          height: calc( 100% - 95px);
+          display: flex;
+          visibility: hidden;
+      }
+
+      html, body {
+          margin: 0;
+          font-family: 'Open Sans', sans-serif;
+          counter-reset: element;
+          overflow: hidden;
+          cursor: url(assets/cursor-auto.png), auto;
+      }
+
+      :focus { outline: none; }
+
+      #main {
+          height: 100vh;
+          background: #f5f5f5;
+          background-size: 39px 39px;
+          background-position: center;
+          background-image: linear-gradient(to right, #e8e8e8 1px, transparent 1px), linear-gradient(to bottom, #e8e8e8 1px, transparent 1px);
+          margin: 0;
+          position: relative;
+          transition: filter ease 0.5s;
+          display: flex;
+      }
+
+      #header {
+          position: fixed;
+          top: 16px;
+          right: 16px;
+          display: flex;
+          flex-direction: column;
+      }
+
+      #reaction-rate {
+        background: #364F6B;
+        margin: 16px auto 0 auto;
+        padding: 10px;
+        border-radius: 5px;
+      }
+
+      #reaction-rate span {
+        color: white;
+        line-height: 0.75em;
+        display: inline-block;
+        font-size: 16px;
+      }
+
+      #slider {
+        width: 4px;
+        height: 100px;
+        background: white;
+        margin: 8px auto;
+        position: relative;
+      }
+
+      #slider-thumb:active {
+        cursor: url(assets/cursor-drag-clicked.png), pointer;
+      }
+
+      #slider-thumb {
+        cursor: url(assets/cursor-drag.png), pointer;
+        width: 12px;
+        height: 12px;
+        left: -7px;
+        top: 44px;
+        position: absolute;
+        background: #3fc1c9;
+        border-radius: 5px;
+        border: 3px solid #000;
+      }
+
+      #rack-icon {
+          float: right;
+          padding: 5px;
+          width: 50px;
+          height: 50px;
+          border: 5px solid #364F6B;
+          border-radius: 50%;
+          display: flex;
+      }
+
+      #rack-icon:hover {
+          cursor: url(assets/cursor-pointer.png), pointer;
+      }
+
+      #rack-icon:active {
+        cursor: url(assets/cursor-pointer-clicked.png), pointer;
+      }
+
+      #rack-icon svg {
+          width: 40px;
+          margin: auto;
+      }
+
+      #rack-icon:hover svg {
+          animation: swing 0.5s;
+      }
+
+    #hotbar {
+      position: fixed;
+        bottom: 0;
+        z-index: 1;
+        left: 0;
+        right: 0;
+        width: fit-content;
+        margin-left: auto;
+        margin-right: auto;
+        display: flex;
+        padding: 10px 10px;
+        background: #364f6b;
+        border-top-right-radius: 25px;
+        border-top-left-radius: 25px;
+        border-top: 5px solid #000;
+        border-right: 5px solid #000;
+        border-left: 5px solid #000;
+    }
+
+    .slot {
+        width: 75px;
+        height: 75px;
+        background: white;
+        border-radius: 50%;
+        margin: 0 5px;
+        position: relative;
+        z-index: 2;
+        display: flex;
+    }
+
+    @media all and (max-width: 850px) {
+      .slot {
+        width: 50px;
+        height: 50px;
+      }
+    }
+
+    @media all and (max-width: 650px) {
+      .slot:nth-child(n+7) {
+        display: none;
+      }
+    }
+    </style>
   </head>
   <body translate="no" overlay="off">
     <div id="overlay" onclick="overlayToggle()">
@@ -395,26 +541,38 @@
         <span>0.5x</span>            
       </div>
     </div>
-    <div id="bar">
-      <div id="hotbar" tabindex="1">
-        <div class="slot" tabindex="1"></div>
-        <div class="slot" tabindex="1"></div>
-        <div class="slot" tabindex="1"></div>
-        <div class="slot" tabindex="1"></div>
-        <div class="slot" tabindex="1"></div>
-        <div class="slot" tabindex="1"></div>
-        <div class="slot" tabindex="1"></div>
-        <div class="slot" tabindex="1"></div>
-        <div class="slot" tabindex="1"></div>
-      </div>
-      <div id="control">
-      </div>
+    <div id="hotbar" tabindex="1">
+      <div class="slot" tabindex="1"></div>
+      <div class="slot" tabindex="1"></div>
+      <div class="slot" tabindex="1"></div>
+      <div class="slot" tabindex="1"></div>
+      <div class="slot" tabindex="1"></div>
+      <div class="slot" tabindex="1"></div>
+      <div class="slot" tabindex="1"></div>
+      <div class="slot" tabindex="1"></div>
+      <div class="slot" tabindex="1"></div>
     </div>
     <div id="menu" tabindex="1">
       <ul id="menu-options">
         <li id="menu-option"></li>
       </ul>
     </div>
+    <noscript id="deferred-styles">
+      <link rel="stylesheet" type="text/css" href="main.css"/>
+    </noscript>
+    <script>
+      var loadDeferredStyles = function() {
+        var addStylesNode = document.getElementById("deferred-styles");
+        var replacement = document.createElement("div");
+        replacement.innerHTML = addStylesNode.textContent;
+        document.body.appendChild(replacement)
+        addStylesNode.parentElement.removeChild(addStylesNode);
+      };
+      var raf = window.requestAnimationFrame || window.mozRequestAnimationFrame ||
+          window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
+      if (raf) raf(function() { window.setTimeout(loadDeferredStyles, 0); });
+      else window.addEventListener('load', loadDeferredStyles);
+    </script>
     <script defer rel="dns-prefetch" src="js/script.js" type="text/javascript"></script>
   </body>
 </html>
