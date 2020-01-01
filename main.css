@@ -1,0 +1,554 @@
+html, body {
+    margin: 0;
+    font-family: 'Open Sans', sans-serif;
+    box-sizing: border-box;
+    counter-reset: element;
+    overflow: hidden;
+    cursor: url(assets/cursor-auto.png), auto;
+    box-sizing: border-box;
+}
+
+:focus { outline: none; }
+
+#periodic-table::-webkit-scrollbar {
+    background-color: transparent;
+    width: 16px
+}
+
+#periodic-table::-webkit-scrollbar-track {
+    background-color: transparent;
+}
+
+#periodic-table::-webkit-scrollbar-thumb {
+    background-color: #dadce0;
+    border-radius: 16px;
+    border: 4px solid #fff;
+}
+
+#periodic-table::-webkit-scrollbar-thumb:hover {
+    background-color: #80868b;
+    cursor: url(assets/cursor-pointer.png), pointer;
+}
+
+#periodic-table::-webkit-scrollbar-thumb:active {
+    background-color: #5f6368;
+    cursor: url(assets/cursor-pointer-clicked.png), pointer;
+}
+
+#periodic-table::-webkit-scrollbar-button {
+	display: none
+}
+
+#main {
+    height: 100vh;
+    background: #f5f5f5;
+    background-size: 39px 39px;
+    background-position: center;
+    background-image: linear-gradient(to right, #e8e8e8 1px, transparent 1px), linear-gradient(to bottom, #e8e8e8 1px, transparent 1px);
+    margin: 0;
+    position: relative;
+    transition: filter ease 0.5s;
+    display: flex;
+}
+
+#main .element {
+	position: absolute;
+	width: 75px;
+	height: 75px;
+	border-radius: 50%;
+	box-shadow: inset 0 0 0 2px #000, 0 0 0 1px #000;
+}
+
+#main .element abbr {
+	font-size: 30px;
+}
+
+#header {
+    position: fixed;
+    top: 16px;
+    right: 16px;
+    display: flex;
+    flex-direction: column;
+}
+
+#reaction-rate {
+	background: #364F6B;
+	margin: 16px auto 0 auto;
+	padding: 10px;
+	border-radius: 5px;
+}
+
+#reaction-rate span {
+	color: white;
+}
+
+#slider {
+	width: 4px;
+	height: 100px;
+	background: white;
+	margin: 8px auto;
+	position: relative;
+}
+
+#slider-thumb:active {
+	cursor: url(assets/cursor-drag-clicked.png), pointer;
+}
+
+#slider-thumb {
+	cursor: url(assets/cursor-drag.png), pointer;
+	width: 12px;
+	height: 12px;
+	left: -7px;
+	top: 44px;
+	position: absolute;
+	background: #3fc1c9;
+	border-radius: 5px;
+	border: 3px solid #000;
+}
+
+#rack-dialog {
+    position: absolute;
+    width: 100%;
+    height: calc( 100% - 95px);
+    display: flex;
+    visibility: hidden;
+}
+
+#rack-dialog > div {
+    width: fit-content;
+    margin: auto;
+    background: white;
+    border-radius: 25px;
+    z-index: 1;
+    border: 5px solid #000;
+}
+
+#close {
+	width: 30px;
+	height: 30px;
+	background: #fc5185;
+	z-index: 1;
+	border-radius: 50%;
+	margin: -10px -10px 0 auto;
+	display: flex;
+	transition: transform .2s;
+	border: 5px solid #000;
+}
+
+#close:hover {
+    cursor: url(assets/cursor-pointer.png), pointer;
+	transform: rotate(90deg);
+}
+
+#close:active {
+	cursor: url(assets/cursor-pointer-clicked.png), pointer;
+}
+
+#overlay {
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    z-index: 1;
+    background: rgba(0, 0, 0, 0.5);
+	visibility: hidden;
+	opacity: 0;
+	transition: opacity 0.5s;
+}
+
+#rack-icon {
+    float: right;
+    padding: 5px;
+    width: 50px;
+    height: 50px;
+    border: 5px solid #364F6B;
+    border-radius: 50%;
+    display: flex;
+}
+
+#rack-icon:hover {
+    cursor: url(assets/cursor-pointer.png), pointer;
+}
+
+#rack-icon:active {
+	cursor: url(assets/cursor-pointer-clicked.png), pointer;
+}
+
+#rack-icon svg {
+    width: 40px;
+    margin: auto;
+}
+
+#rack-icon:hover svg {
+    animation: swing 0.5s;
+}
+
+@keyframes swing {
+    20% {
+        -webkit-transform: rotate3d(0, 0, 1, 15deg);
+        transform: rotate3d(0, 0, 1, 15deg);
+    }
+
+    40% {
+        -webkit-transform: rotate3d(0, 0, 1, -10deg);
+        transform: rotate3d(0, 0, 1, -10deg);
+    }
+
+    60% {
+        -webkit-transform: rotate3d(0, 0, 1, 5deg);
+        transform: rotate3d(0, 0, 1, 5deg);
+    }
+
+    80% {
+        -webkit-transform: rotate3d(0, 0, 1, -5deg);
+        transform: rotate3d(0, 0, 1, -5deg);
+    }
+
+    to {
+        -webkit-transform: rotate3d(0, 0, 1, 0deg);
+        transform: rotate3d(0, 0, 1, 0deg);
+    }
+}
+
+#hotbar {
+    display: flex;
+    padding: 10px 10px;
+    background: #364f6b;
+    border-top-right-radius: 25px;
+    border-top-left-radius: 25px;
+    border-top: 5px solid #000;
+    border-right: 5px solid #000;
+    border-left: 5px solid #000;
+}
+
+#bar {
+	position: fixed;
+    bottom: 0;
+    z-index: 1;
+    left: 0;
+    right: 0;
+    width: fit-content;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.slot {
+    width: 75px;
+    height: 75px;
+    background: white;
+    border-radius: 50%;
+    margin: 0 5px;
+    position: relative;
+    z-index: 2;
+    display: flex;
+}
+
+@keyframes pulse
+{
+     0% {
+          box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.4);
+     }
+     100% {
+          box-shadow: 0 0 0 15px rgba(255, 255, 255, 0);
+     }
+}
+
+.pulse {
+	animation: pulse 0.7s;
+}
+
+@keyframes pulse2
+{
+     0% {
+          box-shadow: 0 0 0 0 rgba(0, 0, 0, 0.4), inset 0 0 0 2px #000, 0 0 0 1px #000;
+     }
+     100% {
+          box-shadow: 0 0 0 7.5px rgba(0, 0, 0, 0), inset 0 0 0 2px #000, 0 0 0 1px #000;
+     }
+}
+
+.pulse2 {
+	animation: pulse2 0.35s;
+}
+
+#periodic-table {
+    display: grid;
+    grid-column-gap: 5px;
+    grid-row-gap: 5px;
+    padding-left: 0;
+    margin: 0 40px 40px 40px;
+    overflow: auto;
+    position: relative;
+}
+
+.element {
+    display: flex;
+    position: relative;
+    justify-content: center;
+    align-items: center;
+    background: rgb(91, 194, 234);
+    font-weight: bold;
+    min-height: 40px;
+    font-family: 'Open Sans Condensed', sans-serif;
+}
+
+.slot > li {
+	width: 100%;
+	height: 100%;
+	border-radius: 50%;
+	display: flex;
+	margin: auto;
+	background: rgb(91, 194, 234);
+	box-shadow: inset 0 0 0 2px #000, 0 0 0 1px #000;
+}
+
+.slot > li abbr {
+	font-size: 30px;
+}
+
+#periodic-table > li:before {
+    counter-increment: element;
+    content: counter(element);
+    position: absolute;
+    top: 1px;
+    left: 3px;
+    font-size: calc(5px + 0.4vw);
+    font-weight: lighter;
+}
+
+.element abbr {
+    font-size: 1.8229166666666667vw;
+	text-decoration: none;
+    margin: auto;
+    user-select: none;
+    pointer-events: none;
+}
+
+#helium {
+    grid-column-start: 18;
+}
+
+#boron, #aluminium {
+    grid-column-start: 13;
+}
+
+#cerium, #thorium {
+    grid-column-start: 4;
+}
+
+#periodic-table > li:nth-child(n+58):nth-last-child(n+48) {
+    grid-row-start: 8;
+}
+
+#periodic-table > li:nth-child(n+90):nth-last-child(n+16) {
+    grid-row-start: 9;
+}
+
+#periodic-table:before {
+    display: block;
+    content: '';
+    grid-row: 8 / 10;
+    grid-column: 1 / 4;
+}
+
+.noble-gas {
+    background: rgb(234, 218, 36) !important;
+}
+
+.diatomic-nonmetal {
+    background: rgb(234, 179, 127) !important;
+}
+
+.alkali {
+    background: hsl(326, 52%, 84%) !important;
+}
+
+.hydrogen {
+    background: rgb(163, 199, 210) !important;
+}
+
+.alkaline {
+    background: hsl(120, 52%, 84%) !important;
+}
+
+.unknown {
+    background: hsl(210, 2%, 73%) !important;
+}
+
+.lanthanide {
+    background: hsl(183, 54%, 84%) !important;
+}
+
+.actinide {
+    background: hsl(82, 60%, 56%) !important;
+}
+
+.metalloid {
+    background: hsl(142, 60%, 56%) !important;
+}
+
+.polyatomic-non-metal {
+    background: hsl(358, 60%, 56%) !important;
+}
+
+@media all and (min-width: 1101px) {
+    #periodic-table > li {
+        width: 3.125vw;
+        height: 3.125vw;
+    }
+}
+
+@media all and (max-width: 1100px) {
+    #helium, #boron, #aluminium, #cerium, #thorium {
+        grid-column-start: auto;
+    }
+
+    #periodic-table {
+        grid-template-columns: repeat( 8, 1fr );
+        height: inherit;
+    }
+
+    #rack-dialog > div {
+    	height: calc(100% - 60px);
+    }
+
+
+    #periodic-table > li abbr {
+        font-size: 0;
+    }
+
+    #periodic-table > li abbr:after {
+        content: attr(title);
+        font-size: 16px;
+    }
+
+    #periodic-table > li:before {
+        font-size: 0;
+    }
+
+    #periodic-table > li:nth-child(n+58):nth-last-child(n+48) {
+        grid-row-start: auto !important;
+    }
+
+    #periodic-table > li:nth-child(n+90):nth-last-child(n+16) {
+        grid-row-start: auto !important;
+    }
+
+    #periodic-table:before {
+        display: none !important;
+    }
+}
+
+@media all and (max-width: 850px) {
+    #periodic-table {
+        grid-template-columns: repeat( 6, 1fr );
+    }
+
+    .slot {
+    	width: 50px;
+    	height: 50px;
+    }
+
+    #controlbar {
+    	bottom: 75px;
+    }
+
+    .slot .element abbr {
+    	font-size: 20px;
+    }
+
+	body > .element abbr{
+		font-size: 20px !important;
+	}
+
+	#main > .element {
+    	width: 50px;
+    	height: 50px;
+	}
+
+	#main > .element abbr{
+		font-size: 20px !important;
+	}
+}
+
+@media all and (max-width: 650px) {
+    #periodic-table {
+        grid-template-columns: repeat( 4, 1fr );
+    }
+
+    .slot:nth-child(n+7) {
+    	display: none;
+    }
+}
+
+.element:hover {
+	cursor: url(assets/cursor-drag.png), pointer;
+}
+
+.element:active, {
+	cursor: url(assets/cursor-drag-clicked.png), pointer;
+}
+
+body[overlay="off"] > .element {
+	box-shadow: 5px 5px 0 rgba(0, 0, 0, 0.5), inset 0 0 0 2px #000, 0 0 0 1px #000;
+	border-radius: 50%;
+}
+
+body[overlay="off"] > .element abbr{
+	font-size: 30px;
+}
+
+body[overlay="on"] > .element {
+	box-shadow: 5px 5px 0 rgba(0, 0, 0, 0.5);
+}
+
+#main > .gu-transit {
+	display: none;
+}
+
+.gu-mirror {
+	position: fixed !important;
+	margin: 0 !important;
+	z-index: 2 !important;
+	cursor: url(assets/cursor-drag-clicked.png), pointer !important;
+}
+
+.gu-hide {
+	display: none !important;
+}
+
+.gu-unselectable {
+	user-select: none !important;	
+}
+
+#menu {
+	z-index: 2;
+	position: fixed;
+	display: none;
+	padding: 0;
+	background: white;
+	border: 1px solid #aaa;
+	width: 175px;
+	box-shadow: 5px 5px rgba(0, 0, 0, 0.2);
+	user-select: none;
+}
+
+#menu-options {
+	list-style: none;
+	padding: 5px 0;
+	margin: 0;
+	font-size: 16px;
+}
+
+#menu-option {
+	font-size: 14px;
+	padding: 10px 20px;
+	cursor: url(assets/cursor-pointer.png), pointer;
+}
+
+#menu-option:hover {
+    background: rgba(0, 0, 0, 0.1);
+}
+
+#menu-option:active {
+	cursor: url(assets/cursor-pointer-clicked.png), pointer;
+}

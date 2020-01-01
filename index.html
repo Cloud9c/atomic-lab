@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Atomic Lab</title>
+    <link rel="shortcut icon" href="favicon.png" type="image/x-icon">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans|Open+Sans+Condensed:300&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="main.css" type="text/css">
+  </head>
+  <body translate="no" overlay="off">
+    <div id="overlay" onclick="overlayToggle()">
+    </div>
+    <div id="rack-dialog">
+      <div>
+        <div id="close" onclick="overlayToggle()">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style="margin: auto">
+            <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" fill="#fff"/>
+            <path d="M0 0h24v24H0z" fill="none"/>
+          </svg>
+        </div>
+        <ol id="periodic-table">
+          <li class="element hydrogen">
+            <abbr title="Hydrogen">H</abbr>
+          </li>
+          <li class="element noble-gas" id="helium">
+            <abbr title="Helium">He</abbr>
+          </li>
+          <li class="element alkali">
+            <abbr title="Lithium">Li</abbr>
+          </li>
+          <li class="element alkaline">
+            <abbr title="Beryllium">Be</abbr>
+          </li>
+          <li class="element metalloid" id="boron">
+            <abbr title="Boron">B</abbr>
+          </li>
+          <li class="element polyatomic-non-metal">
+            <abbr title="Carbon">C</abbr>
+          </li>
+          <li class="element diatomic-nonmetal">
+            <abbr title="Nitrogen">N</abbr>
+          </li>
+          <li class="element diatomic-nonmetal">
+            <abbr title="Oxygen">O</abbr>
+          </li>
+          <li class="element diatomic-nonmetal">
+            <abbr title="Fluorine">F</abbr>
+          </li>
+          <li class="element noble-gas">
+            <abbr title="Neon">Ne</abbr>
+          </li>
+          <li class="element alkali">
+            <abbr title="Sodium">Na</abbr>
+          </li>
+          <li class="element alkaline">
+            <abbr title="Magnesium">Mg</abbr>
+          </li>
+          <li class="element" id="aluminium">
+            <abbr title="Aluminium">Al</abbr>
+          </li>
+          <li class="element metalloid">
+            <abbr title="Silicon">Si</abbr>
+          </li>
+          <li class="element polyatomic-non-metal">
+            <abbr title="Phosphorus">P</abbr>
+          </li>
+          <li class="element polyatomic-non-metal">
+            <abbr title="Sulphur">S</abbr>
+          </li>
+          <li class="element diatomic-nonmetal">
+            <abbr title="Chlorine">Cl</abbr>
+          </li>
+          <li class="element noble-gas">
+            <abbr title="Argon">Ar</abbr>
+          </li>
+          <li class="element alkali">
+            <abbr title="Potassium">K</abbr>
+          </li>
+          <li class="element alkaline">
+            <abbr title="Calcium">Ca</abbr>
+          </li>
+          <li class="element">
+            <abbr title="Scandium">Sc</abbr>
+          </li>
+          <li class="element">
+            <abbr title="Titanium">Ti</abbr>
+          </li>
+          <li class="element">
+            <abbr title="Vanadium">V</abbr>
+          </li>
+          <li class="element">
+            <abbr title="Chromium">Cr</abbr>
+          </li>
+          <li class="element">
+            <abbr title="Manganese">Mn</abbr>
+          </li>
+          <li class="element">
+            <abbr title="Iron">Fe</abbr>
+          </li>
+          <li class="element">
+            <abbr title="Cobalt">Co</abbr>
+          </li>
+          <li class="element">
+            <abbr title="Nickel">Ni</abbr>
+          </li>
+          <li class="element">
+            <abbr title="Copper">Cu</abbr>
+          </li>
+          <li class="element">
+            <abbr title="Zinc">Zn</abbr>
+          </li>
+          <li class="element">
+            <abbr title="Gallium">Ga</abbr>
+          </li>
+          <li class="element metalloid">
+            <abbr title="Germanium">Ge</abbr>
+          </li>
+          <li class="element metalloid">
+            <abbr title="Arsenic">As</abbr>
+          </li>
+          <li class="element polyatomic-non-metal">
+            <abbr title="Selenium">Se</abbr>
+          </li>
+          <li class="element diatomic-nonmetal">
+            <abbr title="Bromide">Br</abbr>
+          </li>
+          <li class="element noble-gas">
+            <abbr title="Krypton">Kr</abbr>
+          </li>
+          <li class="element alkali">
+            <abbr title="Rubidium">Rb</abbr>
+          </li>
+          <li class="element alkaline">
+            <abbr title="Strontium">Sr</abbr>
+          </li>
+          <li class="element">
+            <abbr title="Yttrium">Y</abbr>
+          </li>
+          <li class="element">
+            <abbr title="Zirconium">Zr</abbr>
+          </li>
+          <li class="element">
+            <abbr title="Niobium">Nb</abbr>
+          </li>
+          <li class="element">
+            <abbr title="Molybdenum">Mo</abbr>
+          </li>
+          <li class="element">
+            <abbr title="Technetium">Tc</abbr>
+          </li>
+          <li class="element">
+            <abbr title="Ruthenium">Ru</abbr>
+          </li>
+          <li class="element">
+            <abbr title="Rhodium">Ro</abbr>
+          </li>
+          <li class="element">
+            <abbr title="Palladium">Pd</abbr>
+          </li>
+          <li class="element">
+            <abbr title="Silver">Ag</abbr>
+          </li>
+          <li class="element">
+            <abbr title="Cadmium">Cd</abbr>
+          </li>
+          <li class="element">
+            <abbr title="Indium">In</abbr>
+          </li>
+          <li class="element">
+            <abbr title="Tin">Sn</abbr>
+          </li>
+          <li class="element metalloid">
+            <abbr title="Antimony">Sb</abbr>
+          </li>
+          <li class="element metalloid">
+            <abbr title="Tellurium">Te</abbr>
+          </li>
+          <li class="element diatomic-nonmetal">
+            <abbr title="Iodine">I</abbr>
+          </li>
+          <li class="element noble-gas">
+            <abbr title="Xenon">Xe</abbr>
+          </li>
+          <li class="element alkali">
+            <abbr title="Caesium">Cs</abbr>
+          </li>
+          <li class="element alkaline">
+            <abbr title="Barium">Ba</abbr>
+          </li>
+          <li class="element lanthanide">
+            <abbr title="Lanthanum">La</abbr>
+          </li>
+          <li class="element lanthanide" id="cerium">
+            <abbr title="Cerium">Ce</abbr>
+          </li>
+          <li class="element lanthanide">
+            <abbr title="Praseodymium">Pr</abbr>
+          </li>
+          <li class="element lanthanide">
+            <abbr title="Neodymium">Nd</abbr>
+          </li>
+          <li class="element lanthanide">
+            <abbr title="Promethium">Pm</abbr>
+          </li>
+          <li class="element lanthanide">
+            <abbr title="Samarium">Sm</abbr>
+          </li>
+          <li class="element lanthanide">
+            <abbr title="Europium">Eu</abbr>
+          </li>
+          <li class="element lanthanide">
+            <abbr title="Gadolinium">Gd</abbr>
+          </li>
+          <li class="element lanthanide">
+            <abbr title="Terbium">Td</abbr>
+          </li>
+          <li class="element lanthanide">
+            <abbr title="Dysprosium">Dy</abbr>
+          </li>
+          <li class="element lanthanide">
+            <abbr title="Holmium">Ho</abbr>
+          </li>
+          <li class="element lanthanide">
+            <abbr title="Erbium">Er</abbr>
+          </li>
+          <li class="element lanthanide">
+            <abbr title="Thulium">Tm</abbr>
+          </li>
+          <li class="element lanthanide">
+            <abbr title="Ytterbium">Yb</abbr>
+          </li>
+          <li class="element lanthanide">
+            <abbr title="Lutetium">Lu</abbr>
+          </li>
+          <li class="element" id="hafnium">
+            <abbr title="Hafnium">Hf</abbr>
+          </li>
+          <li class="element">
+            <abbr title="Tantalum">Ta</abbr>
+          </li>
+          <li class="element">
+            <abbr title="Tungsten">W</abbr>
+          </li>
+          <li class="element">
+            <abbr title="Rhenium">Re</abbr>
+          </li>
+          <li class="element">
+            <abbr title="Osmium">Os</abbr>
+          </li>
+          <li class="element">
+            <abbr title="Iridium">Ir</abbr>
+          </li>
+          <li class="element">
+            <abbr title="Platinum">Pt</abbr>
+          </li>
+          <li class="element">
+            <abbr title="Gold">Au</abbr>
+          </li>
+          <li class="element">
+            <abbr title="Mercury">Hg</abbr>
+          </li>
+          <li class="element">
+            <abbr title="Thallium">Tl</abbr>
+          </li>
+          <li class="element">
+            <abbr title="Lead">Pb</abbr>
+          </li>
+          <li class="element">
+            <abbr title="Bismuth">Bi</abbr>
+          </li>
+          <li class="element">
+            <abbr title="Polonium">Po</abbr>
+          </li>
+          <li class="element metalloid">
+            <abbr title="Astatine">At</abbr>
+          </li>
+          <li class="element noble-gas">
+            <abbr title="Radon">Rn</abbr>
+          </li>
+          <li class="element alkali">
+            <abbr title="Francium">Fr</abbr>
+          </li>
+          <li class="element alkaline">
+            <abbr title="Radium">Ra</abbr>
+          </li>
+          <li class="element actinide">
+            <abbr title="Actinium">Ac</abbr>
+          </li>
+          <li class="element actinide" id="thorium" >
+            <abbr title="Thorium">Th</abbr>
+          </li>
+          <li class="element actinide">
+            <abbr title="Protactinium">Pa</abbr>
+          </li>
+          <li class="element actinide">
+            <abbr title="Uranium">U</abbr>
+          </li>
+          <li class="element actinide">
+            <abbr title="Neptunium">Np</abbr>
+          </li>
+          <li class="element actinide">
+            <abbr title="Plutonium">Up</abbr>
+          </li>
+          <li class="element actinide">
+            <abbr title="Americium">Am</abbr>
+          </li>
+          <li class="element actinide">
+            <abbr title="Curium">Cm</abbr>
+          </li>
+          <li class="element actinide">
+            <abbr title="Berkelium">Bk</abbr>
+          </li>
+          <li class="element actinide">
+            <abbr title="Californium">Cf</abbr>
+          </li>
+          <li class="element actinide">
+            <abbr title="Einsteinium">Es</abbr>
+          </li>
+          <li class="element actinide">
+            <abbr title="Fermium">Fm</abbr>
+          </li>
+          <li class="element actinide">
+            <abbr title="Mendelevium">Md</abbr>
+          </li>
+          <li class="element actinide">
+            <abbr title="Nobelium">No</abbr>
+          </li>
+          <li class="element actinide">
+            <abbr title="Lawrencium">Lr</abbr>
+          </li>
+          <li class="element" id="rutherfordium">
+            <abbr title="Rutherfordium">Rf</abbr>
+          </li>
+          <li class="element">
+            <abbr title="Dubnium">Db</abbr>
+          </li>
+          <li class="element">
+            <abbr title="Seaborgium">Sg</abbr>
+          </li>
+          <li class="element">
+            <abbr title="Bohrium">Bh</abbr>
+          </li>
+          <li class="element">
+            <abbr title="Hassium">Hs</abbr>
+          </li>
+          <li class="element unknown">
+            <abbr title="Meitnerium">Mt</abbr>
+          </li>
+          <li class="element unknown">
+            <abbr title="Darmstadtium">Ds</abbr>
+          </li>
+          <li class="element unknown">
+            <abbr title="Roentgenium">Rg</abbr>
+          </li>
+          <li class="element">
+            <abbr title="Copernicium">Cn</abbr>
+          </li>
+          <li class="element unknown">
+            <abbr title="Nihonium">Cn</abbr>
+          </li>
+          <li class="element unknown">
+            <abbr title="Flerovium">Fl</abbr>
+          </li>
+          <li class="element unknown">
+            <abbr title="Moscovium">Mc</abbr>
+          </li>
+          <li class="element unknown">
+            <abbr title="Livermorium">Lv</abbr>
+          </li>
+          <li class="element unknown">
+            <abbr title="Tennessine">Ts</abbr>
+          </li>
+          <li class="element unknown">
+            <abbr title="Oganesson">Og</abbr>
+          </li>
+        </ol>
+      </div>
+    </div>
+    <div id="main" tabindex="1">
+    </div>
+    <div id="header">
+      <div id="rack-icon" onclick="overlayToggle()" tabindex="0" title="The Rack">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 512">
+            <path fill="#364f6b" d="M477.7 186.1L309.5 18.3c-3.1-3.1-8.2-3.1-11.3 0l-34 33.9c-3.1 3.1-3.1 8.2 0 11.3l11.2 11.1L33 316.5c-38.8 38.7-45.1 102-9.4 143.5 20.6 24 49.5 36 78.4 35.9 26.4 0 52.8-10 72.9-30.1l246.3-245.7 11.2 11.1c3.1 3.1 8.2 3.1 11.3 0l34-33.9c3.1-3 3.1-8.1 0-11.2zM318 256H161l148-147.7 78.5 78.3L318 256z"></path>
+        </svg>
+      </div>
+      <div id="reaction-rate" title="Reaction Rate">
+        <div><span>1.5x</span></div>
+
+        <div id="slider">
+          <div id="slider-thumb"></div>
+        </div>
+
+        <div><span>0.5x</span></div>            
+      </div>
+    </div>
+    <div id="bar">
+      <div id="hotbar" tabindex="1">
+        <div class="slot" tabindex="1"></div>
+        <div class="slot" tabindex="1"></div>
+        <div class="slot" tabindex="1"></div>
+        <div class="slot" tabindex="1"></div>
+        <div class="slot" tabindex="1"></div>
+        <div class="slot" tabindex="1"></div>
+        <div class="slot" tabindex="1"></div>
+        <div class="slot" tabindex="1"></div>
+        <div class="slot" tabindex="1"></div>
+      </div>
+      <div id="control">
+      </div>
+    </div>
+    <div id="menu" tabindex="1">
+      <ul id="menu-options">
+        <li id="menu-option"></li>
+      </ul>
+    </div>
+    <script src="https://unpkg.com/popper.js@1"></script>
+    <script src="https://unpkg.com/tippy.js@5"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dragula/3.7.2/dragula.min.js"></script>
+    <script type="text/javascript" src="script.js"></script>
+  </body>
+</html>
