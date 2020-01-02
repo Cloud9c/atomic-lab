@@ -149,6 +149,7 @@ document.addEventListener("contextmenu", e => {
 		}
 		else {
 			toggleMenu("hide");
+			return;
 		}
 		const origin = {
 			left: e.pageX,
