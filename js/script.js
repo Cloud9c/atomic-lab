@@ -33,6 +33,7 @@ document.addEventListener('keydown',  e => {
 	if (/^[1-9]$/i.test(event.key) && typeof hoverElement !== 'undefined') {
 		var clone = hoverElement.cloneNode(true);
 		clone.removeAttribute('style');
+		clone.classList.remove("gu-mirror");
 
 		document.getElementsByClassName('slot')[event.key - 1].innerHTML = "";
 		document.getElementsByClassName('slot')[event.key - 1].appendChild(clone);
@@ -169,8 +170,8 @@ function sliderAdjust(target) {
 		var pos = e.pageY - 140;
 		if (pos < 0)
 			pos = 0;
-		else if (pos > 88)
-			pos = 88;
+		else if (pos > 82)
+			pos = 82;
 		else if (pos < 49 && pos > 39)
 			pos = 44;
 	    target.style.top = pos + "px";
