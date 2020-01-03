@@ -8,42 +8,45 @@
     <link rel="shortcut icon" href="favicon.png" type="image/x-icon">
     <style>
       #rack-dialog {
-          position: absolute;
-          width: 100%;
-          height: calc( 100% - 95px);
-          display: flex;
-          visibility: hidden;
+        position: absolute;
+        width: 100%;
+        height: calc( 100% - 95px);
+        display: flex;
+        visibility: hidden;
       }
 
-      html, body {
-          margin: 0;
-          font-family: 'Open Sans', sans-serif;
-          counter-reset: element;
-          overflow: hidden;
-          cursor: url(assets/cursor-auto.png), auto;
-          user-select: none;
+      html,
+      body {
+        margin: 0;
+        font-family: 'Open Sans', sans-serif;
+        counter-reset: element;
+        overflow: hidden;
+        cursor: url(assets/cursor-auto.png), auto;
+        user-select: none;
       }
 
-      :focus { outline: none; }
+       :focus {
+        outline: none;
+      }
 
       #main {
-          height: 100vh;
-          background: #f5f5f5;
-          background-size: 39px 39px;
-          background-position: center;
-          background-image: linear-gradient(to right, #e8e8e8 1px, transparent 1px), linear-gradient(to bottom, #e8e8e8 1px, transparent 1px);
-          margin: 0;
-          position: relative;
-          transition: filter ease 0.5s;
-          display: flex;
+        height: 100vh;
+        background: #f5f5f5;
+        background-size: 39px 39px;
+        background-position: center;
+        background-image: linear-gradient(to right, #e8e8e8 1px, transparent 1px), linear-gradient(to bottom, #e8e8e8 1px, transparent 1px);
+        margin: 0;
+        position: relative;
+        transition: filter ease 0.5s;
+        display: flex;
       }
 
       #header {
-          position: fixed;
-          top: 16px;
-          right: 16px;
-          display: flex;
-          flex-direction: column;
+        position: fixed;
+        top: 16px;
+        right: 16px;
+        display: flex;
+        flex-direction: column;
       }
 
       #reaction-rate {
@@ -63,9 +66,9 @@
       }
 
       #slider {
-        width: 4px;
+        width: 3px;
         height: 100px;
-        background: white;
+        background: linear-gradient(#e8e8e8 50%, #3fc1c9 50%);
         margin: 8px auto;
         position: relative;
       }
@@ -76,28 +79,28 @@
 
       #slider-thumb {
         cursor: url(assets/cursor-drag.png), pointer;
-        width: 12px;
-        height: 12px;
-        left: -7px;
-        top: 44px;
+        width: 14px;
+        height: 14px;
+        left: -6px;
+        top: 46px;
         position: absolute;
         background: #3fc1c9;
-        border-radius: 5px;
-        border: 3px solid #000;
+        border-radius: 50%;
+        transition: box-shadow 0.2s ease;
       }
 
       .icon-button {
-          float: right;
-          padding: 5px;
-          width: 50px;
-          height: 50px;
-          border: 5px solid #364F6B;
-          border-radius: 50%;
-          display: flex;
+        float: right;
+        padding: 5px;
+        width: 50px;
+        height: 50px;
+        border: 5px solid #364F6B;
+        border-radius: 50%;
+        display: flex;
       }
 
       .icon-button:hover {
-          cursor: url(assets/cursor-pointer.png), pointer;
+        cursor: url(assets/cursor-pointer.png), pointer;
       }
 
       .icon-button:active {
@@ -105,46 +108,46 @@
       }
 
       .icon-button svg {
-          width: 40px;
-          margin: auto;
+        width: 40px;
+        margin: auto;
       }
 
       .icon-button.swing:hover svg {
-          animation: swing 0.75s;
+        animation: swing 0.75s;
       }
 
       .icon-button.boom:hover svg {
-          animation: boom 0.75s;
+        animation: boom 0.75s;
       }
 
       #hotbar {
         position: fixed;
-          bottom: 0;
-          z-index: 1;
-          left: 0;
-          right: 0;
-          width: fit-content;
-          margin-left: auto;
-          margin-right: auto;
-          display: flex;
-          padding: 10px 10px;
-          background: #364f6b;
-          border-top-right-radius: 25px;
-          border-top-left-radius: 25px;
-          border-top: 5px solid #000;
-          border-right: 5px solid #000;
-          border-left: 5px solid #000;
+        bottom: 0;
+        z-index: 1;
+        left: 0;
+        right: 0;
+        width: fit-content;
+        margin-left: auto;
+        margin-right: auto;
+        display: flex;
+        padding: 10px 10px;
+        background: #364f6b;
+        border-top-right-radius: 25px;
+        border-top-left-radius: 25px;
+        border-top: 5px solid #000;
+        border-right: 5px solid #000;
+        border-left: 5px solid #000;
       }
 
       .slot {
-          width: 75px;
-          height: 75px;
-          background: white;
-          border-radius: 50%;
-          margin: 0 5px;
-          position: relative;
-          z-index: 2;
-          display: flex;
+        width: 75px;
+        height: 75px;
+        background: white;
+        border-radius: 50%;
+        margin: 0 5px;
+        position: relative;
+        z-index: 2;
+        display: flex;
       }
 
       @media all and (max-width: 850px) {
@@ -162,7 +165,7 @@
     </style>
     <link rel="preload" href="main.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <noscript>
-        <link rel="stylesheet" href="main.css">
+      <link rel="stylesheet" href="main.css">
     </noscript>
   </head>
   <body translate="no" overlay="off">
@@ -539,13 +542,11 @@
     <div id="header">
       <div class="icon-button swing" onclick="overlayToggle()" tabindex="0" title="Periodic Table">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 512">
-            <path fill="#364f6b" d="M477.7 186.1L309.5 18.3c-3.1-3.1-8.2-3.1-11.3 0l-34 33.9c-3.1 3.1-3.1 8.2 0 11.3l11.2 11.1L33 316.5c-38.8 38.7-45.1 102-9.4 143.5 20.6 24 49.5 36 78.4 35.9 26.4 0 52.8-10 72.9-30.1l246.3-245.7 11.2 11.1c3.1 3.1 8.2 3.1 11.3 0l34-33.9c3.1-3 3.1-8.1 0-11.2zM318 256H161l148-147.7 78.5 78.3L318 256z"></path>
+          <path fill="#364f6b" d="M477.7 186.1L309.5 18.3c-3.1-3.1-8.2-3.1-11.3 0l-34 33.9c-3.1 3.1-3.1 8.2 0 11.3l11.2 11.1L33 316.5c-38.8 38.7-45.1 102-9.4 143.5 20.6 24 49.5 36 78.4 35.9 26.4 0 52.8-10 72.9-30.1l246.3-245.7 11.2 11.1c3.1 3.1 8.2 3.1 11.3 0l34-33.9c3.1-3 3.1-8.1 0-11.2zM318 256H161l148-147.7 78.5 78.3L318 256z"></path>
         </svg>
       </div>
-
       <div id="reaction-rate" title="Reaction Rate">
         <div class="slider-text">1.5x</div>
-
         <div id="slider">
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style="position: absolute; top: 42px; left: -26px;">
             <path fill="#fff" d="M10 17l5-5-5-5v10z"/>
@@ -553,10 +554,8 @@
           </svg>
           <div id="slider-thumb"></div>
         </div>
-
-        <div class="slider-text">0.5x</div>            
+        <div class="slider-text">0.5x</div>
       </div>
-
       <div class="icon-button boom" onclick="//TODO" tabindex="0" title="React!" style="border: 5px solid #FC5185">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
           <path fill=#FC5185 d="M502.78,308.766l-135.17,34.349c-5.921,1.645-9.793,7.318-9.169,13.43l9.827,114.76   c0.618,4.676-1.537,9.284-5.521,11.808c-3.984,2.524-9.072,2.502-13.035-0.055l-91.878-62.461   c-4.557-3.121-10.682-2.6-14.647,1.246l-91.226,86.824c-3.711,3.42-9.161,4.164-13.653,1.863   c-4.492-2.301-7.072-7.159-6.463-12.169l10.105-143.506c0.443-5.373-2.55-10.442-7.469-12.649L7.501,287.843   C2.929,285.737,0,281.162,0,276.127c0-5.035,2.929-9.609,7.501-11.716l126.847-54.306c4.985-2.239,7.984-7.41,7.453-12.849   l-9.959-116.308c-0.618-4.676,1.537-9.284,5.521-11.808s9.072-2.502,13.035,0.055l91.4,62.137c4.782,3.27,11.242,2.522,15.15-1.754   L374.61,3.818c3.819-3.931,9.803-4.804,14.586-2.128c4.783,2.676,7.17,8.233,5.818,13.544l-35.647,181.871   c-1.135,5.507,1.442,11.113,6.361,13.838l139.66,74.238c4.53,2.518,7.107,7.509,6.538,12.66   C511.357,302.992,507.751,307.299,502.78,308.766z"/>

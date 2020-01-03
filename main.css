@@ -1,28 +1,27 @@
 @import url('https://fonts.googleapis.com/css?family=Open+Sans|Open+Sans+Condensed:300&display=swap');
-
 #periodic-table::-webkit-scrollbar {
-    background-color: transparent;
-    width: 16px
+	background-color: transparent;
+	width: 16px
 }
 
 #periodic-table::-webkit-scrollbar-track {
-    background-color: transparent;
+	background-color: transparent;
 }
 
 #periodic-table::-webkit-scrollbar-thumb {
-    background-color: #dadce0;
-    border-radius: 16px;
-    border: 4px solid #fff;
+	background-color: #dadce0;
+	border-radius: 16px;
+	border: 4px solid #fff;
 }
 
 #periodic-table::-webkit-scrollbar-thumb:hover {
-    background-color: #80868b;
-    cursor: url(assets/cursor-pointer.png), pointer;
+	background-color: #80868b;
+	cursor: url(assets/cursor-pointer.png), pointer;
 }
 
 #periodic-table::-webkit-scrollbar-thumb:active {
-    background-color: #5f6368;
-    cursor: url(assets/cursor-pointer-clicked.png), pointer;
+	background-color: #5f6368;
+	cursor: url(assets/cursor-pointer-clicked.png), pointer;
 }
 
 #periodic-table::-webkit-scrollbar-button {
@@ -41,13 +40,13 @@
 	font-size: 30px;
 }
 
-#rack-dialog > div {
-    width: fit-content;
-    margin: auto;
-    background: white;
-    border-radius: 25px;
-    z-index: 1;
-    border: 5px solid #000;
+#rack-dialog>div {
+	width: fit-content;
+	margin: auto;
+	background: white;
+	border-radius: 25px;
+	z-index: 1;
+	border: 5px solid #000;
 }
 
 #close {
@@ -63,7 +62,7 @@
 }
 
 #close:hover {
-    cursor: url(assets/cursor-pointer.png), pointer;
+	cursor: url(assets/cursor-pointer.png), pointer;
 	transform: rotate(90deg);
 }
 
@@ -72,82 +71,74 @@
 }
 
 #overlay {
-    height: 100%;
-    width: 100%;
-    position: absolute;
-    z-index: 1;
-    background: rgba(0, 0, 0, 0.5);
+	height: 100%;
+	width: 100%;
+	position: absolute;
+	z-index: 1;
+	background: rgba(0, 0, 0, 0.5);
 	visibility: hidden;
 	opacity: 0;
 	transition: opacity 0.5s;
 }
 
 @keyframes swing {
-    20% {
-        -webkit-transform: rotate3d(0, 0, 1, 15deg);
-        transform: rotate3d(0, 0, 1, 15deg);
-    }
-
-    40% {
-        -webkit-transform: rotate3d(0, 0, 1, -10deg);
-        transform: rotate3d(0, 0, 1, -10deg);
-    }
-
-    60% {
-        -webkit-transform: rotate3d(0, 0, 1, 5deg);
-        transform: rotate3d(0, 0, 1, 5deg);
-    }
-
-    80% {
-        -webkit-transform: rotate3d(0, 0, 1, -5deg);
-        transform: rotate3d(0, 0, 1, -5deg);
-    }
-
-    to {
-        -webkit-transform: rotate3d(0, 0, 1, 0deg);
-        transform: rotate3d(0, 0, 1, 0deg);
-    }
+	20% {
+		-webkit-transform: rotate3d(0, 0, 1, 15deg);
+		transform: rotate3d(0, 0, 1, 15deg);
+	}
+	40% {
+		-webkit-transform: rotate3d(0, 0, 1, -10deg);
+		transform: rotate3d(0, 0, 1, -10deg);
+	}
+	60% {
+		-webkit-transform: rotate3d(0, 0, 1, 5deg);
+		transform: rotate3d(0, 0, 1, 5deg);
+	}
+	80% {
+		-webkit-transform: rotate3d(0, 0, 1, -5deg);
+		transform: rotate3d(0, 0, 1, -5deg);
+	}
+	to {
+		-webkit-transform: rotate3d(0, 0, 1, 0deg);
+		transform: rotate3d(0, 0, 1, 0deg);
+	}
 }
 
 @keyframes boom {
-  from {
-    -webkit-transform: scale3d(1, 1, 1);
-    transform: scale3d(1, 1, 1);
-  }
-
-  50% {
-    -webkit-transform: scale3d(1.15, 1.15, 1.15);
-    transform: scale3d(1.15, 1.15, 1.15);
-  }
-
-  to {
-    -webkit-transform: scale3d(1, 1, 1);
-    transform: scale3d(1, 1, 1);
-  }
+	from {
+		-webkit-transform: scale3d(1, 1, 1);
+		transform: scale3d(1, 1, 1);
+	}
+	50% {
+		-webkit-transform: scale3d(1.15, 1.15, 1.15);
+		transform: scale3d(1.15, 1.15, 1.15);
+	}
+	to {
+		-webkit-transform: scale3d(1, 1, 1);
+		transform: scale3d(1, 1, 1);
+	}
 }
 
-@keyframes pulse
-{
-     0% {
-          box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.4);
-     }
-     100% {
-          box-shadow: 0 0 0 15px rgba(255, 255, 255, 0);
-     }
+@keyframes pulse {
+	0% {
+		box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.4);
+	}
+	100% {
+		box-shadow: 0 0 0 15px rgba(255, 255, 255, 0);
+	}
 }
 
 .pulse {
 	animation: pulse 0.7s;
 }
 
-@keyframes pulse2
-{
-     0% {
-          box-shadow: 0 0 0 0 rgba(0, 0, 0, 0.4), inset 0 0 0 2px #000, 0 0 0 1px #000;
-     }
-     100% {
-          box-shadow: 0 0 0 7.5px rgba(0, 0, 0, 0), inset 0 0 0 2px #000, 0 0 0 1px #000;
-     }
+@keyframes pulse2 {
+	0% {
+		box-shadow: 0 0 0 0 rgba(0, 0, 0, 0.4), inset 0 0 0 2px #000, 0 0 0 1px #000;
+	}
+	100% {
+		box-shadow: 0 0 0 7.5px rgba(0, 0, 0, 0), inset 0 0 0 2px #000, 0 0 0 1px #000;
+	}
 }
 
 .pulse2 {
@@ -155,27 +146,27 @@
 }
 
 #periodic-table {
-    display: grid;
-    grid-column-gap: 5px;
-    grid-row-gap: 5px;
-    padding-left: 0;
-    margin: 0 40px 40px 40px;
-    overflow: auto;
-    position: relative;
+	display: grid;
+	grid-column-gap: 5px;
+	grid-row-gap: 5px;
+	padding-left: 0;
+	margin: 0 40px 40px 40px;
+	overflow: auto;
+	position: relative;
 }
 
 .element {
-    display: flex;
-    position: relative;
-    justify-content: center;
-    align-items: center;
-    background: rgb(91, 194, 234);
-    font-weight: bold;
-    min-height: 40px;
-    font-family: 'Open Sans Condensed', sans-serif;
+	display: flex;
+	position: relative;
+	justify-content: center;
+	align-items: center;
+	background: rgb(91, 194, 234);
+	font-weight: bold;
+	min-height: 40px;
+	font-family: 'Open Sans Condensed', sans-serif;
 }
 
-.slot > li {
+.slot>li {
 	width: 100%;
 	height: 100%;
 	border-radius: 50%;
@@ -185,193 +176,188 @@
 	box-shadow: inset 0 0 0 2px #000, 0 0 0 1px #000;
 }
 
-.slot > li abbr {
+.slot>li abbr {
 	font-size: 30px;
 }
 
-#periodic-table > li:before {
-    counter-increment: element;
-    content: counter(element);
-    position: absolute;
-    top: 1px;
-    left: 3px;
-    font-size: calc(5px + 0.4vw);
-    font-weight: lighter;
+#periodic-table>li:before {
+	counter-increment: element;
+	content: counter(element);
+	position: absolute;
+	top: 1px;
+	left: 3px;
+	font-size: calc(5px + 0.4vw);
+	font-weight: lighter;
 }
 
 .element abbr {
-    font-size: 1.8229166666666667vw;
+	font-size: 1.8229166666666667vw;
 	text-decoration: none;
-    margin: auto;
-    user-select: none;
-    pointer-events: none;
+	margin: auto;
+	user-select: none;
+	pointer-events: none;
 }
 
 #helium {
-    grid-column-start: 18;
+	grid-column-start: 18;
 }
 
-#boron, #aluminium {
-    grid-column-start: 13;
+#boron,
+#aluminium {
+	grid-column-start: 13;
 }
 
-#cerium, #thorium {
-    grid-column-start: 4;
+#cerium,
+#thorium {
+	grid-column-start: 4;
 }
 
-#periodic-table > li:nth-child(n+58):nth-last-child(n+48) {
-    grid-row-start: 8;
+#periodic-table>li:nth-child(n+58):nth-last-child(n+48) {
+	grid-row-start: 8;
 }
 
-#periodic-table > li:nth-child(n+90):nth-last-child(n+16) {
-    grid-row-start: 9;
+#periodic-table>li:nth-child(n+90):nth-last-child(n+16) {
+	grid-row-start: 9;
 }
 
 #periodic-table:before {
-    display: block;
-    content: '';
-    grid-row: 8 / 10;
-    grid-column: 1 / 4;
+	display: block;
+	content: '';
+	grid-row: 8 / 10;
+	grid-column: 1 / 4;
 }
 
 .noble-gas {
-    background: rgb(234, 218, 36) !important;
+	background: rgb(234, 218, 36) !important;
 }
 
 .diatomic-nonmetal {
-    background: rgb(234, 179, 127) !important;
+	background: rgb(234, 179, 127) !important;
 }
 
 .alkali {
-    background: hsl(326, 52%, 84%) !important;
+	background: hsl(326, 52%, 84%) !important;
 }
 
 .hydrogen {
-    background: rgb(163, 199, 210) !important;
+	background: rgb(163, 199, 210) !important;
 }
 
 .alkaline {
-    background: hsl(120, 52%, 84%) !important;
+	background: hsl(120, 52%, 84%) !important;
 }
 
 .unknown {
-    background: hsl(210, 2%, 73%) !important;
+	background: hsl(210, 2%, 73%) !important;
 }
 
 .lanthanide {
-    background: hsl(183, 54%, 84%) !important;
+	background: hsl(183, 54%, 84%) !important;
 }
 
 .actinide {
-    background: hsl(82, 60%, 56%) !important;
+	background: hsl(82, 60%, 56%) !important;
 }
 
 .metalloid {
-    background: hsl(142, 60%, 56%) !important;
+	background: hsl(142, 60%, 56%) !important;
 }
 
 .polyatomic-non-metal {
-    background: hsl(358, 60%, 56%) !important;
+	background: hsl(358, 60%, 56%) !important;
 }
 
 @media all and (min-width: 1101px) {
-    #periodic-table > li {
-        width: 3.125vw;
-        height: 3.125vw;
-    }
+	#periodic-table>li {
+		width: 3.125vw;
+		height: 3.125vw;
+	}
 }
 
 @media all and (max-width: 1100px) {
-    #helium, #boron, #aluminium, #cerium, #thorium {
-        grid-column-start: auto;
-    }
-
-    #periodic-table {
-        grid-template-columns: repeat( 8, 1fr );
-        height: inherit;
-    }
-
-    #rack-dialog > div {
-    	height: calc(100% - 60px);
-    }
-
-    #periodic-table > li abbr {
-        font-size: 0;
-    }
-
-    #periodic-table > li abbr:after {
-        content: attr(title);
-        font-size: 16px;
-    }
-
-    #periodic-table > li:before {
-        font-size: 0;
-    }
-
-    #periodic-table > li:nth-child(n+58):nth-last-child(n+48) {
-        grid-row-start: auto !important;
-    }
-
-    #periodic-table > li:nth-child(n+90):nth-last-child(n+16) {
-        grid-row-start: auto !important;
-    }
-
-    #periodic-table:before {
-        display: none !important;
-    }
+	#helium,
+	#boron,
+	#aluminium,
+	#cerium,
+	#thorium {
+		grid-column-start: auto;
+	}
+	#periodic-table {
+		grid-template-columns: repeat( 8, 1fr);
+		height: inherit;
+	}
+	#rack-dialog>div {
+		height: calc(100% - 60px);
+	}
+	#periodic-table>li abbr {
+		font-size: 0;
+	}
+	#periodic-table>li abbr:after {
+		content: attr(title);
+		font-size: 16px;
+	}
+	#periodic-table>li:before {
+		font-size: 0;
+	}
+	#periodic-table>li:nth-child(n+58):nth-last-child(n+48) {
+		grid-row-start: auto !important;
+	}
+	#periodic-table>li:nth-child(n+90):nth-last-child(n+16) {
+		grid-row-start: auto !important;
+	}
+	#periodic-table:before {
+		display: none !important;
+	}
 }
 
 @media all and (max-width: 850px) {
-    #periodic-table {
-        grid-template-columns: repeat( 6, 1fr );
-    }
-
+	#periodic-table {
+		grid-template-columns: repeat( 6, 1fr);
+	}
 	.slot .element abbr {
 		font-size: 20px;
 	}
-
-	body > .element abbr{
+	body>.element abbr {
 		font-size: 20px !important;
 	}
-
-	#main > .element {
-    	width: 50px;
-    	height: 50px;
+	#main>.element {
+		width: 50px;
+		height: 50px;
 	}
-
-	#main > .element abbr{
+	#main>.element abbr {
 		font-size: 20px !important;
 	}
 }
 
 @media all and (max-width: 650px) {
-    #periodic-table {
-        grid-template-columns: repeat( 4, 1fr );
-    }
+	#periodic-table {
+		grid-template-columns: repeat( 4, 1fr);
+	}
 }
 
 .element:hover {
 	cursor: url(assets/cursor-drag.png), pointer;
 }
 
-.element:active, {
+.element:active,
+{
 	cursor: url(assets/cursor-drag-clicked.png), pointer;
 }
 
-body[overlay="off"] > .element {
+body[overlay="off"]>.element {
 	box-shadow: 5px 5px 0 rgba(0, 0, 0, 0.5), inset 0 0 0 2px #000, 0 0 0 1px #000;
 	border-radius: 50%;
 }
 
-body[overlay="off"] > .element abbr{
+body[overlay="off"]>.element abbr {
 	font-size: 30px;
 }
 
-body[overlay="on"] > .element {
+body[overlay="on"]>.element {
 	box-shadow: 5px 5px 0 rgba(0, 0, 0, 0.5);
 }
 
-#main > .gu-transit {
+#main>.gu-transit {
 	display: none;
 }
 
@@ -387,7 +373,7 @@ body[overlay="on"] > .element {
 }
 
 .gu-unselectable {
-	user-select: none !important;	
+	user-select: none !important;
 }
 
 #menu {
@@ -416,7 +402,7 @@ body[overlay="on"] > .element {
 }
 
 #menu-option:hover {
-    background: rgba(0, 0, 0, 0.1);
+	background: rgba(0, 0, 0, 0.1);
 }
 
 #menu-option:active {
