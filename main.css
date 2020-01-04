@@ -1,4 +1,33 @@
 @import url('https://fonts.googleapis.com/css?family=Open+Sans|Open+Sans+Condensed:300&display=swap');
+
+:focus {
+	outline: none;
+}
+
+#slider-thumb:active {
+	cursor: url(assets/cursor-drag-clicked.png), pointer;
+}
+
+#slider-thumb:hover, #slider-thumb:active {
+	box-shadow: 0px 0px 0 2px #fff;
+}
+
+.icon-button:hover {
+	cursor: url(assets/cursor-pointer.png), pointer;
+}
+
+.icon-button:active {
+	cursor: url(assets/cursor-pointer-clicked.png), pointer;
+}
+
+.icon-button.swing:hover svg {
+	animation: swing 0.75s;
+}
+
+.icon-button.boom:hover svg {
+	animation: boom 0.75s;
+}
+
 #periodic-table::-webkit-scrollbar {
 	background-color: transparent;
 	width: 16px
@@ -46,7 +75,7 @@
 	background: white;
 	border-radius: 25px;
 	z-index: 1;
-	border: 5px solid #000;
+	border: 4px solid #000;
 }
 
 #close {
@@ -58,7 +87,7 @@
 	margin: -10px -10px 0 auto;
 	display: flex;
 	transition: transform .2s;
-	border: 5px solid #000;
+	border: 4px solid #000;
 }
 
 #close:hover {
@@ -132,23 +161,21 @@
 	animation: pulse 0.7s;
 }
 
-@keyframes pulse2 {
-	0% {
-		box-shadow: 0 0 0 0 rgba(0, 0, 0, 0.4), inset 0 0 0 2px #000, 0 0 0 1px #000;
-	}
-	100% {
-		box-shadow: 0 0 0 7.5px rgba(0, 0, 0, 0), inset 0 0 0 2px #000, 0 0 0 1px #000;
-	}
-}
-
-.pulse2 {
-	animation: pulse2 0.35s;
+.selected::before{
+    content: '';
+    position: absolute;
+    height: 24px;
+    width: 24px;
+    top: -8px;
+    right: -8px;
+    border-top: 5px solid #fc5185;
+    border-right: 5px solid #fc5185;
 }
 
 #periodic-table {
 	display: grid;
-	grid-column-gap: 5px;
-	grid-row-gap: 5px;
+	grid-column-gap: 4px;
+	grid-row-gap: 4px;
 	padding-left: 0;
 	margin: 0 40px 40px 40px;
 	overflow: auto;
@@ -345,7 +372,7 @@
 }
 
 body[overlay="off"]>.element {
-	box-shadow: 5px 5px 0 rgba(0, 0, 0, 0.5), inset 0 0 0 2px #000, 0 0 0 1px #000;
+	box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.5), inset 0 0 0 2px #000, 0 0 0 1px #000;
 	border-radius: 50%;
 }
 
@@ -354,7 +381,7 @@ body[overlay="off"]>.element abbr {
 }
 
 body[overlay="on"]>.element {
-	box-shadow: 5px 5px 0 rgba(0, 0, 0, 0.5);
+	box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.5);
 }
 
 #main>.gu-transit {
@@ -384,13 +411,13 @@ body[overlay="on"]>.element {
 	background: white;
 	border: 1px solid #aaa;
 	width: 175px;
-	box-shadow: 5px 5px rgba(0, 0, 0, 0.2);
+	box-shadow: 4px 4px rgba(0, 0, 0, 0.2);
 	user-select: none;
 }
 
 #menu-options {
 	list-style: none;
-	padding: 5px 0;
+	padding: 4px 0;
 	margin: 0;
 	font-size: 16px;
 }
@@ -407,4 +434,12 @@ body[overlay="on"]>.element {
 
 #menu-option:active {
 	cursor: url(assets/cursor-pointer-clicked.png), pointer;
+}
+
+#drag-area {
+	position: absolute;
+	background: rgba(252, 81, 133, 0.2);
+	border: 1px solid rgba(252, 81, 133, 0.5);
+	display: none;
+	z-index: 1;
 }

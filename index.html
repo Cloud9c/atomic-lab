@@ -23,21 +23,18 @@
         overflow: hidden;
         cursor: url(assets/cursor-auto.png), auto;
         user-select: none;
-      }
-
-       :focus {
-        outline: none;
+        height: 100%;
+        width: 100%;
       }
 
       #main {
-        height: 100vh;
+        height: 100%;
         background: #f5f5f5;
         background-size: 39px 39px;
         background-position: center;
         background-image: linear-gradient(to right, #e8e8e8 1px, transparent 1px), linear-gradient(to bottom, #e8e8e8 1px, transparent 1px);
         margin: 0;
         position: relative;
-        transition: filter ease 0.5s;
         display: flex;
       }
 
@@ -53,7 +50,7 @@
         background: #364F6B;
         margin: 16px auto;
         padding: 15px 10px;
-        border-radius: 5px;
+        border-radius: 4px;
       }
 
       .slider-text {
@@ -67,22 +64,20 @@
 
       #slider {
         width: 3px;
+        border-left: 6px solid #364F6B;
+        border-right: 6px solid #364F6B;
         height: 100px;
         background: linear-gradient(#e8e8e8 50%, #3fc1c9 50%);
-        margin: 8px auto;
+        margin: 16px auto;
         position: relative;
-      }
-
-      #slider-thumb:active {
-        cursor: url(assets/cursor-drag-clicked.png), pointer;
       }
 
       #slider-thumb {
         cursor: url(assets/cursor-drag.png), pointer;
-        width: 14px;
-        height: 14px;
+        width: 15px;
+        height: 15px;
         left: -6px;
-        top: 46px;
+        top: 43px;
         position: absolute;
         background: #3fc1c9;
         border-radius: 50%;
@@ -91,33 +86,17 @@
 
       .icon-button {
         float: right;
-        padding: 5px;
+        padding: 4px;
         width: 50px;
         height: 50px;
-        border: 5px solid #364F6B;
+        border: 4px solid #364F6B;
         border-radius: 50%;
         display: flex;
-      }
-
-      .icon-button:hover {
-        cursor: url(assets/cursor-pointer.png), pointer;
-      }
-
-      .icon-button:active {
-        cursor: url(assets/cursor-pointer-clicked.png), pointer;
       }
 
       .icon-button svg {
         width: 40px;
         margin: auto;
-      }
-
-      .icon-button.swing:hover svg {
-        animation: swing 0.75s;
-      }
-
-      .icon-button.boom:hover svg {
-        animation: boom 0.75s;
       }
 
       #hotbar {
@@ -134,9 +113,9 @@
         background: #364f6b;
         border-top-right-radius: 25px;
         border-top-left-radius: 25px;
-        border-top: 5px solid #000;
-        border-right: 5px solid #000;
-        border-left: 5px solid #000;
+        border-top: 4px solid #000;
+        border-right: 4px solid #000;
+        border-left: 4px solid #000;
       }
 
       .slot {
@@ -144,7 +123,7 @@
         height: 75px;
         background: white;
         border-radius: 50%;
-        margin: 0 5px;
+        margin: 0 4px;
         position: relative;
         z-index: 2;
         display: flex;
@@ -538,6 +517,7 @@
       </div>
     </div>
     <div id="main" tabindex="0">
+      <div id="drag-area"></div>
     </div>
     <div id="header">
       <div class="icon-button swing" onclick="overlayToggle()" tabindex="0" title="Periodic Table">
@@ -548,7 +528,7 @@
       <div id="reaction-rate" title="Reaction Rate">
         <div class="slider-text">1.5x</div>
         <div id="slider">
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style="position: absolute; top: 42px; left: -26px;">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style="position: absolute; top: 38px; left: -26px;">
             <path fill="#fff" d="M10 17l5-5-5-5v10z"/>
             <path fill="none" d="M0 24V0h24v24H0z"/>
           </svg>
@@ -556,7 +536,7 @@
         </div>
         <div class="slider-text">0.5x</div>
       </div>
-      <div class="icon-button boom" onclick="//TODO" tabindex="0" title="React!" style="border: 5px solid #FC5185">
+      <div class="icon-button boom" onclick="//TODO" tabindex="0" title="React!" style="border: 4px solid #FC5185">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
           <path fill=#FC5185 d="M502.78,308.766l-135.17,34.349c-5.921,1.645-9.793,7.318-9.169,13.43l9.827,114.76   c0.618,4.676-1.537,9.284-5.521,11.808c-3.984,2.524-9.072,2.502-13.035-0.055l-91.878-62.461   c-4.557-3.121-10.682-2.6-14.647,1.246l-91.226,86.824c-3.711,3.42-9.161,4.164-13.653,1.863   c-4.492-2.301-7.072-7.159-6.463-12.169l10.105-143.506c0.443-5.373-2.55-10.442-7.469-12.649L7.501,287.843   C2.929,285.737,0,281.162,0,276.127c0-5.035,2.929-9.609,7.501-11.716l126.847-54.306c4.985-2.239,7.984-7.41,7.453-12.849   l-9.959-116.308c-0.618-4.676,1.537-9.284,5.521-11.808s9.072-2.502,13.035,0.055l91.4,62.137c4.782,3.27,11.242,2.522,15.15-1.754   L374.61,3.818c3.819-3.931,9.803-4.804,14.586-2.128c4.783,2.676,7.17,8.233,5.818,13.544l-35.647,181.871   c-1.135,5.507,1.442,11.113,6.361,13.838l139.66,74.238c4.53,2.518,7.107,7.509,6.538,12.66   C511.357,302.992,507.751,307.299,502.78,308.766z"/>
         </svg>
