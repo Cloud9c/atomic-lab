@@ -127,17 +127,17 @@ function followCursor(target, diffX, diffY) {
     document.getElementById("main").addEventListener("mouseup", mouseUp);
 }
 
-const toggleMenu = command => {
-    for (let i = 0; i < document.getElementsByClassName("selected").length; i++) {
-		document.getElementsByClassName("selected")[i].classList.remove("selected");
-	}
+const toggleMenu = ({command, e}) => {
+	if (!e.classList.contains("element"))
+	    while (document.getElementsByClassName("selected")[0])
+			document.getElementsByClassName("selected")[0].classList.remove("selected");
 
     document.getElementById("menu").style.display = command === "show" ? "block" : "none";
 };
 
 const setPosition = ({top, left}) => {
-    document.getElementById("menu").style.left = `${left}px`;
-    document.getElementById("menu").style.top = `${top}px`;
+    document.getElementById("menu").style.left = left + "px";
+    document.getElementById("menu").style.top = top + "px";
 
     if (document.activeElement.id === "hotbar") {
         document.getElementById("menu-option").innerHTML = "Clear All Slots";
@@ -146,49 +146,42 @@ const setPosition = ({top, left}) => {
                 document.getElementsByClassName("slot")[i].innerHTML = "";
             }
         };
-        toggleMenu("show");
+        toggleMenu({command: "show", e: document.activeElement});
     } else if (document.activeElement.classList.contains("slot")) {
-        const target = document.activeElement;
         document.getElementById("menu-option").innerHTML = "Clear Slot";
         document.getElementById("menu-option").onclick = function() {
-            target.innerHTML = "";
+            document.activeElement.innerHTML = "";
         };
-        toggleMenu("show");
+        toggleMenu({command: "show", e: document.activeElement});
     } else if (document.activeElement.id === "main") {
-        const target = document.getElementById("main");
         document.getElementById("menu-option").innerHTML = "Clear Lab";
         document.getElementById("menu-option").onclick = function() {
-            target.innerHTML = "";
+            document.getElementById("main").innerHTML = "";
         };
-        toggleMenu("show");
+        toggleMenu({command: "show", e: document.activeElement});
     } else if (document.activeElement.parentElement.id === "main" && document.activeElement.classList.contains("element")) {
-        const target = document.activeElement;
         document.getElementById("menu-option").innerHTML = "Remove Atom";
         document.getElementById("menu-option").onclick = function() {
-            document.getElementById("main").removeChild(target);
+            document.getElementById("main").removeChild(document.activeElement);
         };
-        toggleMenu("show");
-        target.classList.add("selected");
+        toggleMenu({command: "show", e: document.activeElement});
+        document.activeElement.classList.add("selected");
     }
 };
 
 document.addEventListener("contextmenu", e => {
     e.preventDefault();
-    if (document.activeElement !== document.getElementById('menu')) {
-        if (document.activeElement.id === "hotbar" || document.activeElement.classList.contains("slot") || document.activeElement.id === "main" || document.activeElement.classList.contains("element") && document.activeElement.parentElement.id === "main") {
+    if (e.target !== document.getElementById('menu')) {
+        if (e.target.id === "hotbar" || e.target.classList.contains("slot") || e.target.id === "main" || e.target.classList.contains("element") && e.target.parentElement.id === "main") {
         	document.getElementById("menu-option").innerHTML = "";
-	        const origin = {
-	            left: e.pageX,
-	            top: e.pageY
-	        };
-	        setPosition(origin); 
+	        setPosition({left: e.pageX, top: e.pageY}); 
         }
     }
 });
 
 document.addEventListener('mousedown', e => {
-    if (document.activeElement !== document.getElementById('menu'))
-        toggleMenu("hide");
+    if (e.target.id !== "menu" && !e.target.classList.contains("element"))
+        toggleMenu({command: "hide", e: e.target});
 });
 
 document.getElementById("slider").addEventListener("mousedown", e => {
@@ -196,7 +189,6 @@ document.getElementById("slider").addEventListener("mousedown", e => {
 	    sliderAdjust(e.target);
 	    document.body.style.cursor = "url(assets/cursor-drag-clicked.png), pointer";
 	} else {
-		console.log(e.target)
 		const pos = e.pageY - 148;
 		document.getElementById("slider").style.background = "linear-gradient(#e8e8e8 " + pos + "%, #3fc1c9 " + pos + "%)";
 		document.getElementById("slider-thumb").style.top = pos + "px";
@@ -250,7 +242,7 @@ dragula([document.getElementById('periodic-table'), document.getElementById('mai
     if (target === document.getElementById('main')) {
         el.style.left = document.getElementsByClassName("gu-mirror")[0].style.left;
         el.style.top = document.getElementsByClassName("gu-mirror")[0].style.top;
-        el.tabIndex = "1";
+        el.tabIndex = "0";
     }
 })
 
