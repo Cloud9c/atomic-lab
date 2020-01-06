@@ -422,17 +422,17 @@ body[overlay="on"]>.element {
 	font-size: 16px;
 }
 
-#menu-option {
+#menu-options li {
 	font-size: 14px;
 	padding: 10px 20px;
 	cursor: url(assets/cursor-pointer.png), pointer;
 }
 
-#menu-option:hover {
+#menu-options li:hover {
 	background: rgba(0, 0, 0, 0.1);
 }
 
-#menu-option:active {
+#menu-options li:active:hover {
 	cursor: url(assets/cursor-pointer-clicked.png), pointer;
 }
 

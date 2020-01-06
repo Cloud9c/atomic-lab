@@ -62,14 +62,13 @@ document.getElementById("main").addEventListener("mousedown", e => {
         if (e.target.classList.contains("element")) {
             diffX = e.pageX - e.target.offsetLeft;
             diffY = e.pageY - e.target.offsetTop;
-    
-            e.target.parentNode.appendChild(e.target);
-    
+
+            document.getElementById("main").appendChild(e.target);
+
             followCursor(e.target, diffX, diffY);
             e.target.style.cursor = "url(assets/cursor-drag-clicked.png), pointer";
-        } else {
+        } else
         	mouseDrag(e.pageX, e.pageY);
-        }
     }
 });
 
@@ -110,21 +109,57 @@ function mouseDrag(x, y) {
 }
 
 function followCursor(target, diffX, diffY) {
-    const mouseMove = e => {
-        target.style.left = e.pageX - diffX + "px";
-        target.style.top = e.pageY - diffY + "px";
-        target.style.boxShadow = "5px 5px 0 rgba(0, 0, 0, 0.5), inset 0 0 0 2px #000, 0 0 0 1px #000";
-    }
+	if (document.getElementsByClassName("selected")[1]) {
+	    const mouseMoveMultiple = e => {
+	    	const oldLeft = target.offsetLeft;
+	    	const oldTop = target.offsetTop;
 
-    const mouseUp = () => {
-        target.style.boxShadow = "";
-        target.style.cursor = "";
-        document.getElementById("main").removeEventListener('mouseup', mouseUp, false);
-        document.getElementById("main").removeEventListener('mousemove', mouseMove, false);
-    }
+	        target.style.left = e.pageX - diffX + "px";
+	        target.style.top = e.pageY - diffY + "px";
 
-    document.getElementById("main").addEventListener("mousemove", mouseMove);
-    document.getElementById("main").addEventListener("mouseup", mouseUp);
+	        const leftDir = target.offsetLeft - oldLeft;
+	        const topDir = target.offsetTop - oldTop;
+
+	        for (let i = 0; i < document.getElementsByClassName("selected").length - 1; i++) {
+	        	document.getElementsByClassName("selected")[i].style.left = document.getElementsByClassName("selected")[i].offsetLeft + leftDir + "px";
+	        	document.getElementsByClassName("selected")[i].style.top = document.getElementsByClassName("selected")[i].offsetTop + topDir + "px";
+	        }
+	    }
+
+	    const mouseUpMultiple = () => {
+	    	target.style.cursor = "";
+			while (document.getElementsByClassName("selected")[0]){
+				document.getElementsByClassName("selected")[0].style.boxShadow = "";
+				document.getElementsByClassName("selected")[0].classList.remove("selected");
+			}
+	        document.getElementById("main").removeEventListener('mouseup', mouseUpMultiple, false);
+	        document.getElementById("main").removeEventListener('mousemove', mouseMoveMultiple, false);
+	    }
+
+		for (let i = 0; i < document.getElementsByClassName("selected").length; i++)
+			document.getElementsByClassName("selected")[i].style.boxShadow = "5px 5px 0 rgba(0, 0, 0, 0.5), inset 0 0 0 2px #000, 0 0 0 1px #000";
+
+	    document.getElementById("main").addEventListener("mousemove", mouseMoveMultiple);
+	    document.getElementById("main").addEventListener("mouseup", mouseUpMultiple);		
+	} else {
+	    const mouseMove = e => {
+	        target.style.left = e.pageX - diffX + "px";
+	        target.style.top = e.pageY - diffY + "px";
+	    }
+
+	    const mouseUp = () => {
+	    	target.classList.remove("selected");
+	        target.style.boxShadow = "";
+	        target.style.cursor = "";
+	        document.getElementById("main").removeEventListener('mouseup', mouseUp, false);
+	        document.getElementById("main").removeEventListener('mousemove', mouseMove, false);
+	    }
+
+		target.classList.add("selected");
+		target.style.boxShadow = "5px 5px 0 rgba(0, 0, 0, 0.5), inset 0 0 0 2px #000, 0 0 0 1px #000";
+	    document.getElementById("main").addEventListener("mousemove", mouseMove);
+	    document.getElementById("main").addEventListener("mouseup", mouseUp);
+	}
 }
 
 const toggleMenu = ({command, e}) => {
@@ -135,52 +170,66 @@ const toggleMenu = ({command, e}) => {
     document.getElementById("menu").style.display = command === "show" ? "block" : "none";
 };
 
-const setPosition = ({top, left}) => {
+const setPosition = ({top, left, target}) => {
     document.getElementById("menu").style.left = left + "px";
     document.getElementById("menu").style.top = top + "px";
 
-    if (document.activeElement.id === "hotbar") {
+    if (target.id === "hotbar") {
         document.getElementById("menu-option").innerHTML = "Clear All Slots";
         document.getElementById("menu-option").onclick = function() {
-            for (let i = 0; i < 9; i++) {
+            for (let i = 0; i < 9; i++)
                 document.getElementsByClassName("slot")[i].innerHTML = "";
-            }
+            toggleMenu({command: "hide", e: target});
         };
-        toggleMenu({command: "show", e: document.activeElement});
-    } else if (document.activeElement.classList.contains("slot")) {
+        toggleMenu({command: "show", e: target});
+    } else if (target.classList.contains("slot")) {
         document.getElementById("menu-option").innerHTML = "Clear Slot";
         document.getElementById("menu-option").onclick = function() {
-            document.activeElement.innerHTML = "";
+            target.innerHTML = "";
+            toggleMenu({command: "hide", e: target});
         };
-        toggleMenu({command: "show", e: document.activeElement});
-    } else if (document.activeElement.id === "main") {
+        toggleMenu({command: "show", e: target});
+    } else if (target.id === "main") {
         document.getElementById("menu-option").innerHTML = "Clear Lab";
         document.getElementById("menu-option").onclick = function() {
             document.getElementById("main").innerHTML = "";
+            toggleMenu({command: "hide", e: target});
         };
-        toggleMenu({command: "show", e: document.activeElement});
-    } else if (document.activeElement.parentElement.id === "main" && document.activeElement.classList.contains("element")) {
-        document.getElementById("menu-option").innerHTML = "Remove Atom";
-        document.getElementById("menu-option").onclick = function() {
-            document.getElementById("main").removeChild(document.activeElement);
-        };
-        toggleMenu({command: "show", e: document.activeElement});
-        document.activeElement.classList.add("selected");
+        toggleMenu({command: "show", e: target});
+    } else if (target.parentElement.id === "main" && target.classList.contains("element")) {
+    	if (document.getElementsByClassName("selected")[1]) {
+	        document.getElementById("menu-option").innerHTML = "Remove Atoms";
+	        document.getElementById("menu-option").onclick = function() {
+    			while (document.getElementsByClassName("selected")[0])
+					document.getElementById("main").removeChild(document.getElementsByClassName("selected")[0]);
+	            toggleMenu({command: "hide", e: target});
+	        };
+    	}
+    	else {
+	        document.getElementById("menu-option").innerHTML = "Remove Atom";
+	        document.getElementById("menu-option").onclick = function() {
+	            document.getElementById("main").removeChild(target);
+	            toggleMenu({command: "hide", e: target});
+	        };
+	        target.classList.add("selected");
+    	}
+
+        toggleMenu({command: "show", e: target});
     }
 };
 
 document.addEventListener("contextmenu", e => {
     e.preventDefault();
     if (e.target !== document.getElementById('menu')) {
-        if (e.target.id === "hotbar" || e.target.classList.contains("slot") || e.target.id === "main" || e.target.classList.contains("element") && e.target.parentElement.id === "main") {
+        if (e.target.id === "hotbar" || e.target.classList.contains("slot") || e.target.id === "main" || (e.target.classList.contains("element") && e.target.parentElement.id === "main")) {
         	document.getElementById("menu-option").innerHTML = "";
-	        setPosition({left: e.pageX, top: e.pageY}); 
+	        setPosition({left: e.pageX, top: e.pageY, target: e.target}); 
         }
     }
 });
 
 document.addEventListener('mousedown', e => {
-    if (e.target.id !== "menu" && !e.target.classList.contains("element"))
+    if (document.getElementById("menu").style.display === "block" && !e.target.classList.contains("element") && e.target.id !== "menu-option")
         toggleMenu({command: "hide", e: e.target});
 });
 
