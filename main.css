@@ -406,7 +406,6 @@ body[overlay="on"]>.element {
 #menu {
 	z-index: 2;
 	position: fixed;
-	display: none;
 	padding: 0;
 	background: white;
 	border: 1px solid #aaa;

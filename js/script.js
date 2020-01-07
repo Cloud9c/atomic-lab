@@ -57,21 +57,6 @@ document.addEventListener('keydown', e => {
 
 });
 
-document.getElementById("main").addEventListener("mousedown", e => {
-    if (e.button === 0){
-        if (e.target.classList.contains("element")) {
-            diffX = e.pageX - e.target.offsetLeft;
-            diffY = e.pageY - e.target.offsetTop;
-
-            document.getElementById("main").appendChild(e.target);
-
-            followCursor(e.target, diffX, diffY);
-            e.target.style.cursor = "url(assets/cursor-drag-clicked.png), pointer";
-        } else
-        	mouseDrag(e.pageX, e.pageY);
-    }
-});
-
 function mouseDrag(x, y) {
 	const target = document.getElementById("drag-area");
 	target.style.left = x + "px";
@@ -100,16 +85,16 @@ function mouseDrag(x, y) {
     	target.style.display = "none";
     	target.style.width = "0";
     	target.style.height = "0";
-        document.getElementById("main").removeEventListener('mouseup', mouseUp, false);
-        document.getElementById("main").removeEventListener('mousemove', mouseMove, false);
+        document.removeEventListener('mouseup', mouseUp, false);
+        document.removeEventListener('mousemove', mouseMove, false);
     }
 
-    document.getElementById("main").addEventListener("mousemove", mouseMove);
-    document.getElementById("main").addEventListener("mouseup", mouseUp);
+    document.addEventListener("mousemove", mouseMove);
+    document.addEventListener("mouseup", mouseUp);
 }
 
 function followCursor(target, diffX, diffY) {
-	if (document.getElementsByClassName("selected")[1]) {
+	if (document.getElementsByClassName("selected")[1] && target.classList.contains("selected")) {
 	    const mouseMoveMultiple = e => {
 	    	const oldLeft = target.offsetLeft;
 	    	const oldTop = target.offsetTop;
@@ -128,9 +113,9 @@ function followCursor(target, diffX, diffY) {
 
 	    const mouseUpMultiple = () => {
 	    	target.style.cursor = "";
-			while (document.getElementsByClassName("selected")[0]){
-				document.getElementsByClassName("selected")[0].style.boxShadow = "";
-				document.getElementsByClassName("selected")[0].classList.remove("selected");
+			for (let i = 0; i < document.getElementsByClassName("selected").length; i++){
+				document.getElementsByClassName("selected")[i].style.boxShadow = "";
+				// document.getElementsByClassName("selected")[0].classList.remove("selected");
 			}
 	        document.getElementById("main").removeEventListener('mouseup', mouseUpMultiple, false);
 	        document.getElementById("main").removeEventListener('mousemove', mouseMoveMultiple, false);
@@ -148,12 +133,15 @@ function followCursor(target, diffX, diffY) {
 	    }
 
 	    const mouseUp = () => {
-	    	target.classList.remove("selected");
+	    	// target.classList.remove("selected");
 	        target.style.boxShadow = "";
 	        target.style.cursor = "";
 	        document.getElementById("main").removeEventListener('mouseup', mouseUp, false);
 	        document.getElementById("main").removeEventListener('mousemove', mouseMove, false);
 	    }
+
+	    while (document.getElementsByClassName("selected")[0])
+			document.getElementsByClassName("selected")[0].classList.remove("selected");
 
 		target.classList.add("selected");
 		target.style.boxShadow = "5px 5px 0 rgba(0, 0, 0, 0.5), inset 0 0 0 2px #000, 0 0 0 1px #000";
@@ -192,7 +180,8 @@ const setPosition = ({top, left, target}) => {
     } else if (target.id === "main") {
         document.getElementById("menu-option").innerHTML = "Clear Lab";
         document.getElementById("menu-option").onclick = function() {
-            document.getElementById("main").innerHTML = "";
+            while (document.getElementById("main")[2])
+			    document.getElementById("main").removeChild(document.getElementById("main").lastChild);
             toggleMenu({command: "hide", e: target});
         };
         toggleMenu({command: "show", e: target});
@@ -228,9 +217,30 @@ document.addEventListener("contextmenu", e => {
     }
 });
 
+document.getElementById("main").addEventListener("mousedown", e => {
+    if (e.button === 0){
+        if (e.target.classList.contains("element")) {
+            diffX = e.pageX - e.target.offsetLeft;
+            diffY = e.pageY - e.target.offsetTop;
+
+            document.getElementById("main").appendChild(e.target);
+
+            followCursor(e.target, diffX, diffY);
+            e.target.style.cursor = "url(assets/cursor-drag-clicked.png), pointer";
+        } else{
+        	mouseDrag(e.pageX, e.pageY);
+        }
+    }
+});
+
 document.addEventListener('mousedown', e => {
-    if (document.getElementById("menu").style.display === "block" && !e.target.classList.contains("element") && e.target.id !== "menu-option")
-        toggleMenu({command: "hide", e: e.target});
+    if (e.target.id !== "menu-option"){
+    	toggleMenu({command: "hide", e: e.target});
+
+    	if (document.getElementsByClassName("selected")[0] && document.getElementsByClassName("selected")[0].boxShadow === "")
+		    while (document.getElementsByClassName("selected")[0])
+				document.getElementsByClassName("selected")[0].classList.remove("selected");
+	}
 });
 
 document.getElementById("slider").addEventListener("mousedown", e => {
@@ -254,6 +264,10 @@ function sliderAdjust(target) {
         else if (pos < 53 && pos > 33)
             pos = 43;
         target.style.top = pos + "px";
+
+        if (pos < 0)
+        	pos = 0;
+
         document.getElementById("slider").style.background = "linear-gradient(#e8e8e8 " + pos + "%, #3fc1c9 " + pos + "%)";
     }
 
