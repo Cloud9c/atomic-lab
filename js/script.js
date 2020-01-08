@@ -20,14 +20,203 @@ function overlayToggle() {
     }
 };
 
-document.addEventListener('mouseover', e => {
+function mouseDrag(x, y) {
+    const target = document.getElementById("drag-area");
+    target.style.left = x + "px";
+    target.style.top = y + "px";
+    target.style.display = "initial";
+
+    const mouseMove = function(e) {
+        target.style.width = Math.abs(e.pageX - x) + "px";
+        target.style.height = Math.abs(e.pageY - y) + "px";
+
+        if (e.pageX < x)
+            target.style.left = e.pageX + "px";
+        if (e.pageY < y)
+            target.style.top = e.pageY + "px";
+
+        for (let i = 0; i < document.getElementById("main").getElementsByClassName("element").length; i++) {
+            rect = document.getElementById("main").getElementsByClassName("element")[i].getBoundingClientRect();
+            if (document.elementFromPoint(rect.left, rect.top).id === "drag-area" || document.elementFromPoint(rect.right, rect.top).id === "drag-area" || document.elementFromPoint(rect.left, rect.bottom).id === "drag-area" || document.elementFromPoint(rect.right, rect.bottom).id === "drag-area")
+                document.getElementById("main").getElementsByClassName("element")[i].classList.add("selected");
+            else
+                document.getElementById("main").getElementsByClassName("element")[i].classList.remove("selected");
+        }
+    };
+
+    function mouseUp() {
+        target.style.display = "none";
+        target.style.width = "0";
+        target.style.height = "0";
+        document.removeEventListener('mouseup', mouseUp, false);
+        document.removeEventListener('mousemove', mouseMove, false);
+    };
+
+    document.addEventListener("mousemove", mouseMove);
+    document.addEventListener("mouseup", mouseUp);
+};
+
+function followCursor(target, diffX, diffY) {
+    if (document.getElementsByClassName("selected")[1] && target.classList.contains("selected")) {
+        const mouseMoveMultiple = function(e) {
+            const oldLeft = target.offsetLeft;
+            const oldTop = target.offsetTop;
+
+            target.style.left = e.pageX - diffX + "px";
+            target.style.top = e.pageY - diffY + "px";
+
+            const leftDir = target.offsetLeft - oldLeft;
+            const topDir = target.offsetTop - oldTop;
+
+            for (let i = 0; i < document.getElementsByClassName("selected").length - 1; i++) {
+                document.getElementsByClassName("selected")[i].style.left = document.getElementsByClassName("selected")[i].offsetLeft + leftDir + "px";
+                document.getElementsByClassName("selected")[i].style.top = document.getElementsByClassName("selected")[i].offsetTop + topDir + "px";
+            }
+        };
+
+        const mouseUpMultiple = function() {
+            target.style.cursor = "";
+            for (let i = 0; i < document.getElementsByClassName("selected").length; i++) {
+                document.getElementsByClassName("selected")[i].style.boxShadow = "";
+                // document.getElementsByClassName("selected")[0].classList.remove("selected");
+            }
+            document.getElementById("main").removeEventListener('mouseup', mouseUpMultiple, false);
+            document.getElementById("main").removeEventListener('mousemove', mouseMoveMultiple, false);
+        };
+
+        for (let i = 0; i < document.getElementsByClassName("selected").length; i++)
+            document.getElementsByClassName("selected")[i].style.boxShadow = "5px 5px 0 rgba(0, 0, 0, 0.5), inset 0 0 0 2px #000, 0 0 0 1px #000";
+
+        document.getElementById("main").addEventListener("mousemove", mouseMoveMultiple);
+        document.getElementById("main").addEventListener("mouseup", mouseUpMultiple);
+    } else {
+        const mouseMove = function(e) {
+            target.style.left = e.pageX - diffX + "px";
+            target.style.top = e.pageY - diffY + "px";
+        };
+
+        const mouseUp = function() {
+            // target.classList.remove("selected");
+            target.style.boxShadow = "";
+            target.style.cursor = "";
+            document.getElementById("main").removeEventListener('mouseup', mouseUp, false);
+            document.getElementById("main").removeEventListener('mousemove', mouseMove, false);
+        };
+
+        while (document.getElementsByClassName("selected")[0])
+            document.getElementsByClassName("selected")[0].classList.remove("selected");
+
+        target.classList.add("selected");
+        target.style.boxShadow = "5px 5px 0 rgba(0, 0, 0, 0.5), inset 0 0 0 2px #000, 0 0 0 1px #000";
+        document.getElementById("main").addEventListener("mousemove", mouseMove);
+        document.getElementById("main").addEventListener("mouseup", mouseUp);
+    }
+};
+
+function toggleMenu(command, e) {
+    if (!e.classList.contains("element"))
+        while (document.getElementsByClassName("selected")[0])
+            document.getElementsByClassName("selected")[0].classList.remove("selected");
+
+    document.getElementById("menu").style.display = command === "show" ? "block" : "none";
+};
+
+function setPosition(left, top, target) {
+    document.getElementById("menu").style.left = left + "px";
+    document.getElementById("menu").style.top = top + "px";
+
+    if (target.id === "hotbar") {
+        document.getElementById("menu-option").innerHTML = "Clear All Slots";
+        document.getElementById("menu-option").onclick = function() {
+            for (let i = 0; i < 9; i++)
+                document.getElementsByClassName("slot")[i].innerHTML = "";
+            toggleMenu("hide", target);
+        };
+        toggleMenu("show", target);
+    } else if (target.classList.contains("slot")) {
+        document.getElementById("menu-option").innerHTML = "Clear Slot";
+        document.getElementById("menu-option").onclick = function() {
+            target.innerHTML = "";
+            toggleMenu("hide", target);
+        };
+        toggleMenu("show", target);
+    } else if (target.id === "main") {
+        document.getElementById("menu-option").innerHTML = "Clear Lab";
+        document.getElementById("menu-option").onclick = function() {
+            while (document.getElementById("main")[2])
+                document.getElementById("main").removeChild(document.getElementById("main").lastChild);
+            toggleMenu("hide", target);
+        };
+        toggleMenu("show", target);
+    } else if (target.parentElement.id === "main" && target.classList.contains("element")) {
+        if (document.getElementsByClassName("selected")[1]) {
+            document.getElementById("menu-option").innerHTML = "Remove Atoms";
+            document.getElementById("menu-option").onclick = function() {
+                while (document.getElementsByClassName("selected")[0])
+                    document.getElementById("main").removeChild(document.getElementsByClassName("selected")[0]);
+                toggleMenu("hide", target);
+            };
+        } else {
+            document.getElementById("menu-option").innerHTML = "Remove Atom";
+            document.getElementById("menu-option").onclick = function() {
+                document.getElementById("main").removeChild(target);
+                toggleMenu("hide", target);
+            };
+            target.classList.add("selected");
+        }
+
+        toggleMenu("show", target);
+    }
+};
+
+function sliderAdjust(target) {
+    const mouseMove = function(e) {
+        let pos = e.pageY - 148;
+        if (pos < -7)
+            pos = -7;
+        else if (pos > 93)
+            pos = 93;
+        else if (pos < 53 && pos > 33)
+            pos = 43;
+        target.style.top = pos + "px";
+
+        if (pos < 0)
+            pos = 0;
+
+        document.getElementById("slider").style.background = "linear-gradient(#e8e8e8 " + pos + "%, #3fc1c9 " + pos + "%)";
+    };
+
+    function mouseUp(e) {
+        document.body.removeEventListener('mouseup', mouseUp, false);
+        document.body.removeEventListener('mousemove', mouseMove, false);
+        document.body.style.cursor = "";
+        const changePX = document.getElementById("slider-thumb").offsetTop;
+        document.getElementById("slider-thumb").style.top = changePX + "px";
+        document.getElementById("slider").style.background = "linear-gradient(#e8e8e8 " + changePX + "%, #3fc1c9 " + changePX + "%)";
+    };
+    document.body.addEventListener("mousemove", mouseMove);
+    document.body.addEventListener("mouseup", mouseUp);
+};
+
+function animate() {
+	const rate = 1;
+	function step() {
+		for (let i = 0; i < document.getElementById("main").getElementsByClassName("element").length; i++) {
+			document.getElementById("main").getElementsByClassName("element")[i].style.transform = "translateX(" + 50 + "px)";
+		}
+		window.requestAnimationFrame(step);
+	}
+	window.requestAnimationFrame(step);
+}
+
+document.addEventListener('mouseover', function(e) {
     if (event.target.classList.contains("element"))
         hoverElement = event.target;
     else
         hoverElement = undefined;
 });
 
-document.addEventListener('keydown', e => {
+document.addEventListener('keydown', function(e) {
     if (/^[1-9]$/i.test(event.key) && typeof hoverElement !== 'undefined') {
         const clone = hoverElement.cloneNode(true);
         clone.removeAttribute('style');
@@ -39,13 +228,12 @@ document.addEventListener('keydown', e => {
         setTimeout(function(e) {
             document.getElementsByClassName('slot')[e].classList.remove("pulse");
         }, 500, event.key - 1);
-    }
-	else if (event.key === "ArrowUp" || event.key === "ArrowDown"){
+    } else if (event.key === "ArrowUp" || event.key === "ArrowDown") {
         let pos = document.getElementById("slider-thumb").offsetTop;
         if (event.key === "ArrowUp")
-        	pos -= 2;
-       	else
-       		pos += 2;
+            pos -= 2;
+        else
+            pos += 2;
 
         if (pos < -7)
             pos = -7;
@@ -53,172 +241,22 @@ document.addEventListener('keydown', e => {
             pos = 93;
         document.getElementById("slider-thumb").style.top = pos + "px";
         document.getElementById("slider").style.background = "linear-gradient(#e8e8e8 " + pos + "%, #3fc1c9 " + pos + "%)";
-	}
-
+    }
 });
 
-function mouseDrag(x, y) {
-	const target = document.getElementById("drag-area");
-	target.style.left = x + "px";
-	target.style.top = y + "px";	
-	target.style.display = "initial";
 
-    const mouseMove = e => {
-        target.style.width = Math.abs(e.pageX - x) + "px";
-        target.style.height = Math.abs(e.pageY - y) + "px";
-
-        if (e.pageX < x)
-			target.style.left = e.pageX + "px";
-		if (e.pageY < y)
-			target.style.top = e.pageY + "px";
-
-		for (let i = 0; i < document.getElementById("main").getElementsByClassName("element").length; i++) {
-			rect = document.getElementById("main").getElementsByClassName("element")[i].getBoundingClientRect();
-			if (document.elementFromPoint(rect.left, rect.top).id === "drag-area" || document.elementFromPoint(rect.right, rect.top).id === "drag-area" || document.elementFromPoint(rect.left, rect.bottom).id === "drag-area" || document.elementFromPoint(rect.right, rect.bottom).id === "drag-area")
-				document.getElementById("main").getElementsByClassName("element")[i].classList.add("selected");
-			else
-				document.getElementById("main").getElementsByClassName("element")[i].classList.remove("selected");
-		}
-    }
-
-    const mouseUp = () => {
-    	target.style.display = "none";
-    	target.style.width = "0";
-    	target.style.height = "0";
-        document.removeEventListener('mouseup', mouseUp, false);
-        document.removeEventListener('mousemove', mouseMove, false);
-    }
-
-    document.addEventListener("mousemove", mouseMove);
-    document.addEventListener("mouseup", mouseUp);
-}
-
-function followCursor(target, diffX, diffY) {
-	if (document.getElementsByClassName("selected")[1] && target.classList.contains("selected")) {
-	    const mouseMoveMultiple = e => {
-	    	const oldLeft = target.offsetLeft;
-	    	const oldTop = target.offsetTop;
-
-	        target.style.left = e.pageX - diffX + "px";
-	        target.style.top = e.pageY - diffY + "px";
-
-	        const leftDir = target.offsetLeft - oldLeft;
-	        const topDir = target.offsetTop - oldTop;
-
-	        for (let i = 0; i < document.getElementsByClassName("selected").length - 1; i++) {
-	        	document.getElementsByClassName("selected")[i].style.left = document.getElementsByClassName("selected")[i].offsetLeft + leftDir + "px";
-	        	document.getElementsByClassName("selected")[i].style.top = document.getElementsByClassName("selected")[i].offsetTop + topDir + "px";
-	        }
-	    }
-
-	    const mouseUpMultiple = () => {
-	    	target.style.cursor = "";
-			for (let i = 0; i < document.getElementsByClassName("selected").length; i++){
-				document.getElementsByClassName("selected")[i].style.boxShadow = "";
-				// document.getElementsByClassName("selected")[0].classList.remove("selected");
-			}
-	        document.getElementById("main").removeEventListener('mouseup', mouseUpMultiple, false);
-	        document.getElementById("main").removeEventListener('mousemove', mouseMoveMultiple, false);
-	    }
-
-		for (let i = 0; i < document.getElementsByClassName("selected").length; i++)
-			document.getElementsByClassName("selected")[i].style.boxShadow = "5px 5px 0 rgba(0, 0, 0, 0.5), inset 0 0 0 2px #000, 0 0 0 1px #000";
-
-	    document.getElementById("main").addEventListener("mousemove", mouseMoveMultiple);
-	    document.getElementById("main").addEventListener("mouseup", mouseUpMultiple);		
-	} else {
-	    const mouseMove = e => {
-	        target.style.left = e.pageX - diffX + "px";
-	        target.style.top = e.pageY - diffY + "px";
-	    }
-
-	    const mouseUp = () => {
-	    	// target.classList.remove("selected");
-	        target.style.boxShadow = "";
-	        target.style.cursor = "";
-	        document.getElementById("main").removeEventListener('mouseup', mouseUp, false);
-	        document.getElementById("main").removeEventListener('mousemove', mouseMove, false);
-	    }
-
-	    while (document.getElementsByClassName("selected")[0])
-			document.getElementsByClassName("selected")[0].classList.remove("selected");
-
-		target.classList.add("selected");
-		target.style.boxShadow = "5px 5px 0 rgba(0, 0, 0, 0.5), inset 0 0 0 2px #000, 0 0 0 1px #000";
-	    document.getElementById("main").addEventListener("mousemove", mouseMove);
-	    document.getElementById("main").addEventListener("mouseup", mouseUp);
-	}
-}
-
-const toggleMenu = ({command, e}) => {
-	if (!e.classList.contains("element"))
-	    while (document.getElementsByClassName("selected")[0])
-			document.getElementsByClassName("selected")[0].classList.remove("selected");
-
-    document.getElementById("menu").style.display = command === "show" ? "block" : "none";
-};
-
-const setPosition = ({top, left, target}) => {
-    document.getElementById("menu").style.left = left + "px";
-    document.getElementById("menu").style.top = top + "px";
-
-    if (target.id === "hotbar") {
-        document.getElementById("menu-option").innerHTML = "Clear All Slots";
-        document.getElementById("menu-option").onclick = function() {
-            for (let i = 0; i < 9; i++)
-                document.getElementsByClassName("slot")[i].innerHTML = "";
-            toggleMenu({command: "hide", e: target});
-        };
-        toggleMenu({command: "show", e: target});
-    } else if (target.classList.contains("slot")) {
-        document.getElementById("menu-option").innerHTML = "Clear Slot";
-        document.getElementById("menu-option").onclick = function() {
-            target.innerHTML = "";
-            toggleMenu({command: "hide", e: target});
-        };
-        toggleMenu({command: "show", e: target});
-    } else if (target.id === "main") {
-        document.getElementById("menu-option").innerHTML = "Clear Lab";
-        document.getElementById("menu-option").onclick = function() {
-            while (document.getElementById("main")[2])
-			    document.getElementById("main").removeChild(document.getElementById("main").lastChild);
-            toggleMenu({command: "hide", e: target});
-        };
-        toggleMenu({command: "show", e: target});
-    } else if (target.parentElement.id === "main" && target.classList.contains("element")) {
-    	if (document.getElementsByClassName("selected")[1]) {
-	        document.getElementById("menu-option").innerHTML = "Remove Atoms";
-	        document.getElementById("menu-option").onclick = function() {
-    			while (document.getElementsByClassName("selected")[0])
-					document.getElementById("main").removeChild(document.getElementsByClassName("selected")[0]);
-	            toggleMenu({command: "hide", e: target});
-	        };
-    	}
-    	else {
-	        document.getElementById("menu-option").innerHTML = "Remove Atom";
-	        document.getElementById("menu-option").onclick = function() {
-	            document.getElementById("main").removeChild(target);
-	            toggleMenu({command: "hide", e: target});
-	        };
-	        target.classList.add("selected");
-    	}
-
-        toggleMenu({command: "show", e: target});
-    }
-};
-
-document.addEventListener("contextmenu", e => {
+document.addEventListener("contextmenu", function(e) {
     e.preventDefault();
     if (e.target !== document.getElementById('menu')) {
         if (e.target.id === "hotbar" || e.target.classList.contains("slot") || e.target.id === "main" || (e.target.classList.contains("element") && e.target.parentElement.id === "main")) {
-        	document.getElementById("menu-option").innerHTML = "";
-	        setPosition({left: e.pageX, top: e.pageY, target: e.target}); 
+            document.getElementById("menu-option").innerHTML = "";
+            setPosition(e.pageX, e.pageY, e.target);
         }
     }
 });
 
-document.getElementById("main").addEventListener("mousedown", e => {
-    if (e.button === 0){
+document.getElementById("main").addEventListener("mousedown", function(e) {
+    if (e.button === 0) {
         if (e.target.classList.contains("element")) {
             diffX = e.pageX - e.target.offsetLeft;
             diffY = e.pageY - e.target.offsetTop;
@@ -227,61 +265,32 @@ document.getElementById("main").addEventListener("mousedown", e => {
 
             followCursor(e.target, diffX, diffY);
             e.target.style.cursor = "url(assets/cursor-drag-clicked.png), pointer";
-        } else{
-        	mouseDrag(e.pageX, e.pageY);
+        } else {
+            mouseDrag(e.pageX, e.pageY);
         }
     }
 });
 
-document.addEventListener('mousedown', e => {
-    if (e.target.id !== "menu-option"){
-    	toggleMenu({command: "hide", e: e.target});
+document.addEventListener('mousedown', function(e) {
+    if (e.target.id !== "menu-option") {
+        toggleMenu("hide", e.target);
 
-    	if (document.getElementsByClassName("selected")[0] && document.getElementsByClassName("selected")[0].boxShadow === "")
-		    while (document.getElementsByClassName("selected")[0])
-				document.getElementsByClassName("selected")[0].classList.remove("selected");
-	}
-});
-
-document.getElementById("slider").addEventListener("mousedown", e => {
-	if (e.target.id === "slider-thumb") {
-	    sliderAdjust(e.target);
-	    document.body.style.cursor = "url(assets/cursor-drag-clicked.png), pointer";
-	} else {
-		const pos = e.pageY - 148;
-		document.getElementById("slider").style.background = "linear-gradient(#e8e8e8 " + pos + "%, #3fc1c9 " + pos + "%)";
-		document.getElementById("slider-thumb").style.top = pos + "px";
-	}
-});
-
-function sliderAdjust(target) {
-    const mouseMove = e => {
-        let pos = e.pageY - 148;
-        if (pos < -7)
-            pos = -7;
-        else if (pos > 93)
-            pos = 93;
-        else if (pos < 53 && pos > 33)
-            pos = 43;
-        target.style.top = pos + "px";
-
-        if (pos < 0)
-        	pos = 0;
-
-        document.getElementById("slider").style.background = "linear-gradient(#e8e8e8 " + pos + "%, #3fc1c9 " + pos + "%)";
+        if (document.getElementsByClassName("selected")[0] && document.getElementsByClassName("selected")[0].boxShadow === "")
+            while (document.getElementsByClassName("selected")[0])
+                document.getElementsByClassName("selected")[0].classList.remove("selected");
     }
+});
 
-    const mouseUp = () => {
-        document.body.removeEventListener('mouseup', mouseUp, false);
-        document.body.removeEventListener('mousemove', mouseMove, false);
-        document.body.style.cursor = "";
-        const changePX = document.getElementById("slider-thumb").offsetTop;
-	    document.getElementById("slider-thumb").style.top = changePX + "px";
-	    document.getElementById("slider").style.background = "linear-gradient(#e8e8e8 " + changePX + "%, #3fc1c9 " + changePX + "%)";
-	}
-    document.body.addEventListener("mousemove", mouseMove);
-    document.body.addEventListener("mouseup", mouseUp);
-}
+document.getElementById("slider").addEventListener("mousedown", function(e) {
+    if (e.target.id === "slider-thumb") {
+        sliderAdjust(e.target);
+        document.body.style.cursor = "url(assets/cursor-drag-clicked.png), pointer";
+    } else {
+        const pos = e.pageY - 148;
+        document.getElementById("slider").style.background = "linear-gradient(#e8e8e8 " + pos + "%, #3fc1c9 " + pos + "%)";
+        document.getElementById("slider-thumb").style.top = pos + "px";
+    }
+});
 
 dragula([document.getElementById('periodic-table'), document.getElementById('main'), document.getElementsByClassName('slot')[0], document.getElementsByClassName('slot')[1], document.getElementsByClassName('slot')[2], document.getElementsByClassName('slot')[3], document.getElementsByClassName('slot')[4], document.getElementsByClassName('slot')[5], document.getElementsByClassName('slot')[6], document.getElementsByClassName('slot')[7], document.getElementsByClassName('slot')[8]], {
     copy: function(el, source) {
@@ -294,7 +303,8 @@ dragula([document.getElementById('periodic-table'), document.getElementById('mai
     },
     moves: function(el, source, handle, sibling) {
         return source !== document.getElementById('main');
-    }}).on('drop', function(el, target, source, sibling) {
+    }
+}).on('drop', function(el, target, source, sibling) {
     if (target != null && target.classList.contains("slot")) {
         target.classList.add("pulse");
         setTimeout(function() {
@@ -308,7 +318,6 @@ dragula([document.getElementById('periodic-table'), document.getElementById('mai
         el.tabIndex = "0";
     }
 })
-
 
 tippy('.element', {
     delay: [400, 0],
