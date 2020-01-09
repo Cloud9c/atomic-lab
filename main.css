@@ -20,11 +20,11 @@
 	cursor: url(assets/cursor-pointer-clicked.png), pointer;
 }
 
-.icon-button.swing:hover svg {
+#rack:hover svg {
 	animation: swing 0.75s;
 }
 
-.icon-button.boom:hover svg {
+#react:hover svg {
 	animation: boom 0.75s;
 }
 
@@ -84,6 +84,10 @@
 	display: flex;
 	transition: transform .2s;
 	border: 4px solid #000;
+}
+
+#close > svg {
+	margin: auto
 }
 
 #close:hover {
@@ -408,7 +412,7 @@ body[overlay="on"]>.element {
 	border: 1px solid #aaa;
 	width: 175px;
 	box-shadow: 4px 4px rgba(0, 0, 0, 0.2);
-	user-select: none;
+	display: none;
 }
 
 #menu-options {
@@ -438,4 +442,27 @@ body[overlay="on"]>.element {
 	border: 1px solid rgba(252, 81, 133, 0.5);
 	display: none;
 	z-index: 1;
+}
+
+#snackbar {
+	width: 250px;
+	margin: 0 auto;
+	background: #fff;
+	border: 4px #FC5185 solid;
+	text-align: center;
+	border-radius: 4px;
+	padding: 16px;
+	position: fixed;
+	z-index: 1;
+	left: 0;
+	right: 0;
+	top: 0;
+	opacity: 0;
+	visibility: hidden;
+}
+
+#snackbar.show {
+	visibility: visible;
+	top: 30px;
+	opacity: 1;
 }
