@@ -109,16 +109,17 @@
         margin: auto;
       }
 
-      #hotbar {
+      #bottom-container {
         position: fixed;
         bottom: 0;
         z-index: 1;
-        left: 0;
-        right: 0;
-        width: fit-content;
-        margin-left: auto;
-        margin-right: auto;
         display: flex;
+        width: 100%;
+      }
+
+      #hotbar {
+        display: flex;
+        margin: 0 auto;
         padding: 10px 10px;
         background: #364f6b;
         border-top-right-radius: 25px;
@@ -559,16 +560,18 @@
         </svg>
       </div>
     </div>
-    <div id="hotbar" tabindex="0">
-      <div class="slot" tabindex="0"></div>
-      <div class="slot" tabindex="0"></div>
-      <div class="slot" tabindex="0"></div>
-      <div class="slot" tabindex="0"></div>
-      <div class="slot" tabindex="0"></div>
-      <div class="slot" tabindex="0"></div>
-      <div class="slot" tabindex="0"></div>
-      <div class="slot" tabindex="0"></div>
-      <div class="slot" tabindex="0"></div>
+    <div id="bottom-container">
+      <div id="hotbar" tabindex="0">
+        <div class="slot" tabindex="0"></div>
+        <div class="slot" tabindex="0"></div>
+        <div class="slot" tabindex="0"></div>
+        <div class="slot" tabindex="0"></div>
+        <div class="slot" tabindex="0"></div>
+        <div class="slot" tabindex="0"></div>
+        <div class="slot" tabindex="0"></div>
+        <div class="slot" tabindex="0"></div>
+        <div class="slot" tabindex="0"></div>
+      </div>
     </div>
     <div id="menu" tabindex="0">
       <ul id="menu-options">

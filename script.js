@@ -6,7 +6,7 @@ var hoverElement, animate;
 
 window.addEventListener('load', (event) => {
 	var slot = localStorage.getItem("slot").split(";");
-	var main = localStorage.getItem("main").split("-");
+	var main = localStorage.getItem("main").split("`");
 
 	for (var i = 0; i < 9; i++)
 		document.getElementsByClassName("slot")[i].innerHTML = slot[i];
@@ -217,7 +217,7 @@ onbeforeunload = function (e) {
 		slot += document.getElementsByClassName("slot")[i].innerHTML + ";";
 
 	for (var i = 0; i < document.getElementById("main").getElementsByClassName("element").length; i++)
-	    main += document.getElementById("main").getElementsByClassName("element")[i].outerHTML + "-";
+	    main += document.getElementById("main").getElementsByClassName("element")[i].outerHTML + "`";
 
 	localStorage.setItem("slot", slot);
 	localStorage.setItem("main", main);
