@@ -80,8 +80,8 @@
 	display: grid;
 	grid-column-gap: 2px;
 	grid-row-gap: 2px;
-	padding: 40px;
-	margin: 0;
+	padding: 0 40px 0;
+	margin: 40px 0 20px;
 	overflow: auto;
 	position: relative;
 }
