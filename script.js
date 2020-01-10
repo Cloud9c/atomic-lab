@@ -8,11 +8,13 @@ window.addEventListener('load', (event) => {
 	var slot = localStorage.getItem("slot").split(";");
 	var main = localStorage.getItem("main").split("`");
 
+	if (slot === null)
+		return;
+
 	for (var i = 0; i < 9; i++)
 		document.getElementsByClassName("slot")[i].innerHTML = slot[i];
 	for (var i = 0; i < main.length; i++)
 		document.getElementById("main").innerHTML += main[i];
-
 });
 
 function mouseDrag(x, y) {
@@ -116,54 +118,6 @@ function toggleMenu(command, e) {
     document.getElementById("menu").style.display = command === "show" ? "block" : "none";
 }
 
-function setPosition(left, top, target) {
-    document.getElementById("menu").style.left = left + "px";
-    document.getElementById("menu").style.top = top + "px";
-
-    if (target.id === "hotbar") {
-        document.getElementById("menu-option").innerHTML = "Clear All Slots";
-        document.getElementById("menu-option").onclick = function() {
-            for (var i = 0; i < 9; i++)
-                document.getElementsByClassName("slot")[i].innerHTML = "";
-            toggleMenu("hide", target);
-        };
-        toggleMenu("show", target);
-    } else if (target.parentElement.classList.contains("slot")) {
-        document.getElementById("menu-option").innerHTML = "Clear Slot";
-        document.getElementById("menu-option").onclick = function() {
-            target.parentElement.innerHTML = "";
-            toggleMenu("hide", target);
-        };
-        toggleMenu("show", target);
-    } else if (target.id === "main") {
-        document.getElementById("menu-option").innerHTML = "Clear Lab";
-        document.getElementById("menu-option").onclick = function() {
-            while (document.getElementById("main").getElementsByClassName("element")[0])
-                document.getElementById("main").removeChild(document.getElementById("main").lastChild);
-            toggleMenu("hide", target);
-        };
-        toggleMenu("show", target);
-    } else if (target.parentElement.id === "main" && target.classList.contains("element")) {
-        if (document.getElementsByClassName("selected")[1]) {
-            document.getElementById("menu-option").innerHTML = "Remove Atoms";
-            document.getElementById("menu-option").onclick = function() {
-                while (document.getElementsByClassName("selected")[0])
-                    document.getElementById("main").removeChild(document.getElementsByClassName("selected")[0]);
-                toggleMenu("hide", target);
-            };
-        } else {
-            document.getElementById("menu-option").innerHTML = "Remove Atom";
-            document.getElementById("menu-option").onclick = function() {
-                document.getElementById("main").removeChild(target);
-                toggleMenu("hide", target);
-            };
-            target.classList.add("selected");
-        }
-
-        toggleMenu("show", target);
-    }
-}
-
 function sliderAdjust(target) {
     function mouseMove(e) {
         var pos = e.pageY - 148;
@@ -208,20 +162,6 @@ function overlayToggle() {
         document.body.setAttribute("overlay", "on");
     }
 }
-
-onbeforeunload = function (e) {
-	var slot = "";
-	var main = "";
-
-	for (var i = 0; i < 9; i++)
-		slot += document.getElementsByClassName("slot")[i].innerHTML + ";";
-
-	for (var i = 0; i < document.getElementById("main").getElementsByClassName("element").length; i++)
-	    main += document.getElementById("main").getElementsByClassName("element")[i].outerHTML + "`";
-
-	localStorage.setItem("slot", slot);
-	localStorage.setItem("main", main);
-};
 
 document.getElementById("rack").addEventListener("click", overlayToggle);
 
@@ -303,13 +243,64 @@ document.addEventListener("keydown", function(e) {
     }
 });
 
-
 document.addEventListener("contextmenu", function(e) {
     e.preventDefault();
     if (e.target !== document.getElementById("menu")) {
         if (e.target.id === "hotbar" || e.target.classList.contains("slot") || e.target.id === "main" || (e.target.classList.contains("element") && (e.target.parentElement.classList.contains("slot") || e.target.parentElement.id === "main"))) {
             document.getElementById("menu-option").innerHTML = "";
-            setPosition(e.pageX, e.pageY, e.target);
+
+            if (e.pageX + 175 > document.body.clientWidth)
+            	document.getElementById("menu").style.left = document.body.clientWidth - 175 + "px";
+            else
+            	document.getElementById("menu").style.left = e.pageX + "px";
+
+            if (e.pageY + 47 > document.body.clientHeight)
+            	document.body.clientHeight - 47 + "px";
+           	else
+				document.getElementById("menu").style.top = e.pageY + "px";
+
+			if (e.target.id === "hotbar") {
+			    document.getElementById("menu-option").innerHTML = "Clear All Slots";
+			    document.getElementById("menu-option").onclick = function() {
+			        for (var i = 0; i < 9; i++)
+			            document.getElementsByClassName("slot")[i].innerHTML = "";
+			        toggleMenu("hide", e.target);
+			    };
+			    toggleMenu("show", e.target);
+			} else if (e.target.parentElement.classList.contains("slot")) {
+			    document.getElementById("menu-option").innerHTML = "Clear Slot";
+			    document.getElementById("menu-option").onclick = function() {
+			        e.target.parentElement.innerHTML = "";
+			        toggleMenu("hide", e.target);
+			    };
+			    toggleMenu("show", e.target);
+			} else if (e.target.id === "main") {
+			    document.getElementById("menu-option").innerHTML = "Clear Lab";
+			    document.getElementById("menu-option").onclick = function() {
+			        while (document.getElementById("main").getElementsByClassName("element")[0])
+			            document.getElementById("main").removeChild(document.getElementById("main").lastChild);
+			        toggleMenu("hide", e.target);
+			    };
+			    toggleMenu("show", e.target);
+			} else if (e.target.parentElement.id === "main" && e.target.classList.contains("element")) {
+			    if (document.getElementsByClassName("selected")[1]) {
+			        document.getElementById("menu-option").innerHTML = "Remove Atoms";
+			        document.getElementById("menu-option").onclick = function() {
+			            while (document.getElementsByClassName("selected")[0])
+			                document.getElementById("main").removeChild(document.getElementsByClassName("selected")[0]);
+			            toggleMenu("hide", e.target);
+			        };
+			    } else {
+			        document.getElementById("menu-option").innerHTML = "Remove Atom";
+			        document.getElementById("menu-option").onclick = function() {
+			            document.getElementById("main").removeChild(e.target);
+			            toggleMenu("hide", e.target);
+			        };
+			        e.target.classList.add("selected");
+			    }
+
+			    toggleMenu("show", e.target);
+			}
         }
     }
 });
@@ -379,7 +370,7 @@ dragula([document.getElementById("periodic-table"), document.getElementById("mai
 tippy(".element", {
     delay: [400, 0],
     content(reference) {
-        var title = reference.firstElementChild.getAttribute("title");
+        var title = reference.children[0].getAttribute("title") + " (" + [].indexOf.call(document.getElementById("periodic-table").children, reference) + ")<br>" + reference.getAttribute("amass") + " Da<br>" + reference.getAttribute("eneg") + " χ";
         reference.removeAttribute("title");
         return title;
     }
@@ -393,3 +384,17 @@ tippy("#header > div", {
         return title;
     }
 });
+
+onbeforeunload = function (e) {
+	var slot = "";
+	var main = "";
+
+	for (var i = 0; i < 9; i++)
+		slot += document.getElementsByClassName("slot")[i].innerHTML + ";";
+
+	for (var i = 0; i < document.getElementById("main").getElementsByClassName("element").length; i++)
+	    main += document.getElementById("main").getElementsByClassName("element")[i].outerHTML + "`";
+
+	localStorage.setItem("slot", slot);
+	localStorage.setItem("main", main);
+};

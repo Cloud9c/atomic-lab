@@ -115,6 +115,7 @@
         z-index: 1;
         display: flex;
         width: 100%;
+        pointer-events: none;
       }
 
       #hotbar {
@@ -127,6 +128,7 @@
         border-top: 4px solid #000;
         border-right: 4px solid #000;
         border-left: 4px solid #000;
+        pointer-events: all;
       }
 
       .slot {
@@ -177,358 +179,358 @@
           </svg>
         </div>
         <ol id="periodic-table">
-          <li class="element hydrogen" eneg="2.20">
+          <li class="element hydrogen" amass="1.008" eneg="2.20">
             <abbr title="Hydrogen">H</abbr>
           </li>
-          <li class="element noble-gas" id="helium" eneg="0">
+          <li class="element noble-gas" id="helium" amass="4.0026" eneg="0">
             <abbr title="Helium">He</abbr>
           </li>
-          <li class="element alkali" eneg="0.98">
+          <li class="element alkali" amass="6.94" eneg="0.98">
             <abbr title="Lithium">Li</abbr>
           </li>
-          <li class="element alkaline" eneg="1.57">
+          <li class="element alkaline" amass="9.0122" eneg="1.57">
             <abbr title="Beryllium">Be</abbr>
           </li>
-          <li class="element metalloid" id="boron" eneg="2.04">
+          <li class="element metalloid" id="boron" amass="10.81" eneg="2.04">
             <abbr title="Boron">B</abbr>
           </li>
-          <li class="element nonmetal" eneg="2.55">
+          <li class="element nonmetal" amass="12.011" eneg="2.55">
             <abbr title="Carbon">C</abbr>
           </li>
-          <li class="element nonmetal" eneg="3.04">
+          <li class="element nonmetal" amass="14.007" eneg="3.04">
             <abbr title="Nitrogen">N</abbr>
           </li>
-          <li class="element nonmetal" eneg="3.44">
+          <li class="element nonmetal" amass="15.999" eneg="3.44">
             <abbr title="Oxygen">O</abbr>
           </li>
-          <li class="element nonmetal" eneg="3.98">
+          <li class="element nonmetal" amass="18.998" eneg="3.98">
             <abbr title="Fluorine">F</abbr>
           </li>
-          <li class="element noble-gas" eneg="0">
+          <li class="element noble-gas" amass="20.180" eneg="0">
             <abbr title="Neon">Ne</abbr>
           </li>
-          <li class="element alkali" eneg="0.93">
+          <li class="element alkali" amass="22.990" eneg="0.93">
             <abbr title="Sodium">Na</abbr>
           </li>
-          <li class="element alkaline" eneg="1.31">
+          <li class="element alkaline" amass="24.305" eneg="1.31">
             <abbr title="Magnesium">Mg</abbr>
           </li>
-          <li class="element" id="aluminium" eneg="1.61">
+          <li class="element" id="aluminium" amass="26.982" eneg="1.61">
             <abbr title="Aluminium">Al</abbr>
           </li>
-          <li class="element metalloid" eneg="1.90">
+          <li class="element metalloid" amass="28.085" eneg="1.90">
             <abbr title="Silicon">Si</abbr>
           </li>
-          <li class="element nonmetal" eneg="2.19">
+          <li class="element nonmetal" amass="30.974" eneg="2.19">
             <abbr title="Phosphorus">P</abbr>
           </li>
-          <li class="element nonmetal" eneg="2.58">
+          <li class="element nonmetal" amass="32.06" eneg="2.58">
             <abbr title="Sulphur">S</abbr>
           </li>
-          <li class="element nonmetal" eneg="3.16">
+          <li class="element nonmetal" amass="35.45" eneg="3.16">
             <abbr title="Chlorine">Cl</abbr>
           </li>
-          <li class="element noble-gas" eneg="0">
+          <li class="element noble-gas" amass="39.948" eneg="0">
             <abbr title="Argon">Ar</abbr>
           </li>
-          <li class="element alkali" eneg="0.82">
+          <li class="element alkali" amass="39.098" eneg="0.82">
             <abbr title="Potassium">K</abbr>
           </li>
-          <li class="element alkaline" eneg="1.00">
+          <li class="element alkaline" amass="40.078" eneg="1.00">
             <abbr title="Calcium">Ca</abbr>
           </li>
-          <li class="element" eneg="1.36">
+          <li class="element" amass="44.956" eneg="1.36">
             <abbr title="Scandium">Sc</abbr>
           </li>
-          <li class="element" eneg="1.54">
+          <li class="element" amass="47.867" eneg="1.54">
             <abbr title="Titanium">Ti</abbr>
           </li>
-          <li class="element" eneg="1.63">
+          <li class="element" amass="50.942" eneg="1.63">
             <abbr title="Vanadium">V</abbr>
           </li>
-          <li class="element" eneg="1.66">
+          <li class="element" amass="51.996" eneg="1.66">
             <abbr title="Chromium">Cr</abbr>
           </li>
-          <li class="element" eneg="1.55">
+          <li class="element" amass="54.938" eneg="1.55">
             <abbr title="Manganese">Mn</abbr>
           </li>
-          <li class="element" eneg="1.83">
+          <li class="element" amass="55.845" eneg="1.83">
             <abbr title="Iron">Fe</abbr>
           </li>
-          <li class="element" eneg="1.88">
+          <li class="element" amass="58.933" eneg="1.88">
             <abbr title="Cobalt">Co</abbr>
           </li>
-          <li class="element" eneg="1.91">
+          <li class="element" amass="58.693" eneg="1.91">
             <abbr title="Nickel">Ni</abbr>
           </li>
-          <li class="element" eneg="1.90">
+          <li class="element" amass="63.546" eneg="1.90">
             <abbr title="Copper">Cu</abbr>
           </li>
-          <li class="element" eneg="1.65">
+          <li class="element" amass="65.38" eneg="1.65">
             <abbr title="Zinc">Zn</abbr>
           </li>
-          <li class="element" eneg="1.81">
+          <li class="element" amass="69.723" eneg="1.81">
             <abbr title="Gallium">Ga</abbr>
           </li>
-          <li class="element metalloid" eneg="2.01">
+          <li class="element metalloid" amass="72.630" eneg="2.01">
             <abbr title="Germanium">Ge</abbr>
           </li>
-          <li class="element metalloid" eneg="2.18">
+          <li class="element metalloid" amass="74.992" eneg="2.18">
             <abbr title="Arsenic">As</abbr>
           </li>
-          <li class="element nonmetal" eneg="2.55">
+          <li class="element nonmetal" amass="78.971" eneg="2.55">
             <abbr title="Selenium">Se</abbr>
           </li>
-          <li class="element nonmetal" eneg="2.96">
+          <li class="element nonmetal" amass="79.904" eneg="2.96">
             <abbr title="Bromide">Br</abbr>
           </li>
-          <li class="element noble-gas" eneg="3.00">
+          <li class="element noble-gas" amass="83.798" eneg="3.00">
             <abbr title="Krypton">Kr</abbr>
           </li>
-          <li class="element alkali" eneg="0.82">
+          <li class="element alkali" amass="85.468" eneg="0.82">
             <abbr title="Rubidium">Rb</abbr>
           </li>
-          <li class="element alkaline" eneg="0.95">
+          <li class="element alkaline" amass="87.62" eneg="0.95">
             <abbr title="Strontium">Sr</abbr>
           </li>
-          <li class="element" eneg="1.22">
+          <li class="element" amass="88.906" eneg="1.22">
             <abbr title="Yttrium">Y</abbr>
           </li>
-          <li class="element" eneg="1.33">
+          <li class="element" amass="91.224" eneg="1.33">
             <abbr title="Zirconium">Zr</abbr>
           </li>
-          <li class="element" eneg="1.6">
+          <li class="element" amass="92.906" eneg="1.6">
             <abbr title="Niobium">Nb</abbr>
           </li>
-          <li class="element" eneg="2.16">
+          <li class="element" amass="95.95" eneg="2.16">
             <abbr title="Molybdenum">Mo</abbr>
           </li>
-          <li class="element" eneg="1.9">
+          <li class="element" amass="98" eneg="1.9">
             <abbr title="Technetium">Tc</abbr>
           </li>
-          <li class="element" eneg="2.2">
+          <li class="element" amass="101.07" eneg="2.2">
             <abbr title="Ruthenium">Ru</abbr>
           </li>
-          <li class="element" eneg="2.28">
+          <li class="element" amass="102.91" eneg="2.28">
             <abbr title="Rhodium">Rh</abbr>
           </li>
-          <li class="element" eneg="2.20">
+          <li class="element" amass="106.42" eneg="2.20">
             <abbr title="Palladium">Pd</abbr>
           </li>
-          <li class="element" eneg="1.93">
+          <li class="element" amass="107.87" eneg="1.93">
             <abbr title="Silver">Ag</abbr>
           </li>
-          <li class="element" eneg="1.69">
+          <li class="element" amass="112.41" eneg="1.69">
             <abbr title="Cadmium">Cd</abbr>
           </li>
-          <li class="element" eneg="1.78">
+          <li class="element" amass="114.82" eneg="1.78">
             <abbr title="Indium">In</abbr>
           </li>
-          <li class="element" eneg="1.96">
+          <li class="element" amass="118.71" eneg="1.96">
             <abbr title="Tin">Sn</abbr>
           </li>
-          <li class="element metalloid" eneg="2.05">
+          <li class="element metalloid" amass="121.76" eneg="2.05">
             <abbr title="Antimony">Sb</abbr>
           </li>
-          <li class="element metalloid" eneg="2.1">
+          <li class="element metalloid" amass="127.60" eneg="2.1">
             <abbr title="Tellurium">Te</abbr>
           </li>
-          <li class="element nonmetal" eneg="2.66">
+          <li class="element nonmetal" amass="126.90" eneg="2.66">
             <abbr title="Iodine">I</abbr>
           </li>
-          <li class="element noble-gas" eneg="2.60">
+          <li class="element noble-gas" amass="131.29" eneg="2.60">
             <abbr title="Xenon">Xe</abbr>
           </li>
-          <li class="element alkali" eneg="0.79">
+          <li class="element alkali" amass="132.91" eneg="0.79">
             <abbr title="Caesium">Cs</abbr>
           </li>
-          <li class="element alkaline" eneg="0.89">
+          <li class="element alkaline" amass="137.33" eneg="0.89">
             <abbr title="Barium">Ba</abbr>
           </li>
-          <li class="element lanthanide" eneg="1.1">
+          <li class="element lanthanide" amass="138.91" eneg="1.1">
             <abbr title="Lanthanum">La</abbr>
           </li>
-          <li class="element lanthanide" id="cerium" eneg="1.12">
+          <li class="element lanthanide" id="cerium" amass="140.12" eneg="1.12">
             <abbr title="Cerium">Ce</abbr>
           </li>
-          <li class="element lanthanide" eneg="1.13">
+          <li class="element lanthanide" amass="140.91" eneg="1.13">
             <abbr title="Praseodymium">Pr</abbr>
           </li>
-          <li class="element lanthanide" eneg="1.14">
+          <li class="element lanthanide" amass="144.24" eneg="1.14">
             <abbr title="Neodymium">Nd</abbr>
           </li>
-          <li class="element lanthanide" eneg="1.13">
+          <li class="element lanthanide" amass="145" eneg="1.13">
             <abbr title="Promethium">Pm</abbr>
           </li>
-          <li class="element lanthanide" eneg="1.17">
+          <li class="element lanthanide" amass="150.36" eneg="1.17">
             <abbr title="Samarium">Sm</abbr>
           </li>
-          <li class="element lanthanide" eneg="1.2">
+          <li class="element lanthanide" amass="151.96" eneg="1.2">
             <abbr title="Europium">Eu</abbr>
           </li>
-          <li class="element lanthanide" eneg="1.2">
+          <li class="element lanthanide" amass="157.25" eneg="1.2">
             <abbr title="Gadolinium">Gd</abbr>
           </li>
-          <li class="element lanthanide" eneg="1.1">
+          <li class="element lanthanide" amass="158.93" eneg="1.1">
             <abbr title="Terbium">Tb</abbr>
           </li>
-          <li class="element lanthanide" eneg="1.22">
+          <li class="element lanthanide" amass="162.50" eneg="1.22">
             <abbr title="Dysprosium">Dy</abbr>
           </li>
-          <li class="element lanthanide" eneg="1.23">
+          <li class="element lanthanide" amass="164.93" eneg="1.23">
             <abbr title="Holmium">Ho</abbr>
           </li>
-          <li class="element lanthanide" eneg="1.24">
+          <li class="element lanthanide" amass="167.26" eneg="1.24">
             <abbr title="Erbium">Er</abbr>
           </li>
-          <li class="element lanthanide" eneg="1.25">
+          <li class="element lanthanide" amass="168.93" eneg="1.25">
             <abbr title="Thulium">Tm</abbr>
           </li>
-          <li class="element lanthanide" eneg="1.1">
+          <li class="element lanthanide" amass="173.05" eneg="1.1">
             <abbr title="Ytterbium">Yb</abbr>
           </li>
-          <li class="element lanthanide" eneg="1.27">
+          <li class="element lanthanide" amass="174.97" eneg="1.27">
             <abbr title="Lutetium">Lu</abbr>
           </li>
-          <li class="element" id="hafnium" eneg="1.3">
+          <li class="element" id="hafnium" amass="178.49" eneg="1.3">
             <abbr title="Hafnium">Hf</abbr>
           </li>
-          <li class="element" eneg="1.5">
+          <li class="element" amass="180.95" eneg="1.5">
             <abbr title="Tantalum">Ta</abbr>
           </li>
-          <li class="element" eneg="2.36">
+          <li class="element" amass="183.84" eneg="2.36">
             <abbr title="Tungsten">W</abbr>
           </li>
-          <li class="element" eneg="1.9">
+          <li class="element" amass="186.21" eneg="1.9">
             <abbr title="Rhenium">Re</abbr>
           </li>
-          <li class="element" eneg="2.2">
+          <li class="element" amass="190.23" eneg="2.2">
             <abbr title="Osmium">Os</abbr>
           </li>
-          <li class="element" eneg="2.20">
+          <li class="element" amass="192.22" eneg="2.20">
             <abbr title="Iridium">Ir</abbr>
           </li>
-          <li class="element" eneg="2.28">
+          <li class="element" amass="195.08" eneg="2.28">
             <abbr title="Platinum">Pt</abbr>
           </li>
-          <li class="element" eneg="2.54">
+          <li class="element" amass="196.97" eneg="2.54">
             <abbr title="Gold">Au</abbr>
           </li>
-          <li class="element" eneg="2.00">
+          <li class="element" amass="200.59" eneg="2.00">
             <abbr title="Mercury">Hg</abbr>
           </li>
-          <li class="element" eneg="1.62">
+          <li class="element" amass="204.38" eneg="1.62">
             <abbr title="Thallium">Tl</abbr>
           </li>
-          <li class="element" eneg="1.87">
+          <li class="element" amass="207.2" eneg="1.87">
             <abbr title="Lead">Pb</abbr>
           </li>
-          <li class="element" eneg="2.02">
+          <li class="element" amass="208.98" eneg="2.02">
             <abbr title="Bismuth">Bi</abbr>
           </li>
-          <li class="element" eneg="2.0">
+          <li class="element" amass="209" eneg="2.0">
             <abbr title="Polonium">Po</abbr>
           </li>
-          <li class="element metalloid" eneg="2.2">
+          <li class="element metalloid" amass="210" eneg="2.2">
             <abbr title="Astatine">At</abbr>
           </li>
-          <li class="element noble-gas" eneg="2.2">
+          <li class="element noble-gas" amass="222" eneg="2.2">
             <abbr title="Radon">Rn</abbr>
           </li>
-          <li class="element alkali" eneg="0.79">
+          <li class="element alkali" amass="223" eneg="0.79">
             <abbr title="Francium">Fr</abbr>
           </li>
-          <li class="element alkaline" eneg="0.9">
+          <li class="element alkaline" amass="226" eneg="0.9">
             <abbr title="Radium">Ra</abbr>
           </li>
-          <li class="element actinide" eneg="1.1">
+          <li class="element actinide" amass="227" eneg="1.1">
             <abbr title="Actinium">Ac</abbr>
           </li>
-          <li class="element actinide" id="thorium" eneg="1.3">
+          <li class="element actinide" id="thorium" amass="232.04" eneg="1.3">
             <abbr title="Thorium">Th</abbr>
           </li>
-          <li class="element actinide" eneg="1.5">
+          <li class="element actinide" amass="231.04" eneg="1.5">
             <abbr title="Protactinium">Pa</abbr>
           </li>
-          <li class="element actinide" eneg="1.38">
+          <li class="element actinide" amass="238.03" eneg="1.38">
             <abbr title="Uranium">U</abbr>
           </li>
-          <li class="element actinide" eneg="1.36">
+          <li class="element actinide" amass="237" eneg="1.36">
             <abbr title="Neptunium">Np</abbr>
           </li>
-          <li class="element actinide" eneg="1.28">
+          <li class="element actinide" amass="244" eneg="1.28">
             <abbr title="Plutonium">Pu</abbr>
           </li>
-          <li class="element actinide" eneg="1.13">
+          <li class="element actinide" amass="243" eneg="1.13">
             <abbr title="Americium">Am</abbr>
           </li>
-          <li class="element actinide" eneg="1.28">
+          <li class="element actinide" amass="247" eneg="1.28">
             <abbr title="Curium">Cm</abbr>
           </li>
-          <li class="element actinide" eneg="1.3">
+          <li class="element actinide" amass="247" eneg="1.3">
             <abbr title="Berkelium">Bk</abbr>
           </li>
-          <li class="element actinide" eneg="1.3">
+          <li class="element actinide" amass="251" eneg="1.3">
             <abbr title="Californium">Cf</abbr>
           </li>
-          <li class="element actinide" eneg="1.3">
+          <li class="element actinide" amass="252" eneg="1.3">
             <abbr title="Einsteinium">Es</abbr>
           </li>
-          <li class="element actinide" eneg="1.3">
+          <li class="element actinide" amass="257" eneg="1.3">
             <abbr title="Fermium">Fm</abbr>
           </li>
-          <li class="element actinide" eneg="1.3">
+          <li class="element actinide" amass="258" eneg="1.3">
             <abbr title="Mendelevium">Md</abbr>
           </li>
-          <li class="element actinide" eneg="1.3">
+          <li class="element actinide" amass="259" eneg="1.3">
             <abbr title="Nobelium">No</abbr>
           </li>
-          <li class="element actinide" eneg="1.3">
+          <li class="element actinide" amass="266" eneg="1.3">
             <abbr title="Lawrencium">Lr</abbr>
           </li>
-          <li class="element" id="rutherfordium" eneg="na">
+          <li class="element" id="rutherfordium" amass="267" eneg="NA">
             <abbr title="Rutherfordium">Rf</abbr>
           </li>
-          <li class="element" eneg="na">
+          <li class="element" amass="268" eneg="NA">
             <abbr title="Dubnium">Db</abbr>
           </li>
-          <li class="element" eneg="na">
+          <li class="element" amass="269" eneg="NA">
             <abbr title="Seaborgium">Sg</abbr>
           </li>
-          <li class="element" eneg="na">
+          <li class="element" amass="270" eneg="NA">
             <abbr title="Bohrium">Bh</abbr>
           </li>
-          <li class="element" eneg="na">
+          <li class="element" amass="270" eneg="NA">
             <abbr title="Hassium">Hs</abbr>
           </li>
-          <li class="element unknown" eneg="na">
+          <li class="element unknown" amass="278" eneg="NA">
             <abbr title="Meitnerium">Mt</abbr>
           </li>
-          <li class="element unknown" eneg="na">
+          <li class="element unknown" amass="281" eneg="NA">
             <abbr title="Darmstadtium">Ds</abbr>
           </li>
-          <li class="element unknown" eneg="na">
+          <li class="element unknown" amass="282" eneg="NA">
             <abbr title="Roentgenium">Rg</abbr>
           </li>
-          <li class="element" eneg="na">
+          <li class="element" amass="285" eneg="NA">
             <abbr title="Copernicium">Cn</abbr>
           </li>
-          <li class="element unknown" eneg="na">
+          <li class="element unknown" amass="286" eneg="NA">
             <abbr title="Nihonium">Nh</abbr>
           </li>
-          <li class="element unknown" eneg="na">
+          <li class="element unknown" amass="289" eneg="NA">
             <abbr title="Flerovium">Fl</abbr>
           </li>
-          <li class="element unknown" eneg="na">
+          <li class="element unknown" amass="290" eneg="NA">
             <abbr title="Moscovium">Mc</abbr>
           </li>
-          <li class="element unknown" eneg="na">
+          <li class="element unknown" amass="293" eneg="NA">
             <abbr title="Livermorium">Lv</abbr>
           </li>
-          <li class="element unknown" eneg="na">
+          <li class="element unknown" amass="294" eneg="NA">
             <abbr title="Tennessine">Ts</abbr>
           </li>
-          <li class="element unknown" eneg="na">
+          <li class="element unknown" amass="294" eneg="NA">
             <abbr title="Oganesson">Og</abbr>
           </li>
         </ol>
