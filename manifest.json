@@ -9,9 +9,9 @@
       "sizes": "128x128"
     }
   ],
-  "start_url": "/?source=pwa",
-  "background_color": "#FC5185",
+  "start_url": "/atomic-lab",
+  "background_color": "#364F6B",
   "display": "standalone",
   "scope": "/",
-  "theme_color": "#3367D6"
+  "theme_color": "#FC5185"
 }
