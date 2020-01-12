@@ -403,10 +403,9 @@ onbeforeunload = function (e) {
 const PRECACHE = 'precache-v1';
 const RUNTIME = 'runtime';
 const PRECACHE_URLS = [
-  'index.html',
-  './',
-  'main.css',
-  'script.js'
+  "index.html",
+  "main.css",
+  "script.js"
 ];
 
 self.addEventListener('install', event => {
