@@ -68,7 +68,7 @@
 #rack-dialog>div {
 	margin: auto;
 	display: flex;
-	background: white;
+	background: #fff;
 	border-radius: 25px;
 	z-index: 1;
 	border: 4px solid #000;
@@ -78,14 +78,20 @@
 
 #periodic-table {
 	display: grid;
-	grid-column-gap: 2px;
-	grid-row-gap: 2px;
 	padding: 0 40px 0;
 	margin: 40px 0 20px;
 	overflow: auto;
 	position: relative;
+	list-style-type: none;
 }
 
+#periodic-table>.element {
+	border: 1px solid #fff;
+}
+
+#periodic-table>.element:hover {
+	border: 1px solid #000;
+}
 
 #close {
 	width: 30px;
@@ -192,7 +198,7 @@
 	position: relative;
 	justify-content: center;
 	align-items: center;
-	background: rgb(91, 194, 234);
+	background: #5BC2EA;
 	font-weight: bold;
 	min-height: 40px;
 	font-family: 'Open Sans Condensed', sans-serif;
@@ -204,11 +210,10 @@
 	border-radius: 50%;
 	display: flex;
 	margin: auto;
-	background: rgb(91, 194, 234);
 	box-shadow: inset 0 0 0 2px #000, 0 0 0 1px #000;
 }
 
-#periodic-table>li:before {
+#periodic-table>.element:before {
 	counter-increment: element;
 	content: counter(element);
 	position: absolute;
@@ -216,6 +221,30 @@
 	left: 3px;
 	font-size: 12px;
 	font-weight: lighter;
+}
+
+#closeup {
+	width: 100%;
+	min-height: 100%;
+	background: #e8e8e8;
+	grid-column: 4 / 6;
+	grid-row: 1 / 3;
+	border: 3px solid #000;
+	display: flex;
+	flex-direction: column;
+	padding: 8px;
+	justify-content: space-between;
+	position: absolute;
+}
+
+#atomic-symbol {
+	font-weight: bold;
+	font-size: 32px;
+}
+
+#atomic-name {
+	font-size: 14px;
+	font-style: italic;
 }
 
 .element abbr {
@@ -240,11 +269,11 @@
 	grid-column-start: 4;
 }
 
-#periodic-table>li:nth-child(n+58):nth-last-child(n+48) {
+#periodic-table>.element:nth-child(n+59):nth-last-child(n+48) {
 	grid-row-start: 8;
 }
 
-#periodic-table>li:nth-child(n+90):nth-last-child(n+16) {
+#periodic-table>.element:nth-child(n+91):nth-last-child(n+16) {
 	grid-row-start: 9;
 }
 
@@ -255,54 +284,54 @@
 	grid-column: 1 / 4;
 }
 
-li.noble-gas {
-	background: rgb(234, 218, 36);
+.element.noble-gas {
+	background: #EADA24;
 }
 
-li.nonmetal {
-	background: rgb(234, 179, 127);
+.element.nonmetal {
+	background: #EAB37F;
 }
 
-li.alkali {
-	background: hsl(326, 52%, 84%);
+.element.alkali {
+	background: #F7AAC0;
 }
 
-li.alkaline {
-	background: hsl(120, 52%, 84%);
+.element.alkaline {
+	background: #C1EBC1;
 }
 
-li.unknown {
-	background: hsl(210, 2%, 73%);
+.element.unknown {
+	background: #B9BABC;
 }
 
-li.lanthanide {
-	background: hsl(183, 54%, 84%);
+.element.lanthanide {
+	background: #b19cd9;
 }
 
-li.actinide {
-	background: hsl(82, 60%, 56%);
+.element.actinide {
+	background: #A1D24B;
 }
 
-li.metalloid {
-	background: hsl(142, 60%, 56%);
+.element.metalloid {
+	background: #4BD27D;
 }
 
 @media all and (min-width: 1320px) {
-	#periodic-table>li {
+	#periodic-table>.element {
 		width: 60px;
 		height: 60px;
 	}
 }
 
 @media all and (max-width: 1320px) and (min-width: 950px) {
-	#periodic-table>li {
+	#periodic-table>.element {
 		width: 40px;
 		height: 40px;
 	}
 }
 
 @media all and (max-width: 1320px) {
-	#periodic-table>li:before {
+	#periodic-table>.element:before {
 		font-size: 0;
 	}
 
@@ -313,6 +342,23 @@ li.metalloid {
 	#main > .element {
 		width: 60px;
 		height: 60px;
+	}
+
+	#closeup {
+		grid-column: 4 / 7;
+		grid-row: 1 / 3;
+	}
+
+	#atomic-mass, #atomic-number {
+		font-size: 14px;
+	}
+
+	#atomic-symbol {
+		font-size: 28px;
+	}
+
+	#atomic-name {
+		font-size: 12px;
 	}
 }
 
@@ -327,17 +373,17 @@ li.metalloid {
 	#periodic-table {
 		grid-template-columns: repeat( 8, 1fr);
 	}
-	#periodic-table>li abbr {
+	#periodic-table>.element abbr {
 		font-size: 0;
 	}
-	#periodic-table>li abbr:after {
+	#periodic-table>.element abbr:after {
 		content: attr(title);
 		font-size: 16px;
 	}
-	ol#periodic-table>li:nth-child(n+58):nth-last-child(n+48) {
+	ol#periodic-table>.element:nth-child(n+58):nth-last-child(n+48) {
 		grid-row-start: auto;
 	}
-	ol#periodic-table>li:nth-child(n+90):nth-last-child(n+16) {
+	ol#periodic-table>.element:nth-child(n+90):nth-last-child(n+16) {
 		grid-row-start: auto;
 	}
 	ol#periodic-table:before {
@@ -405,7 +451,7 @@ body[overlay="on"]>.element {
 	z-index: 2;
 	position: fixed;
 	padding: 0;
-	background: white;
+	background: #fff;
 	border: 1px solid #aaa;
 	width: 175px;
 	box-shadow: 4px 4px rgba(0, 0, 0, 0.2);
