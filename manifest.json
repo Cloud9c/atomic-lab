@@ -14,7 +14,7 @@
       "sizes": "180x180"
     }
   ],
-  "start_url": "../atomic-lab.html",
+  "start_url": "../atomic-lab",
   "background_color": "#364F6B",
   "display": "standalone",
   "scope": "/",
