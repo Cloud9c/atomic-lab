@@ -348,7 +348,7 @@
 
 @media all and (max-width: 1320px) {
 	#periodic-table>.element:before {
-		font-size: 0;
+		content: none;
 	}
 
 	.element abbr {
@@ -379,6 +379,10 @@
 }
 
 @media all and (max-width: 949px) {
+	#closeup {
+		display: none;
+	}
+
 	#helium,
 	#boron,
 	#aluminium,
@@ -389,8 +393,8 @@
 	#periodic-table {
 		grid-template-columns: repeat( 8, 1fr);
 	}
-	#periodic-table>.element abbr {
-		font-size: 0;
+	#periodic-table>.element abbr span {
+		display: none;
 	}
 	#periodic-table>.element abbr:after {
 		content: attr(title);
