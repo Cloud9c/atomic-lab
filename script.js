@@ -3,16 +3,15 @@
 var hoverElement, animate;
 
 window.addEventListener('load', (event) => {
-	var slot = localStorage.getItem("slot").split(";");
-	var main = localStorage.getItem("main").split("`");
+	if (localStorage[0]){
+		var slot = localStorage.getItem("slot").split(";");
+		var main = localStorage.getItem("main").split("`");
 
-	if (slot === null)
-		return;
-
-	for (var i = 0; i < 9; i++)
-		document.getElementsByClassName("slot")[i].innerHTML = slot[i];
-	for (var i = 0; i < main.length; i++)
-		document.getElementById("main").innerHTML += main[i];
+		for (var i = 0; i < 9; i++)
+			document.getElementsByClassName("slot")[i].innerHTML = slot[i];
+		for (var i = 0; i < main.length; i++)
+			document.getElementById("main").innerHTML += main[i];
+	}
 });
 
 function mouseDrag(x, y) {
