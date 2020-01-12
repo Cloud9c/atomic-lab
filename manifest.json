@@ -1,0 +1,17 @@
+{
+  "short_name": "Atomic Lab",
+  "name": "Atomic Lab",
+  "description": "Simulate molecular interactions with Atomic Lab - all 118 elements available!",
+  "icons": [
+    {
+      "src": "favicon.png",
+      "type": "image/png",
+      "sizes": "128x128"
+    }
+  ],
+  "start_url": "?source=pwa",
+  "background_color": "#FC5185",
+  "display": "standalone",
+  "scope": "/",
+  "theme_color": "#3367D6"
+}
