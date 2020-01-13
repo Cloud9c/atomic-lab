@@ -1,5 +1,3 @@
-var CACHE = "cache-and-update";
-
 self.addEventListener("install", function(evt) {
   console.log("The service worker is being installed.");
 
@@ -13,19 +11,19 @@ self.addEventListener("fetch", function(evt) {
 });
 
 function precache() {
-  return caches.open(CACHE).then(function (cache) {
+  return caches.open("cache-and-update").then(function (cache) {
     return cache.addAll([
-      "/index.html",
-      "/asset",
-      "/script.js",
-      "/main.css",
-      "/manifest.json"
+      "./index.html",
+      "./asset",
+      "./script.js",
+      "./main.css",
+      "./manifest.json"
     ]);
   });
 }
 
 function fromCache(request) {
-  return caches.open(CACHE).then(function (cache) {
+  return caches.open("cache-and-update").then(function (cache) {
     return cache.match(request).then(function (matching) {
       return matching || Promise.reject("no-match");
     });
@@ -33,7 +31,7 @@ function fromCache(request) {
 }
 
 function update(request) {
-  return caches.open(CACHE).then(function (cache) {
+  return caches.open("cache-and-update").then(function (cache) {
     return fetch(request).then(function (response) {
       return cache.put(request, response);
     });
