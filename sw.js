@@ -16,7 +16,14 @@ function precache() {
       "index.html",
       "script.js",
       "main.css",
-      "manifest.json"
+      "manifest.json",
+      "apple-icon.png",
+      "cursor-auto.png",
+      "cursor-drag-clicked.png",
+      "cursor-pointer-clicked.png",
+      "cursor-pointer.png",
+      "cursor-drag.png",
+      "favicon.png"
     ]);
   });
 }
