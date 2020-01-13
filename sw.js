@@ -15,8 +15,7 @@ self.addEventListener('fetch', function(evt) {
             caches.open(CACHE_NAME)
               .then(cache => cache.put(evt.request, cacheCopy))
             return response;
-          })
-          .catch(() => caches.match(offlinePage));
+          });
         return cached || networked;
       })
     )
