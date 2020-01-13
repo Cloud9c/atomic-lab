@@ -6,8 +6,8 @@
     <meta name="Description" content="Simulate molecular interactions with Atomic Lab - all 118 elements available!">
     <meta name="theme-color" content="#317EFB"/>
     <title>Atomic Lab</title>
-    <link rel="shortcut icon" href="favicon.png" type="image/x-icon">
-    <link rel="apple-touch-icon" href="favicon.png">
+    <link rel="shortcut icon" href="assets/favicon.png" type="image/x-icon">
+    <link rel="apple-touch-icon" href="assets/apple-icon.png">
     <link rel="manifest" href="manifest.json">
     <style>
       #rack-dialog {
@@ -589,5 +589,12 @@
     </div>
     <div id="snackbar">Place at least 2 atoms on the Lab!</div>
     <script async src="script.js" type="text/javascript"></script>
+    <script>
+      if (!navigator.serviceWorker.controller) {
+         navigator.serviceWorker.register("/sw.js").then(function(reg) {
+             console.log("Service worker has been registered for scope: " + reg.scope);
+         });
+      }
+    </script>
   </body>
 </html>
