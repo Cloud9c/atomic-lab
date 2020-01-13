@@ -13,11 +13,11 @@ self.addEventListener("fetch", function(evt) {
 function precache() {
   return caches.open("cache-and-update").then(function (cache) {
     return cache.addAll([
-      "./index.html",
-      "./asset",
-      "./script.js",
-      "./main.css",
-      "./manifest.json"
+      "index.html",
+      "asset",
+      "script.js",
+      "main.css",
+      "manifest.json"
     ]);
   });
 }
