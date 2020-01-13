@@ -23,7 +23,7 @@ function precache() {
       "assets/cursor-pointer-clicked.png",
       "assets/cursor-pointer.png",
       "assets/cursor-drag.png",
-      "assets/favicon.png"
+      "assets/favicon.ico"
     ]);
   });
 }
