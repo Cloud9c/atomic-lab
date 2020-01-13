@@ -13,17 +13,17 @@ self.addEventListener("fetch", function(evt) {
 function precache() {
   return caches.open("cache-and-update").then(function (cache) {
     return cache.addAll([
-      "index.html",
-      "script.js",
-      "main.css",
-      "manifest.json",
-      "assets/apple-icon.png",
-      "assets/cursor-auto.png",
-      "assets/cursor-drag-clicked.png",
-      "assets/cursor-pointer-clicked.png",
-      "assets/cursor-pointer.png",
-      "assets/cursor-drag.png",
-      "assets/favicon.png"
+      "./index.html",
+      "./script.js",
+      "./main.css",
+      "./manifest.json",
+      "./assets/apple-icon.png",
+      "./assets/cursor-auto.png",
+      "./assets/cursor-drag-clicked.png",
+      "./assets/cursor-pointer-clicked.png",
+      "./assets/cursor-pointer.png",
+      "./assets/cursor-drag.png",
+      "./assets/favicon.png"
     ]);
   });
 }
