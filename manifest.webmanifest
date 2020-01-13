@@ -4,6 +4,11 @@
   "description": "Simulate molecular interactions with Atomic Lab - all 118 elements available!",
   "icons": [
     {
+      "src": "assets/icon.png",
+      "type": "image/png",
+      "sizes": "180x180"
+    },
+    {
       "src": "assets/splash.png",
       "type": "image/png",
       "sizes": "512x512"
