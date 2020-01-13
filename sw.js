@@ -12,7 +12,7 @@ self.addEventListener('fetch', function(evt) {
         var networked = fetch(evt.request)
           .then((response) => {
             let cacheCopy = response.clone()
-            caches.open(CACHE_NAME)
+            caches.open("cache-and-update")
               .then(cache => cache.put(evt.request, cacheCopy))
             return response;
           });
