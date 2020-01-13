@@ -401,6 +401,5 @@ onbeforeunload = function (e) {
 };
 
 if ('serviceWorker' in navigator) {
-	navigator.serviceWorker.register('service-worker.js');
-	navigator.serviceWorker.ready.then(reload);
+	navigator.serviceWorker.register('sw.js');
 }
