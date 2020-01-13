@@ -13,6 +13,7 @@ self.addEventListener("fetch", function(evt) {
 function precache() {
   return caches.open("cache-and-update").then(function (cache) {
     return cache.addAll([
+      "/",
       "index.html",
       "script.js",
       "main.css",
