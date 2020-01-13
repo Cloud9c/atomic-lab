@@ -400,8 +400,7 @@ onbeforeunload = function (e) {
 	localStorage.setItem("main", main);
 };
 
-if('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('/atomic-lab/script.js', {
-    scope: '/'
-  });
+if ('serviceWorker' in navigator) {
+	navigator.serviceWorker.register('service-worker.js');
+	navigator.serviceWorker.ready.then(reload);
 }
