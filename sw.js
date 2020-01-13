@@ -17,13 +17,13 @@ function precache() {
       "script.js",
       "main.css",
       "manifest.json",
-      "apple-icon.png",
-      "cursor-auto.png",
-      "cursor-drag-clicked.png",
-      "cursor-pointer-clicked.png",
-      "cursor-pointer.png",
-      "cursor-drag.png",
-      "favicon.png"
+      "assets/apple-icon.png",
+      "assets/cursor-auto.png",
+      "assets/cursor-drag-clicked.png",
+      "assets/cursor-pointer-clicked.png",
+      "assets/cursor-pointer.png",
+      "assets/cursor-drag.png",
+      "assets/favicon.png"
     ]);
   });
 }
