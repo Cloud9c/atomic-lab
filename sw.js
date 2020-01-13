@@ -17,6 +17,7 @@ function precache() {
       "script.js",
       "main.css",
       "manifest.webmanifest",
+      "sw.js",
       "assets/icon.png",
       "assets/cursor-auto.png",
       "assets/cursor-drag-clicked.png",
