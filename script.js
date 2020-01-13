@@ -401,7 +401,7 @@ onbeforeunload = function (e) {
 };
 
 if('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('/serviceworker.js', {
+  navigator.serviceWorker.register('/atomic-lab/serviceworker.js', {
     scope: '/'
   });
 }
