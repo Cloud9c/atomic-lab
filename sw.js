@@ -16,7 +16,7 @@ function precache() {
       "./index.html",
       "./script.js",
       "./main.css",
-      "./manifest.json",
+      "./manifest.webmanifest",
       "./assets/apple-icon.png",
       "./assets/cursor-auto.png",
       "./assets/cursor-drag-clicked.png",
