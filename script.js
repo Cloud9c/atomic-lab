@@ -69,17 +69,15 @@ function followCursor(target, diffX, diffY) {
         };
 
         var mouseUpMultiple = function() {
-            target.style.cursor = "";
             for (var i = 0; i < document.getElementsByClassName("selected").length; i++) {
                 document.getElementsByClassName("selected")[i].style.boxShadow = "";
-                // document.getElementsByClassName("selected")[0].classList.remove("selected");
             }
             document.getElementById("main").removeEventListener("mouseup", mouseUpMultiple, false);
             document.getElementById("main").removeEventListener("mousemove", mouseMoveMultiple, false);
         };
 
         for (var i = 0; i < document.getElementsByClassName("selected").length; i++)
-            document.getElementsByClassName("selected")[i].style.boxShadow = "5px 5px 0 rgba(0, 0, 0, 0.5), inset 0 0 0 2px #000, 0 0 0 1px #000";
+            document.getElementsByClassName("selected")[i].style.boxShadow = "0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23)";
 
         document.getElementById("main").addEventListener("mousemove", mouseMoveMultiple);
         document.getElementById("main").addEventListener("mouseup", mouseUpMultiple);
@@ -92,7 +90,6 @@ function followCursor(target, diffX, diffY) {
         var mouseUp = function() {
             // target.classList.remove("selected");
             target.style.boxShadow = "";
-            target.style.cursor = "";
             document.getElementById("main").removeEventListener("mouseup", mouseUp, false);
             document.getElementById("main").removeEventListener("mousemove", mouseMove, false);
         };
@@ -101,7 +98,7 @@ function followCursor(target, diffX, diffY) {
             document.getElementsByClassName("selected")[0].classList.remove("selected");
 
         target.classList.add("selected");
-        target.style.boxShadow = "5px 5px 0 rgba(0, 0, 0, 0.5), inset 0 0 0 2px #000, 0 0 0 1px #000";
+        target.style.boxShadow = "0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23)";
         document.getElementById("main").addEventListener("mousemove", mouseMove);
         document.getElementById("main").addEventListener("mouseup", mouseUp);
     }
@@ -117,7 +114,7 @@ function toggleMenu(command, e) {
 
 function sliderAdjust(target) {
     function mouseMove(e) {
-        var pos = e.pageY - 148;
+        var pos = e.pageY - 141;
         if (pos < -7)
             pos = -7;
         else if (pos > 93)
@@ -135,7 +132,6 @@ function sliderAdjust(target) {
     function mouseUp(e) {
         document.body.removeEventListener("mouseup", mouseUp, false);
         document.body.removeEventListener("mousemove", mouseMove, false);
-        document.body.style.cursor = "";
         var changePX = document.getElementById("slider-thumb").offsetTop;
         document.getElementById("slider-thumb").style.top = changePX + "px";
         document.getElementById("slider").style.background = "linear-gradient(#e8e8e8 " + changePX + "%, #3fc1c9 " + changePX + "%)";
@@ -333,7 +329,6 @@ document.getElementById("main").addEventListener("mousedown", function(e) {
             document.getElementById("main").appendChild(e.target);
 
             followCursor(e.target, diffX, diffY);
-            e.target.style.cursor = "url(assets/cursor-drag-clicked.png), pointer";
         } else
             mouseDrag(e.pageX, e.pageY);
     }
@@ -352,9 +347,12 @@ document.addEventListener("mousedown", function(e) {
 document.getElementById("slider").addEventListener("mousedown", function(e) {
     if (e.target.id === "slider-thumb") {
         sliderAdjust(e.target);
-        document.body.style.cursor = "url(assets/cursor-drag-clicked.png), pointer";
     } else {
         var pos = e.pageY - 148;
+        if (pos < -7)
+            pos = -7;
+        else if (pos > 93)
+            pos = 93;
         document.getElementById("slider").style.background = "linear-gradient(#e8e8e8 " + pos + "%, #3fc1c9 " + pos + "%)";
         document.getElementById("slider-thumb").style.top = pos + "px";
     }
@@ -362,6 +360,7 @@ document.getElementById("slider").addEventListener("mousedown", function(e) {
 
 dragula([document.getElementById("periodic-table"), document.getElementById("main"), document.getElementsByClassName("slot")[0], document.getElementsByClassName("slot")[1], document.getElementsByClassName("slot")[2], document.getElementsByClassName("slot")[3], document.getElementsByClassName("slot")[4], document.getElementsByClassName("slot")[5], document.getElementsByClassName("slot")[6], document.getElementsByClassName("slot")[7], document.getElementsByClassName("slot")[8]], {
     copy: function(el, source) {
+        console.log(el.id !== "closeup")
         return source !== document.getElementById("main");
     },
     accepts: function(el, target) {
@@ -370,7 +369,7 @@ dragula([document.getElementById("periodic-table"), document.getElementById("mai
         return target !== document.getElementById("periodic-table");
     },
     moves: function(el, source, handle, sibling) {
-        return source !== document.getElementById("main");
+        return source !== document.getElementById("main") && el.id !== "closeup";
     }}).on("drop", function(el, target, source, sibling) {
     if (target != null && target.classList.contains("slot")) {
         target.classList.add("pulse");

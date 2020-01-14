@@ -1,39 +1,9 @@
-@font-face {
-  font-family: 'Open Sans';
-  font-style: normal;
-  font-weight: 400;
-  font-display: swap;
-  src: local('Open Sans Regular'), local('OpenSans-Regular'), url(https://fonts.gstatic.com/s/opensans/v17/mem8YaGs126MiZpBA-UFVZ0b.woff2) format('woff2');
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
-}
-
-@font-face {
-  font-family: 'Open Sans Condensed';
-  font-style: normal;
-  font-weight: 300;
-  font-display: swap;
-  src: local('Open Sans Condensed Light'), local('OpenSansCondensed-Light'), url(https://fonts.gstatic.com/s/opensanscondensed/v14/z7NFdQDnbTkabZAIOl9il_O6KJj73e7Ff1GhDuXMRw.woff2) format('woff2');
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
-}
-
 :focus {
 	outline: none;
 }
 
-#slider-thumb:active {
-	cursor: url(assets/cursor-drag-clicked.png), pointer;
-}
-
 #slider-thumb:hover, #slider-thumb:active {
 	box-shadow: 0px 0px 0 2px #fff;
-}
-
-.icon-button:hover {
-	cursor: url(assets/cursor-pointer.png), pointer;
-}
-
-.icon-button:active {
-	cursor: url(assets/cursor-pointer-clicked.png), pointer;
 }
 
 #rack:focus svg {
@@ -61,12 +31,11 @@
 
 #periodic-table::-webkit-scrollbar-thumb:hover {
 	background-color: #80868b;
-	cursor: url(assets/cursor-pointer.png), pointer;
+	cursor: pointer;
 }
 
 #periodic-table::-webkit-scrollbar-thumb:active {
 	background-color: #5f6368;
-	cursor: url(assets/cursor-pointer-clicked.png), pointer;
 }
 
 #periodic-table::-webkit-scrollbar-button {
@@ -78,14 +47,15 @@
 	width: 75px;
 	height: 75px;
 	border-radius: 50%;
-	box-shadow: inset 0 0 0 2px #000, 0 0 0 1px #000;
+	box-shadow: 0px 2px 1px -1px rgba(0, 0, 0, 0.2), 0px 1px 1px 0px rgba(0, 0, 0, 0.14), 0px 1px 3px 0px rgba(0,0,0,.12);
+	border: 1px solid rgba(0,0,0,.12);
 }
 
 #rack-dialog>div {
 	margin: auto;
 	display: flex;
 	background: #fff;
-	border-radius: 25px;
+	border-radius: 4px;
 	z-index: 1;
   box-shadow: 0 11px 15px -7px rgba(0,0,0,.2), 0 24px 38px 3px rgba(0,0,0,.14), 0 9px 46px 8px rgba(0,0,0,.12);
 	max-height: calc(100% - 60px);
@@ -93,12 +63,12 @@
 }
 
 #periodic-table {
-	display: grid;
-	padding: 0 40px 0;
-	margin: 40px 0 20px;
-	overflow: auto;
-	position: relative;
-	list-style-type: none;
+    display: grid;
+    margin: 32px;
+    padding: 0 0 0 0;
+    overflow: auto;
+    position: relative;
+    list-style-type: none;
 }
 
 #periodic-table>.element {
@@ -106,34 +76,27 @@
 }
 
 #periodic-table>.element:hover {
-	border: 1px solid #000;
+	border: 1px solid rgba(0,0,0,.12);f
 }
 
 #close {
-	width: 30px;
-	height: 30px;
-	background: #fc5185;
+	width: 40px;
+	height: 40px;
 	z-index: 1;
 	border-radius: 50%;
-	margin: -10px -10px 0 auto;
 	display: flex;
 	transition: transform .2s;
-	border: 4px solid #000;
 	position: absolute;
 	right: 0;
+	cursor: pointer;
+}
+
+#close:hover, #close:focus {
+	transform: rotate(90deg);
 }
 
 #close > svg {
 	margin: auto
-}
-
-#close:hover {
-	cursor: url(assets/cursor-pointer.png), pointer;
-	transform: rotate(90deg);
-}
-
-#close:active {
-	cursor: url(assets/cursor-pointer-clicked.png), pointer;
 }
 
 #overlay {
@@ -212,21 +175,20 @@
 .element {
 	display: flex;
 	position: relative;
-	justify-content: center;
-	align-items: center;
 	background: #5BC2EA;
-	font-weight: bold;
+	font-weight: thin;
 	min-height: 40px;
-	font-family: 'Open Sans Condensed', sans-serif;
+	font-family: 'Roboto', sans-serif;
+	cursor: grab;
+	transition: box-shadow 150ms linear;
 }
 
 .slot>li {
-	width: 100%;
-	height: 100%;
+	width: calc(100% - 2px);
+	height: calc(100% - 2px);
 	border-radius: 50%;
 	display: flex;
 	margin: auto;
-	box-shadow: inset 0 0 0 2px #000, 0 0 0 1px #000;
 }
 
 #periodic-table>.element:before {
@@ -264,7 +226,7 @@
 }
 
 .element abbr {
-	font-size: 35px;
+	font-size: 28px;
 	text-decoration: none;
 	margin: auto;
 	user-select: none;
@@ -352,7 +314,7 @@
 	}
 
 	.element abbr {
-		font-size: 25px;
+		font-size: 20px;
 	}
 
 	#main > .element {
@@ -391,7 +353,7 @@
 		grid-column-start: auto;
 	}
 	#periodic-table {
-		grid-template-columns: repeat( 8, 1fr);
+		grid-template-columns: repeat( 7, 1fr);
 	}
 	#periodic-table>.element abbr span {
 		display: none;
@@ -424,28 +386,27 @@
 	}
 }
 
+@media all and (max-width: 750px) {
+	#periodic-table {
+		grid-template-columns: repeat( 4, 1fr);
+	}
+}
+
 @media all and (max-width: 650px) {
 	#periodic-table {
 		grid-template-columns: repeat( 4, 1fr);
 	}
 }
 
-.element:hover {
-	cursor: url(assets/cursor-drag.png), pointer;
-}
-
-.element:active,
-{
-	cursor: url(assets/cursor-drag-clicked.png), pointer;
-}
-
-body[overlay="off"]>.element {
-	box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.5), inset 0 0 0 2px #000, 0 0 0 1px #000;
+body>.element {
+	width: 75px !important;
+	height: 75px !important;
 	border-radius: 50%;
 }
 
-body[overlay="on"]>.element {
-	box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.5);
+body>.element {
+	box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
+	border: 1px solid rgba(0,0,0,.12);
 }
 
 #main>.gu-transit {
@@ -456,7 +417,7 @@ body[overlay="on"]>.element {
 	position: fixed !important;
 	margin: 0 !important;
 	z-index: 2 !important;
-	cursor: url(assets/cursor-drag-clicked.png), pointer !important;
+	cursor: grabbing !important;
 }
 
 .gu-hide {
@@ -472,10 +433,11 @@ body[overlay="on"]>.element {
 	position: fixed;
 	padding: 0;
 	background: #fff;
-	border: 1px solid #aaa;
+	border-radius: 4px;
 	width: 175px;
 	box-shadow: 4px 4px rgba(0, 0, 0, 0.2);
 	display: none;
+	box-shadow: 0 5px 5px -3px rgba(0,0,0,.2), 0 8px 10px 1px rgba(0,0,0,.14), 0 3px 14px 2px rgba(0,0,0,.12);
 }
 
 #menu-options {
@@ -486,17 +448,16 @@ body[overlay="on"]>.element {
 }
 
 #menu-options li {
-	font-size: 14px;
-	padding: 10px 20px;
-	cursor: url(assets/cursor-pointer.png), pointer;
+	font-size: 16px;
+	padding: 0 16px;
+	height: 48px;
+	display: flex;
+	align-items: center;
+	cursor: pointer;
 }
 
 #menu-options li:hover {
-	background: rgba(0, 0, 0, 0.1);
-}
-
-#menu-options li:active:hover {
-	cursor: url(assets/cursor-pointer-clicked.png), pointer;
+	background: #f5f5f5;
 }
 
 #drag-area {
