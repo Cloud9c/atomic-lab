@@ -78,13 +78,15 @@ function followCursor(target, diffX, diffY) {
             for (var i = 0; i < document.getElementsByClassName("selected").length; i++) {
                 document.getElementsByClassName("selected")[i].style.boxShadow = "";
             }
+	    target.style.cursor = "";
             document.getElementById("main").removeEventListener("mouseup", mouseUpMultiple);
             document.getElementById("main").removeEventListener("mousemove", mouseMoveMultiple);
         };
 
         for (var i = 0; i < document.getElementsByClassName("selected").length; i++)
             document.getElementsByClassName("selected")[i].style.boxShadow = "0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23)";
-
+	
+	target.style.cursor = "grabbing";
         document.getElementById("main").addEventListener("mousemove", mouseMoveMultiple);
         document.getElementById("main").addEventListener("mouseup", mouseUpMultiple);
     } else {
@@ -95,6 +97,7 @@ function followCursor(target, diffX, diffY) {
 
         var mouseUp = function() {
             target.style.boxShadow = "";
+	    target.style.cursor = "";
             document.getElementById("main").removeEventListener("mouseup", mouseUp);
             document.getElementById("main").removeEventListener("mousemove", mouseMove);
         };
@@ -104,6 +107,7 @@ function followCursor(target, diffX, diffY) {
 
         target.classList.add("selected");
         target.style.boxShadow = "0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23)";
+	target.style.cursor = "grabbing";
         document.getElementById("main").addEventListener("mousemove", mouseMove);
         document.getElementById("main").addEventListener("mouseup", mouseUp);
     }
