@@ -9,7 +9,7 @@ document.head.insertBefore(a,document.head.firstChild));p()}"complete"===documen
 var hoverElement, animate;
 
 window.addEventListener('load', function (e) {
-	if (localStorage.getItem("slot") === null){
+	if (localStorage.getItem("slot") !== null){
 		var slot = localStorage.getItem("slot").split(";");
 		var main = localStorage.getItem("slot").split("`");
 
