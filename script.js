@@ -11,7 +11,7 @@ var hoverElement, animate;
 window.addEventListener('load', function (e) {
 	if (localStorage.getItem("slot") !== null){
 		var slot = localStorage.getItem("slot").split(";");
-		var main = localStorage.getItem("slot").split("`");
+		var main = localStorage.getItem("main").split("`");
 
 		for (var i = 0; i < 9; i++)
 			document.getElementsByClassName("slot")[i].innerHTML = slot[i];
