@@ -48,8 +48,8 @@ function mouseDrag(x, y) {
         target.style.display = "none";
         target.style.width = "0";
         target.style.height = "0";
-        document.removeEventListener("mouseup", mouseUp, false);
-        document.removeEventListener("mousemove", mouseMove, false);
+        document.removeEventListener("mouseup", mouseUp);
+        document.removeEventListener("mousemove", mouseMove);
     }
 
     document.addEventListener("mousemove", mouseMove);
@@ -78,8 +78,8 @@ function followCursor(target, diffX, diffY) {
             for (var i = 0; i < document.getElementsByClassName("selected").length; i++) {
                 document.getElementsByClassName("selected")[i].style.boxShadow = "";
             }
-            document.getElementById("main").removeEventListener("mouseup", mouseUpMultiple, false);
-            document.getElementById("main").removeEventListener("mousemove", mouseMoveMultiple, false);
+            document.getElementById("main").removeEventListener("mouseup", mouseUpMultiple);
+            document.getElementById("main").removeEventListener("mousemove", mouseMoveMultiple);
         };
 
         for (var i = 0; i < document.getElementsByClassName("selected").length; i++)
@@ -94,10 +94,9 @@ function followCursor(target, diffX, diffY) {
         };
 
         var mouseUp = function() {
-            // target.classList.remove("selected");
             target.style.boxShadow = "";
-            document.getElementById("main").removeEventListener("mouseup", mouseUp, false);
-            document.getElementById("main").removeEventListener("mousemove", mouseMove, false);
+            document.getElementById("main").removeEventListener("mouseup", mouseUp);
+            document.getElementById("main").removeEventListener("mousemove", mouseMove);
         };
 
         while (document.getElementsByClassName("selected")[0])
@@ -136,8 +135,8 @@ function sliderAdjust(target) {
     }
 
     function mouseUp(e) {
-        document.body.removeEventListener("mouseup", mouseUp, false);
-        document.body.removeEventListener("mousemove", mouseMove, false);
+        document.body.removeEventListener("mouseup", mouseUp);
+        document.body.removeEventListener("mousemove", mouseMove);
         var changePX = document.getElementById("slider-thumb").offsetTop;
         document.getElementById("slider-thumb").style.top = changePX + "px";
         document.getElementById("slider").style.background = "linear-gradient(#e8e8e8 " + changePX + "%, #3fc1c9 " + changePX + "%)";
@@ -169,7 +168,6 @@ document.getElementById("overlay").addEventListener("click", overlayToggle);
 document.getElementById("close").addEventListener("click", overlayToggle);
 
 document.getElementById("react").addEventListener("click", function() {
-
 	if (animate){
 		cancelAnimationFrame(animate);
 		animate = undefined;
@@ -190,9 +188,18 @@ document.getElementById("react").addEventListener("click", function() {
 	} else {
 		document.getElementById("snackbar").className = "show";
 		document.getElementById("snackbar").style.transition = "all 0.5s"
-		setTimeout( function(){
+
+		var autoClose = setTimeout(function(){
 			document.getElementById("snackbar").classList = "";
 		}, 3000);
+
+        function closeSnackBar() {
+            clearTimeout(autoClose);
+            document.getElementById("snackbar").classList = "";
+            document.getElementById("snackbar-close").removeEventListener("click", closeSnackBar);
+        }
+
+        var closeNow = document.getElementById("snackbar-close").addEventListener("click", closeSnackBar);
 	}
 
     function frame() {

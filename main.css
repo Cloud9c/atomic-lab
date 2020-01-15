@@ -488,13 +488,12 @@ body>.element {
 }
 
 #snackbar {
-	width: 250px;
-	margin: 0 auto;
-	background: #fff;
-	border: 4px #FC5185 solid;
-	text-align: center;
+	width: fit-content;
+	margin: auto;
+	background: #333;
+	color: #D5D5D5;
 	border-radius: 4px;
-	padding: 16px;
+	padding: 8px 0 8px 16px;
 	position: fixed;
 	z-index: 1;
 	left: 0;
@@ -502,6 +501,30 @@ body>.element {
 	top: 0;
 	opacity: 0;
 	visibility: hidden;
+	display: flex;
+	justify-content: center;
+	box-shadow: 0 3px 5px -1px rgba(0,0,0,.2), 0 6px 10px 0 rgba(0,0,0,.14), 0 1px 18px 0 rgba(0,0,0,.12);
+}
+
+#snackbar * {
+	display: flex;
+	align-items: center;
+}
+
+#snackbar-close{
+	margin: 0 12px 0 16px;
+	padding: 8px;
+	border-radius: 50%;
+	position: relative;
+	cursor: pointer;
+}
+
+#snackbar-close:hover {
+	background: rgba(255, 255, 255, 0.08);
+}
+
+#snackbar-close:active {
+	background: rgba(255, 255, 255, 0.12);
 }
 
 #snackbar.show {
