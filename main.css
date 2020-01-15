@@ -211,6 +211,10 @@
 	transition: box-shadow 150ms linear;
 }
 
+.element:active {
+	cursor: grabbing !important;
+}
+
 .slot>li {
 	width: calc(100% - 2px);
 	height: calc(100% - 2px);
@@ -445,7 +449,6 @@ body>.element {
 	position: fixed !important;
 	margin: 0 !important;
 	z-index: 2 !important;
-	cursor: grabbing !important;
 }
 
 .gu-hide {
