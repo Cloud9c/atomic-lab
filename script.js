@@ -349,7 +349,7 @@ if (mobile) {
             if (e.timeStamp - startTime > 500){
                 openMenu(e);
             }
-            document.removeEventListener("touchend", longPress, {passive: true});
+            document.removeEventListener("touchend", longPress);
         }
 
         document.addEventListener("touchend", longPress, {passive: true});
