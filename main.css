@@ -204,11 +204,13 @@
 	display: flex;
 	position: relative;
 	background: #5BC2EA;
-	font-weight: thin;
 	min-height: 40px;
 	font-family: 'Roboto', sans-serif;
-	cursor: grab;
 	transition: box-shadow 150ms linear;
+}
+
+#main .element {
+	cursor: pointer;
 }
 
 .slot>li {
@@ -488,7 +490,7 @@ body>.element {
 	font-size: 16px;
 }
 
-#menu-options li {
+.option {
 	font-size: 16px;
 	padding: 0 16px;
 	height: 48px;
@@ -497,7 +499,11 @@ body>.element {
 	cursor: pointer;
 }
 
-#menu-options li:hover {
+.option:empty {
+   height: 0;
+}
+
+.option:hover {
 	background: #f5f5f5;
 }
 

@@ -41,8 +41,9 @@ function mouseDrag(x, y) {
             target.style.top = e.pageY + "px";
 
         for (var i = 0; i < document.getElementById("main").getElementsByClassName("element").length; i++) {
-            var rect = document.getElementById("main").getElementsByClassName("element")[i].getBoundingClientRect();
-            if (document.elementFromPoint(rect.left, rect.top) !== null && (document.elementFromPoint(rect.left, rect.top).id === "drag-area" || document.elementFromPoint(rect.right, rect.top).id === "drag-area" || document.elementFromPoint(rect.left, rect.bottom).id === "drag-area" || document.elementFromPoint(rect.right, rect.bottom).id === "drag-area"))
+            var rect1 = document.getElementById("main").getElementsByClassName("element")[i].getBoundingClientRect();
+            var rect2 = document.getElementById("drag-area").getBoundingClientRect();
+            if (rect1.left < rect2.right && rect1.right > rect2.left && rect1.top < rect2.bottom && rect1.bottom > rect2.top)
                 document.getElementById("main").getElementsByClassName("element")[i].classList.add("selected");
             else
                 document.getElementById("main").getElementsByClassName("element")[i].classList.remove("selected");
@@ -93,8 +94,7 @@ function followCursor(target, diffX, diffY) {
 
         for (var i = 0; i < document.getElementsByClassName("selected").length; i++)
             document.getElementsByClassName("selected")[i].style.boxShadow = "0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23)";
-	
-        target.style.cursor = "grabbing";
+
         if (mobile) {
             document.getElementById("main").addEventListener("touchmove", mouseMoveMultiple);
             document.getElementById("main").addEventListener("touchend", mouseUpMultiple);
@@ -115,12 +115,7 @@ function followCursor(target, diffX, diffY) {
             document.getElementById("main").removeEventListener("mousemove", mouseMove);
         };
 
-        while (document.getElementsByClassName("selected")[0])
-            document.getElementsByClassName("selected")[0].classList.remove("selected");
-
-        target.classList.add("selected");
         target.style.boxShadow = "0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23)";
-	target.style.cursor = "grabbing";
         document.getElementById("main").addEventListener("mousemove", mouseMove);
         document.getElementById("main").addEventListener("mouseup", mouseUp);
     }
@@ -138,7 +133,8 @@ function openMenu(e) {
     e.preventDefault();
     if (e.target !== document.getElementById("menu")) {
         if (e.target.id === "hotbar" || e.target.classList.contains("slot") || e.target.id === "main" || (e.target.classList.contains("element") && (e.target.parentElement.classList.contains("slot") || e.target.parentElement.id === "main"))) {
-            document.getElementById("menu-option").innerHTML = "";
+            document.getElementsByClassName("option")[0].innerHTML = "";
+            document.getElementsByClassName("option")[1].innerHTML = "";
 
             if (mobile){
                 e.pageX = e.changedTouches[0].pageX;
@@ -156,23 +152,23 @@ function openMenu(e) {
                 document.getElementById("menu").style.top = e.pageY + "px";
 
             if (e.target.id === "hotbar") {
-                document.getElementById("menu-option").innerHTML = "Clear All Slots";
-                document.getElementById("menu-option").onclick = function() {
+                document.getElementsByClassName("option")[0].innerHTML = "Clear All Slots";
+                document.getElementsByClassName("option")[0].onclick = function() {
                     for (var i = 0; i < 9; i++)
                         document.getElementsByClassName("slot")[i].innerHTML = "";
                     toggleMenu("hide", e.target);
                 };
                 toggleMenu("show", e.target);
             } else if (e.target.parentElement.classList.contains("slot")) {
-                document.getElementById("menu-option").innerHTML = "Clear Slot";
-                document.getElementById("menu-option").onclick = function() {
+                document.getElementsByClassName("option")[0].innerHTML = "Clear Slot";
+                document.getElementsByClassName("option")[0].onclick = function() {
                     e.target.parentElement.innerHTML = "";
                     toggleMenu("hide", e.target);
                 };
                 toggleMenu("show", e.target);
             } else if (e.target.id === "main") {
-                document.getElementById("menu-option").innerHTML = "Clear Lab";
-                document.getElementById("menu-option").onclick = function() {
+                document.getElementsByClassName("option")[0].innerHTML = "Clear Lab";
+                document.getElementsByClassName("option")[0].onclick = function() {
                     while (document.getElementById("main").getElementsByClassName("element")[0])
                         document.getElementById("main").removeChild(document.getElementById("main").lastChild);
                     toggleMenu("hide", e.target);
@@ -180,15 +176,16 @@ function openMenu(e) {
                 toggleMenu("show", e.target);
             } else if (e.target.parentElement.id === "main" && e.target.classList.contains("element")) {
                 if (document.getElementsByClassName("selected")[1]) {
-                    document.getElementById("menu-option").innerHTML = "Remove Atoms";
-                    document.getElementById("menu-option").onclick = function() {
+                    document.getElementsByClassName("option")[0].innerHTML = "Remove Atoms";
+                    document.getElementsByClassName("option")[0].onclick = function() {
                         while (document.getElementsByClassName("selected")[0])
                             document.getElementById("main").removeChild(document.getElementsByClassName("selected")[0]);
                         toggleMenu("hide", e.target);
                     };
                 } else {
-                    document.getElementById("menu-option").innerHTML = "Remove Atom";
-                    document.getElementById("menu-option").onclick = function() {
+                    document.getElementsByClassName("option")[0].innerHTML = "Duplicate Atom";
+                    document.getElementsByClassName("option")[1].innerHTML = "Remove Atom";
+                    document.getElementsByClassName("option")[1].onclick = function() {
                         document.getElementById("main").removeChild(e.target);
                         toggleMenu("hide", e.target);
                     };
@@ -352,7 +349,7 @@ if (mobile) {
             if (e.timeStamp - startTime > 500){
                 openMenu(e);
             }
-            document.removeEventListener("touchend", longPress)
+            document.removeEventListener("touchend", longPress);
         }
 
         document.addEventListener("touchend", longPress);
@@ -418,12 +415,8 @@ if (mobile) {
     });
 
     document.addEventListener("mousedown", function(e) {
-        if (e.target.id !== "menu-option") {
+        if (!e.target.classList.contains("option")) {
             toggleMenu("hide", e.target);
-
-            if (document.getElementsByClassName("selected")[0] && document.getElementsByClassName("selected")[0].boxShadow === "")
-                while (document.getElementsByClassName("selected")[0])
-                    document.getElementsByClassName("selected")[0].classList.remove("selected");
         }
     });
 
@@ -437,7 +430,21 @@ if (mobile) {
 
                 document.getElementById("main").appendChild(e.target);
 
-                followCursor(e.target, diffX, diffY);
+                if (document.getElementsByClassName("selected").length < 2)
+                    while (document.getElementsByClassName("selected")[0])
+                        document.getElementsByClassName("selected")[0].classList.remove("selected");
+                e.target.classList.add("selected");
+
+                var holdWait = setTimeout(function(){
+                    followCursor(e.target, diffX, diffY);
+                }, 75);
+
+                function stillHolding() {
+                    clearTimeout(holdWait);
+                    document.getElementById("main").removeEventListener("mouseup", stillHolding);
+                }
+
+                document.getElementById("main").addEventListener("mouseup", stillHolding);
             } else
                 mouseDrag(e.pageX, e.pageY);
         }
@@ -484,7 +491,7 @@ onbeforeunload = function (e) {
 
 	localStorage.setItem("slot", slot);
 	localStorage.setItem("main", main);
-};
+}
 
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', function() {
