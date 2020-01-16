@@ -19,11 +19,6 @@ function precache() {
       "manifest.webmanifest",
       "sw.js",
       "assets/icon.png",
-      "assets/cursor-auto.png",
-      "assets/cursor-drag-clicked.png",
-      "assets/cursor-pointer-clicked.png",
-      "assets/cursor-pointer.png",
-      "assets/cursor-drag.png",
       "assets/splash.png",
       "assets/favicon.ico"
     ]);
