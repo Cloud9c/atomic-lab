@@ -7,6 +7,7 @@ function p(){var c=c||document;c.addEventListener("mousedown",function(a){0===a.
 document.head.insertBefore(a,document.head.firstChild));p()}"complete"===document.readyState?c():window.addEventListener("load",c)})();}())
 
 var hoverElement, animate;
+var mobile = false;
 
 window.addEventListener('load', function (e) {
 	if (localStorage.getItem("slot") !== null){
@@ -19,6 +20,10 @@ window.addEventListener('load', function (e) {
 			document.getElementById("main").innerHTML += main[i];
 	}
 });
+
+if (typeof window.orientation !== "undefined" || navigator.userAgent.indexOf('IEMobile') !== -1) {
+    mobile = true;
+}
 
 function mouseDrag(x, y) {
     var target = document.getElementById("drag-area");
@@ -62,6 +67,9 @@ function followCursor(target, diffX, diffY) {
             var oldLeft = target.offsetLeft;
             var oldTop = target.offsetTop;
 
+            if (mobile)
+                var e = e.touches[0];
+
             target.style.left = e.pageX - diffX + "px";
             target.style.top = e.pageY - diffY + "px";
 
@@ -78,7 +86,7 @@ function followCursor(target, diffX, diffY) {
             for (var i = 0; i < document.getElementsByClassName("selected").length; i++) {
                 document.getElementsByClassName("selected")[i].style.boxShadow = "";
             }
-	    target.style.cursor = "";
+	       target.style.cursor = "";
             document.getElementById("main").removeEventListener("mouseup", mouseUpMultiple);
             document.getElementById("main").removeEventListener("mousemove", mouseMoveMultiple);
         };
@@ -86,9 +94,14 @@ function followCursor(target, diffX, diffY) {
         for (var i = 0; i < document.getElementsByClassName("selected").length; i++)
             document.getElementsByClassName("selected")[i].style.boxShadow = "0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23)";
 	
-	target.style.cursor = "grabbing";
-        document.getElementById("main").addEventListener("mousemove", mouseMoveMultiple);
-        document.getElementById("main").addEventListener("mouseup", mouseUpMultiple);
+        target.style.cursor = "grabbing";
+        if (mobile) {
+            document.getElementById("main").addEventListener("touchmove", mouseMoveMultiple);
+            document.getElementById("main").addEventListener("touchend", mouseUpMultiple);
+        } else {
+            document.getElementById("main").addEventListener("mousemove", mouseMoveMultiple);
+            document.getElementById("main").addEventListener("mouseup", mouseUpMultiple);
+        }
     } else {
         var mouseMove = function(e) {
             target.style.left = e.pageX - diffX + "px";
@@ -121,32 +134,71 @@ function toggleMenu(command, e) {
     document.getElementById("menu").style.display = command === "show" ? "block" : "none";
 }
 
-function sliderAdjust(target) {
-    function mouseMove(e) {
-        var pos = e.pageY - 141;
-        if (pos < -7)
-            pos = -7;
-        else if (pos > 93)
-            pos = 93;
-        else if (pos < 53 && pos > 33)
-            pos = 43;
-        target.style.top = pos + "px";
+function openMenu(e) {
+    e.preventDefault();
+    if (e.target !== document.getElementById("menu")) {
+        if (e.target.id === "hotbar" || e.target.classList.contains("slot") || e.target.id === "main" || (e.target.classList.contains("element") && (e.target.parentElement.classList.contains("slot") || e.target.parentElement.id === "main"))) {
+            document.getElementById("menu-option").innerHTML = "";
 
-        if (pos < 0)
-            pos = 0;
+            if (mobile){
+                e.pageX = e.changedTouches[0].pageX;
+                e.pageY = e.changedTouches[0].pageY;
+            }
 
-        document.getElementById("slider").style.background = "linear-gradient(#e8e8e8 " + pos + "%, #3fc1c9 " + pos + "%)";
+            if (e.pageX + 175 > document.body.clientWidth)
+                document.getElementById("menu").style.left = document.body.clientWidth - 175 + "px";
+            else
+                document.getElementById("menu").style.left = e.pageX + "px";
+
+            if (e.pageY + 47 > document.body.clientHeight)
+                document.body.clientHeight - 47 + "px";
+            else
+                document.getElementById("menu").style.top = e.pageY + "px";
+
+            if (e.target.id === "hotbar") {
+                document.getElementById("menu-option").innerHTML = "Clear All Slots";
+                document.getElementById("menu-option").onclick = function() {
+                    for (var i = 0; i < 9; i++)
+                        document.getElementsByClassName("slot")[i].innerHTML = "";
+                    toggleMenu("hide", e.target);
+                };
+                toggleMenu("show", e.target);
+            } else if (e.target.parentElement.classList.contains("slot")) {
+                document.getElementById("menu-option").innerHTML = "Clear Slot";
+                document.getElementById("menu-option").onclick = function() {
+                    e.target.parentElement.innerHTML = "";
+                    toggleMenu("hide", e.target);
+                };
+                toggleMenu("show", e.target);
+            } else if (e.target.id === "main") {
+                document.getElementById("menu-option").innerHTML = "Clear Lab";
+                document.getElementById("menu-option").onclick = function() {
+                    while (document.getElementById("main").getElementsByClassName("element")[0])
+                        document.getElementById("main").removeChild(document.getElementById("main").lastChild);
+                    toggleMenu("hide", e.target);
+                };
+                toggleMenu("show", e.target);
+            } else if (e.target.parentElement.id === "main" && e.target.classList.contains("element")) {
+                if (document.getElementsByClassName("selected")[1]) {
+                    document.getElementById("menu-option").innerHTML = "Remove Atoms";
+                    document.getElementById("menu-option").onclick = function() {
+                        while (document.getElementsByClassName("selected")[0])
+                            document.getElementById("main").removeChild(document.getElementsByClassName("selected")[0]);
+                        toggleMenu("hide", e.target);
+                    };
+                } else {
+                    document.getElementById("menu-option").innerHTML = "Remove Atom";
+                    document.getElementById("menu-option").onclick = function() {
+                        document.getElementById("main").removeChild(e.target);
+                        toggleMenu("hide", e.target);
+                    };
+                    e.target.classList.add("selected");
+                }
+
+                toggleMenu("show", e.target);
+            }
+        }
     }
-
-    function mouseUp(e) {
-        document.body.removeEventListener("mouseup", mouseUp);
-        document.body.removeEventListener("mousemove", mouseMove);
-        var changePX = document.getElementById("slider-thumb").offsetTop;
-        document.getElementById("slider-thumb").style.top = changePX + "px";
-        document.getElementById("slider").style.background = "linear-gradient(#e8e8e8 " + changePX + "%, #3fc1c9 " + changePX + "%)";
-    }
-    document.body.addEventListener("mousemove", mouseMove);
-    document.body.addEventListener("mouseup", mouseUp);
 }
 
 function overlayToggle() {
@@ -162,6 +214,59 @@ function overlayToggle() {
             document.getElementById("rack-dialog").style.display = "none";
             document.getElementById("overlay").style.display = "none";
         }, 500)
+    }
+}
+
+function sliderAdjust(e) {
+    if (e.target.id === "slider-thumb") {
+        var target = e.target;
+        function mouseMove(e) {
+            if (mobile)
+                var e = e.touches[0];
+
+            var pos = e.pageY - 141;
+
+            if (pos < -7)
+                pos = -7;
+            else if (pos > 93)
+                pos = 93;
+            else if (pos < 53 && pos > 33)
+                pos = 43;
+            target.style.top = pos + "px";
+
+            if (pos < 0)
+                pos = 0;
+
+            document.getElementById("slider").style.background = "linear-gradient(#e8e8e8 " + pos + "%, #3fc1c9 " + pos + "%)";
+        }
+
+        function mouseUp(e) {
+            if (mobile) {
+                document.body.removeEventListener("touchmove", mouseMove);
+                document.body.removeEventListener("touchend", mouseUp);
+            } else {
+                document.body.removeEventListener("mouseup", mouseUp);
+                document.body.removeEventListener("mousemove", mouseMove);
+            }
+            var changePX = document.getElementById("slider-thumb").offsetTop;
+            document.getElementById("slider-thumb").style.top = changePX + "px";
+            document.getElementById("slider").style.background = "linear-gradient(#e8e8e8 " + changePX + "%, #3fc1c9 " + changePX + "%)";
+        }
+        if (mobile) {
+            document.body.addEventListener("touchmove", mouseMove);
+            document.body.addEventListener("touchend", mouseUp);
+        } else {
+            document.body.addEventListener("mousemove", mouseMove);
+            document.body.addEventListener("mouseup", mouseUp);
+        }
+    } else {
+        var pos = e.pageY - 148;
+        if (pos < -7)
+            pos = -7;
+        else if (pos > 93)
+            pos = 93;
+        document.getElementById("slider").style.background = "linear-gradient(#e8e8e8 " + pos + "%, #3fc1c9 " + pos + "%)";
+        document.getElementById("slider-thumb").style.top = pos + "px";
     }
 }
 
@@ -218,127 +323,10 @@ document.getElementById("react").addEventListener("click", function() {
     }
 });
 
-document.addEventListener("mouseover", function(e) {
-    if (event.target.classList.contains("element")){
-        hoverElement = event.target;
-        if (event.target.parentElement.id === "periodic-table") {
-        	document.getElementById("atomic-number").innerHTML = [].indexOf.call(document.getElementById("periodic-table").getElementsByClassName("element"), event.target) + 1;
-        	document.getElementById("atomic-symbol").innerHTML = event.target.children[0].innerHTML;
-        	document.getElementById("atomic-name").innerHTML = event.target.children[0].getAttribute("title");
-        	document.getElementById("atomic-mass").innerHTML = event.target.getAttribute("amass");
-        	if (event.target.getAttribute("amass") % 1 === 0)
-        		document.getElementById("atomic-mass").innerHTML = "(" + document.getElementById("atomic-mass").innerHTML + ")";
-        	document.getElementById("closeup").style.background = getComputedStyle(event.target).background;
-        } else {
-        	document.getElementById("atomic-number").innerHTML = "Atomic No.";
-        	document.getElementById("atomic-symbol").innerHTML = "Symbol";
-        	document.getElementById("atomic-name").innerHTML = "Name";
-        	document.getElementById("atomic-mass").innerHTML = "Atomic Mass";
-        	document.getElementById("closeup").style.background = "";
-        }
-    }
-    else {
-		hoverElement = undefined;
-    	document.getElementById("atomic-number").innerHTML = "Atomic No.";
-    	document.getElementById("atomic-symbol").innerHTML = "Symbol";
-    	document.getElementById("atomic-name").innerHTML = "Name";
-    	document.getElementById("atomic-mass").innerHTML = "Atomic Mass";
-    	document.getElementById("closeup").style.background = "";      	
-    }
-});
+if (mobile) { 
+    document.getElementById("slider").addEventListener("touchstart", sliderAdjust);
 
-document.addEventListener("keydown", function(e) {
-    if (/^[1-9]$/i.test(event.key) && typeof hoverElement !== "undefined") {
-        var clone = hoverElement.cloneNode(true);
-        clone.removeAttribute("style");
-        clone.classList.remove("gu-mirror");
-
-        document.getElementsByClassName("slot")[event.key - 1].innerHTML = "";
-        document.getElementsByClassName("slot")[event.key - 1].appendChild(clone);
-        document.getElementsByClassName("slot")[event.key - 1].classList.add("pulse");
-        setTimeout(function(e) {
-            document.getElementsByClassName("slot")[e].classList.remove("pulse");
-        }, 500, event.key - 1);
-    } else if (event.key === "ArrowUp" || event.key === "ArrowDown") {
-        var pos = document.getElementById("slider-thumb").offsetTop;
-        if (event.key === "ArrowUp")
-            pos -= 2;
-        else
-            pos += 2;
-
-        if (pos < -7)
-            pos = -7;
-        else if (pos > 93)
-            pos = 93;
-        document.getElementById("slider-thumb").style.top = pos + "px";
-        document.getElementById("slider").style.background = "linear-gradient(#e8e8e8 " + pos + "%, #3fc1c9 " + pos + "%)";
-    }
-});
-
-document.addEventListener("contextmenu", function(e) {
-    e.preventDefault();
-    if (e.target !== document.getElementById("menu")) {
-        if (e.target.id === "hotbar" || e.target.classList.contains("slot") || e.target.id === "main" || (e.target.classList.contains("element") && (e.target.parentElement.classList.contains("slot") || e.target.parentElement.id === "main"))) {
-            document.getElementById("menu-option").innerHTML = "";
-
-            if (e.pageX + 175 > document.body.clientWidth)
-            	document.getElementById("menu").style.left = document.body.clientWidth - 175 + "px";
-            else
-            	document.getElementById("menu").style.left = e.pageX + "px";
-
-            if (e.pageY + 47 > document.body.clientHeight)
-            	document.body.clientHeight - 47 + "px";
-           	else
-				document.getElementById("menu").style.top = e.pageY + "px";
-
-			if (e.target.id === "hotbar") {
-			    document.getElementById("menu-option").innerHTML = "Clear All Slots";
-			    document.getElementById("menu-option").onclick = function() {
-			        for (var i = 0; i < 9; i++)
-			            document.getElementsByClassName("slot")[i].innerHTML = "";
-			        toggleMenu("hide", e.target);
-			    };
-			    toggleMenu("show", e.target);
-			} else if (e.target.parentElement.classList.contains("slot")) {
-			    document.getElementById("menu-option").innerHTML = "Clear Slot";
-			    document.getElementById("menu-option").onclick = function() {
-			        e.target.parentElement.innerHTML = "";
-			        toggleMenu("hide", e.target);
-			    };
-			    toggleMenu("show", e.target);
-			} else if (e.target.id === "main") {
-			    document.getElementById("menu-option").innerHTML = "Clear Lab";
-			    document.getElementById("menu-option").onclick = function() {
-			        while (document.getElementById("main").getElementsByClassName("element")[0])
-			            document.getElementById("main").removeChild(document.getElementById("main").lastChild);
-			        toggleMenu("hide", e.target);
-			    };
-			    toggleMenu("show", e.target);
-			} else if (e.target.parentElement.id === "main" && e.target.classList.contains("element")) {
-			    if (document.getElementsByClassName("selected")[1]) {
-			        document.getElementById("menu-option").innerHTML = "Remove Atoms";
-			        document.getElementById("menu-option").onclick = function() {
-			            while (document.getElementsByClassName("selected")[0])
-			                document.getElementById("main").removeChild(document.getElementsByClassName("selected")[0]);
-			            toggleMenu("hide", e.target);
-			        };
-			    } else {
-			        document.getElementById("menu-option").innerHTML = "Remove Atom";
-			        document.getElementById("menu-option").onclick = function() {
-			            document.getElementById("main").removeChild(e.target);
-			            toggleMenu("hide", e.target);
-			        };
-			        e.target.classList.add("selected");
-			    }
-
-			    toggleMenu("show", e.target);
-			}
-        }
-    }
-});
-
-document.getElementById("main").addEventListener("mousedown", function(e) {
-    if (e.button === 0) {
+    document.getElementById("main").addEventListener("touchstart", function(e) {
         if (e.target.classList.contains("element")) {
             var diffX = e.pageX - e.target.offsetLeft;
             var diffY = e.pageY - e.target.offsetTop;
@@ -346,34 +334,117 @@ document.getElementById("main").addEventListener("mousedown", function(e) {
             document.getElementById("main").appendChild(e.target);
 
             followCursor(e.target, diffX, diffY);
-        } else
-            mouseDrag(e.pageX, e.pageY);
-    }
-});
+        }
+    });
 
-document.addEventListener("mousedown", function(e) {
-    if (e.target.id !== "menu-option") {
-        toggleMenu("hide", e.target);
+    document.addEventListener("touchstart", function(e) {
+        if (e.target.id !== "menu-option") {
+            toggleMenu("hide", e.target);
 
-        if (document.getElementsByClassName("selected")[0] && document.getElementsByClassName("selected")[0].boxShadow === "")
-            while (document.getElementsByClassName("selected")[0])
-                document.getElementsByClassName("selected")[0].classList.remove("selected");
-    }
-});
+            if (document.getElementsByClassName("selected")[0] && document.getElementsByClassName("selected")[0].boxShadow === "")
+                while (document.getElementsByClassName("selected")[0])
+                    document.getElementsByClassName("selected")[0].classList.remove("selected");
+        }
 
-document.getElementById("slider").addEventListener("mousedown", function(e) {
-    if (e.target.id === "slider-thumb") {
-        sliderAdjust(e.target);
-    } else {
-        var pos = e.pageY - 148;
-        if (pos < -7)
-            pos = -7;
-        else if (pos > 93)
-            pos = 93;
-        document.getElementById("slider").style.background = "linear-gradient(#e8e8e8 " + pos + "%, #3fc1c9 " + pos + "%)";
-        document.getElementById("slider-thumb").style.top = pos + "px";
-    }
-});
+        var startTime = e.timeStamp;
+
+        function longPress(e) {
+            if (e.timeStamp - startTime > 500){
+                openMenu(e);
+            }
+            document.removeEventListener("touchend", longPress)
+        }
+
+        document.addEventListener("touchend", longPress);
+    });
+
+    document.addEventListener("contextmenu", function(e) {e.preventDefault();});
+} else {
+    document.addEventListener("mouseover", function(e) {
+        if (event.target.classList.contains("element")){
+            hoverElement = event.target;
+            if (event.target.parentElement.id === "periodic-table") {
+                document.getElementById("atomic-number").innerHTML = [].indexOf.call(document.getElementById("periodic-table").getElementsByClassName("element"), event.target) + 1;
+                document.getElementById("atomic-symbol").innerHTML = event.target.children[0].innerHTML;
+                document.getElementById("atomic-name").innerHTML = event.target.children[0].getAttribute("title");
+                document.getElementById("atomic-mass").innerHTML = event.target.getAttribute("amass");
+                if (event.target.getAttribute("amass") % 1 === 0)
+                    document.getElementById("atomic-mass").innerHTML = "(" + document.getElementById("atomic-mass").innerHTML + ")";
+                document.getElementById("closeup").style.background = getComputedStyle(event.target).background;
+            } else {
+                document.getElementById("atomic-number").innerHTML = "Atomic No.";
+                document.getElementById("atomic-symbol").innerHTML = "Symbol";
+                document.getElementById("atomic-name").innerHTML = "Name";
+                document.getElementById("atomic-mass").innerHTML = "Atomic Mass";
+                document.getElementById("closeup").style.background = "";
+            }
+        }
+        else {
+            hoverElement = undefined;
+            document.getElementById("atomic-number").innerHTML = "Atomic No.";
+            document.getElementById("atomic-symbol").innerHTML = "Symbol";
+            document.getElementById("atomic-name").innerHTML = "Name";
+            document.getElementById("atomic-mass").innerHTML = "Atomic Mass";
+            document.getElementById("closeup").style.background = "";       
+        }
+    });
+
+    document.addEventListener("keydown", function(e) {
+        if (/^[1-9]$/i.test(event.key) && typeof hoverElement !== "undefined") {
+            var clone = hoverElement.cloneNode(true);
+            clone.removeAttribute("style");
+            clone.classList.remove("gu-mirror");
+
+            document.getElementsByClassName("slot")[event.key - 1].innerHTML = "";
+            document.getElementsByClassName("slot")[event.key - 1].appendChild(clone);
+            document.getElementsByClassName("slot")[event.key - 1].classList.add("pulse");
+            setTimeout(function(e) {
+                document.getElementsByClassName("slot")[e].classList.remove("pulse");
+            }, 500, event.key - 1);
+        } else if (event.key === "ArrowUp" || event.key === "ArrowDown") {
+            var pos = document.getElementById("slider-thumb").offsetTop;
+            if (event.key === "ArrowUp")
+                pos -= 2;
+            else
+                pos += 2;
+
+            if (pos < -7)
+                pos = -7;
+            else if (pos > 93)
+                pos = 93;
+            document.getElementById("slider-thumb").style.top = pos + "px";
+            document.getElementById("slider").style.background = "linear-gradient(#e8e8e8 " + pos + "%, #3fc1c9 " + pos + "%)";
+        }
+    });
+
+    document.addEventListener("mousedown", function(e) {
+        if (e.target.id !== "menu-option") {
+            toggleMenu("hide", e.target);
+
+            if (document.getElementsByClassName("selected")[0] && document.getElementsByClassName("selected")[0].boxShadow === "")
+                while (document.getElementsByClassName("selected")[0])
+                    document.getElementsByClassName("selected")[0].classList.remove("selected");
+        }
+    });
+
+    document.getElementById("slider").addEventListener("mousedown", sliderAdjust);
+
+    document.getElementById("main").addEventListener("mousedown", function(e) {
+        if (e.button === 0) {
+            if (e.target.classList.contains("element")) {
+                var diffX = e.pageX - e.target.offsetLeft;
+                var diffY = e.pageY - e.target.offsetTop;
+
+                document.getElementById("main").appendChild(e.target);
+
+                followCursor(e.target, diffX, diffY);
+            } else
+                mouseDrag(e.pageX, e.pageY);
+        }
+    });
+
+    document.addEventListener("contextmenu", openMenu);
+}
 
 dragula([document.getElementById("periodic-table"), document.getElementById("main"), document.getElementsByClassName("slot")[0], document.getElementsByClassName("slot")[1], document.getElementsByClassName("slot")[2], document.getElementsByClassName("slot")[3], document.getElementsByClassName("slot")[4], document.getElementsByClassName("slot")[5], document.getElementsByClassName("slot")[6], document.getElementsByClassName("slot")[7], document.getElementsByClassName("slot")[8]], {
     copy: function(el, source) {

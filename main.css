@@ -327,6 +327,11 @@
 		width: 60px;
 		height: 60px;
 	}
+
+	body>.element {
+		width: 75px !important;
+		height: 75px !important;
+	}
 }
 
 @media all and (max-width: 1320px) and (min-width: 950px) {
@@ -366,6 +371,11 @@
 	#atomic-name {
 		font-size: 12px;
 	}
+
+	body>.element {
+		width: 60px !important;
+		height: 60px !important;
+	}
 }
 
 @media all and (max-width: 949px) {
@@ -382,6 +392,7 @@
 	}
 	#periodic-table {
 		grid-template-columns: repeat( 7, 1fr);
+		margin: 48px 16px 16px 16px;
 	}
 	#periodic-table>.element abbr span {
 		display: none;
@@ -412,6 +423,10 @@
 		width: 50px;
 		height: 50px;
 	}
+	body>.element {
+		width: 50px !important;
+		height: 50px !important;
+	}
 }
 
 @media all and (max-width: 750px) {
@@ -427,8 +442,6 @@
 }
 
 body>.element {
-	width: 75px !important;
-	height: 75px !important;
 	border-radius: 50%;
 }
 
@@ -442,23 +455,23 @@ body>.element {
 }
 
 .gu-mirror {
-	position: fixed !important;
-	margin: 0 !important;
-	z-index: 2 !important;
-	cursor: grabbing !important;
+	position: absolute;
+	margin: 0;
+	z-index: 2;
+	cursor: grabbing;
 }
 
 .gu-hide {
-	display: none !important;
+	display: none;
 }
 
 .gu-unselectable {
-	user-select: none !important;
+	user-select: none;
 }
 
 #menu {
 	z-index: 2;
-	position: fixed;
+	position: absolute;
 	padding: 0;
 	background: #fff;
 	border-radius: 4px;
@@ -503,7 +516,7 @@ body>.element {
 	color: #D5D5D5;
 	border-radius: 4px;
 	padding: 8px 0 8px 16px;
-	position: fixed;
+	position: absolute;
 	z-index: 1;
 	left: 0;
 	right: 0;
