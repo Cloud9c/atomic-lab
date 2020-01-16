@@ -321,7 +321,7 @@ document.getElementById("react").addEventListener("click", function() {
 });
 
 if (mobile) { 
-    document.getElementById("slider").addEventListener("touchstart", sliderAdjust);
+    document.getElementById("slider").addEventListener("touchstart", sliderAdjust, {passive: true});
 
     document.getElementById("main").addEventListener("touchstart", function(e) {
         if (e.target.classList.contains("element")) {
@@ -332,7 +332,7 @@ if (mobile) {
 
             followCursor(e.target, diffX, diffY);
         }
-    });
+    }, {passive: true});
 
     document.addEventListener("touchstart", function(e) {
         if (e.target.id !== "menu-option") {
@@ -349,13 +349,11 @@ if (mobile) {
             if (e.timeStamp - startTime > 500){
                 openMenu(e);
             }
-            document.removeEventListener("touchend", longPress);
+            document.removeEventListener("touchend", longPress, {passive: true});
         }
 
-        document.addEventListener("touchend", longPress);
-    });
-
-    document.addEventListener("contextmenu", function(e) {e.preventDefault();});
+        document.addEventListener("touchend", longPress, {passive: true});
+    }, {passive: true});
 } else {
     document.addEventListener("mouseover", function(e) {
         if (event.target.classList.contains("element")){
