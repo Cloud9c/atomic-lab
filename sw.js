@@ -1,6 +1,21 @@
+var cacheName = "cache-and-update";
+
 self.addEventListener("install", function(evt) {
   console.log("The service worker is being installed.");
-  evt.waitUntil(precache());
+  evt.waitUntil(caches.open(cacheName).then(function (cache) {
+    return cache.addAll(
+      [
+        "index.html",
+        "script.js",
+        "main.css",
+        "manifest.webmanifest",
+        "sw.js",
+        "assets/icon.png",
+        "assets/splash.png",
+        "assets/favicon.ico"
+      ]);
+    })
+  );
 });
 
 self.addEventListener("fetch", function(evt) {
@@ -9,24 +24,8 @@ self.addEventListener("fetch", function(evt) {
   evt.waitUntil(update(evt.request));
 });
 
-function precache() {
-  return caches.open("cache-and-update").then(function (cache) {
-    return cache.addAll([
-      "/",
-      "index.html",
-      "script.js",
-      "main.css",
-      "manifest.webmanifest",
-      "sw.js",
-      "assets/icon.png",
-      "assets/splash.png",
-      "assets/favicon.ico"
-    ]);
-  });
-}
-
 function fromCache(request) {
-  return caches.open("cache-and-update").then(function (cache) {
+  return caches.open(cacheName).then(function (cache) {
     return cache.match(request).then(function (matching) {
       return matching || Promise.reject("no-match");
     });
@@ -34,7 +33,7 @@ function fromCache(request) {
 }
 
 function update(request) {
-  return caches.open("cache-and-update").then(function (cache) {
+  return caches.open(cacheName).then(function (cache) {
     return fetch(request).then(function (response) {
       return cache.put(request, response);
     });
