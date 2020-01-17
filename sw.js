@@ -19,10 +19,13 @@ self.addEventListener("install", function(evt) {
   );
 });
 
-
+self.addEventListener('activate', event => {
+  event.waitUntil(self.clients.claim());
+});
 
 self.addEventListener("fetch", function(evt) {
   console.log("The service worker is serving the asset.");
+  
   evt.respondWith(caches.open(cacheName).then(function (cache) {
     return cache.match(evt.request).then(function (matching) {
       return matching || Promise.reject("no-match");
