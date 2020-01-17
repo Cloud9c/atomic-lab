@@ -8,15 +8,18 @@ self.addEventListener("install", function(evt) {
         "index.html",
         "script.js",
         "main.css",
-        "manifest.webmanifest",
         "sw.js",
         "assets/icon.png",
         "assets/splash.png",
         "assets/favicon.ico"
-      ]);
+      ]).then(function() {
+        self.skipWaiting();
+      });
     })
   );
 });
+
+
 
 self.addEventListener("fetch", function(evt) {
   console.log("The service worker is serving the asset.");
@@ -31,5 +34,4 @@ self.addEventListener("fetch", function(evt) {
       return cache.put(evt.request, response);
     });
   }));
-
 });
