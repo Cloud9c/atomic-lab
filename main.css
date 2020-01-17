@@ -201,7 +201,11 @@
 }
 
 #drag-area[style*="display: none"] ~ .element {
-  cursor: pointer;
+	cursor: pointer;
+}
+
+#periodic-table .element, .slot .element {
+	cursor: pointer;
 }
 
 .slot>li {
