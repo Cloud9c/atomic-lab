@@ -160,7 +160,7 @@ function toggleMenu(command, e) {
 
 function openMenu(e) {
   e.preventDefault();
-  if (e.target !== document.getElementById("menu")) {
+  if (!e.target.classList.contains("option") && !e.target.parentElement.classList.contains("option") && !e.target.parentElement.parentElement.classList.contains("option")) {
     document.getElementsByClassName("option")[0].innerHTML = "";
     document.getElementsByClassName("option")[1].innerHTML = "";
 
@@ -183,7 +183,7 @@ function openMenu(e) {
         toggleMenu("none", e);
       };
     } else if (e.target.id === "main") {
-      document.getElementsByClassName("option")[0].innerHTML = "Clear Lab";
+      document.getElementsByClassName("option")[0].innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" focusable="false" width="24px" height="24px" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><path d="M19 6.41L17.59 5L12 10.59L6.41 5L5 6.41L10.59 12L5 17.59L6.41 19L12 13.41L17.59 19L19 17.59L13.41 12L19 6.41z" fill="#626262"/></svg><span>Clear Lab</span>';
       document.getElementsByClassName("option")[0].onclick = function () {
         while (document.getElementById("main").getElementsByClassName("element")[0])
           document.getElementById("main").removeChild(document.getElementById("main").lastChild);
@@ -191,26 +191,34 @@ function openMenu(e) {
       };
     } else if (e.target.parentElement.id === "main" && e.target.classList.contains("element")) {
       if (document.getElementsByClassName("selected")[1]) {
-        document.getElementsByClassName("option")[0].innerHTML = "Duplicate Atoms";
+        document.getElementsByClassName("option")[0].innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" focusable="false" width="24px" height="24px" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><path d="M19 21H8V7h11m0-2H8a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2m-3-4H4a2 2 0 0 0-2 2v14h2V3h12V1z" fill="#656565"/></svg><span>Duplicate Atoms</span>';
         document.getElementsByClassName("option")[0].onclick = function () {
-          for (var i = 0; i < document.getElementsByClassName("selected"); i++) {
-            var original = document.getElementsByClassName("selected")[i];
-            console.log(original)
-            var clone = original.cloneNode(true);
-            // duplicate.style.left = duplicate.offsetLeft + getComputedStyle(duplicate).width + 8;
-            document.getElementById("main").appendChild(duplicate);
+          for (var i = 0; i < document.getElementsByClassName("selected").length; i++) {
+            var clone = document.getElementsByClassName("selected")[i].cloneNode(true);
+            clone.classList.remove("selected");
+            document.getElementById("main").appendChild(clone);
+            clone.style.left = clone.offsetLeft + clone.offsetWidth - 16 + "px";
+            clone.style.top = clone.offsetTop + clone.offsetHeight - 16 + "px";
           }
           toggleMenu("none", e);
         };
-        document.getElementsByClassName("option")[1].innerHTML = "Remove Atoms";
+        document.getElementsByClassName("option")[1].innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" focusable="false" width="24px" height="24px" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><path d="M9 3v1H4v2h1v13a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V6h1V4h-5V3H9M7 6h10v13H7V6m2 2v9h2V8H9m4 0v9h2V8h-2z" fill="#656565"/></svg><span>Remove Atoms</span>';
         document.getElementsByClassName("option")[1].onclick = function () {
           while (document.getElementsByClassName("selected")[0])
             document.getElementById("main").removeChild(document.getElementsByClassName("selected")[0]);
           toggleMenu("none", e);
         };
       } else {
-        document.getElementsByClassName("option")[0].innerHTML = "Duplicate Atom";
-        document.getElementsByClassName("option")[1].innerHTML = "Remove Atom";
+        document.getElementsByClassName("option")[0].innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" focusable="false" width="24px" height="24px" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><path d="M19 21H8V7h11m0-2H8a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2m-3-4H4a2 2 0 0 0-2 2v14h2V3h12V1z" fill="#656565"/></svg><span>Duplicate Atom</span>';
+        document.getElementsByClassName("option")[0].onclick = function () {
+          var clone = e.target.cloneNode(true);
+          clone.classList.remove("selected");
+          document.getElementById("main").appendChild(clone);
+          clone.style.left = clone.offsetLeft + clone.offsetWidth - 16 + "px";
+          clone.style.top = clone.offsetTop + clone.offsetHeight - 16 + "px";
+          toggleMenu("none", e);
+        };
+        document.getElementsByClassName("option")[1].innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" focusable="false" width="24px" height="24px" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><path d="M9 3v1H4v2h1v13a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V6h1V4h-5V3H9M7 6h10v13H7V6m2 2v9h2V8H9m4 0v9h2V8h-2z" fill="#656565"/></svg><span>Remove Atom</span>';
         document.getElementsByClassName("option")[1].onclick = function () {
           document.getElementById("main").removeChild(e.target);
           toggleMenu("none", e);
@@ -439,7 +447,7 @@ if (mobile) {
   });
 
   document.addEventListener("mousedown", function (e) {
-    if (!e.target.classList.contains("option") && document.getElementById("menu").style.display === "block") {
+    if (!e.target.classList.contains("option") && !e.target.parentElement.classList.contains("option") && !e.target.parentElement.parentElement.classList.contains("option") && document.getElementById("menu").style.display === "block") {
       toggleMenu("none", e);
     }
   });
