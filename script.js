@@ -170,28 +170,29 @@ function openMenu(e) {
     }
 
     if (e.target.id === "hotbar") {
-      document.getElementsByClassName("option")[0].innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" focusable="false" width="24px" height="24px" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><path d="M19 6.41L17.59 5L12 10.59L6.41 5L5 6.41L10.59 12L5 17.59L6.41 19L12 13.41L17.59 19L19 17.59L13.41 12L19 6.41z" fill="#626262"/></svg><span>Clear All Slots</span>';
+      document.getElementsByClassName("option")[0].innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" focusable="false" width="24px" height="24px" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><path d="M9 3v1H4v2h1v13a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V6h1V4h-5V3H9M7 6h10v13H7V6m2 2v9h2V8H9m4 0v9h2V8h-2z" fill="#656565"/></svg><span>Clear All Slots</span>';
       document.getElementsByClassName("option")[0].onclick = function () {
         for (var i = 0; i < 9; i++)
           document.getElementsByClassName("slot")[i].innerHTML = "";
         toggleMenu("none", e);
       };
     } else if (e.target.parentElement.classList.contains("slot")) {
-      document.getElementsByClassName("option")[0].innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" focusable="false" width="24px" height="24px" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><path d="M19 6.41L17.59 5L12 10.59L6.41 5L5 6.41L10.59 12L5 17.59L6.41 19L12 13.41L17.59 19L19 17.59L13.41 12L19 6.41z" fill="#626262"/></svg><span>Clear Slot</span>';
+      document.getElementsByClassName("option")[0].innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" focusable="false" width="24px" height="24px" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><path d="M9 3v1H4v2h1v13a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V6h1V4h-5V3H9M7 6h10v13H7V6m2 2v9h2V8H9m4 0v9h2V8h-2z" fill="#656565"/></svg><span>Clear Slot</span>';
       document.getElementsByClassName("option")[0].onclick = function () {
         e.target.parentElement.innerHTML = "";
         toggleMenu("none", e);
       };
     } else if (e.target.id === "main") {
-      document.getElementsByClassName("option")[0].innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" focusable="false" width="24px" height="24px" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><path d="M19 6.41L17.59 5L12 10.59L6.41 5L5 6.41L10.59 12L5 17.59L6.41 19L12 13.41L17.59 19L19 17.59L13.41 12L19 6.41z" fill="#626262"/></svg><span>Clear Lab</span>';
+      document.getElementsByClassName("option")[0].innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" focusable="false" width="24px" height="24px" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><path d="M9 3v1H4v2h1v13a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V6h1V4h-5V3H9M7 6h10v13H7V6m2 2v9h2V8H9m4 0v9h2V8h-2z" fill="#656565"/></svg><span>Clear Lab</span>';
       document.getElementsByClassName("option")[0].onclick = function () {
         while (document.getElementById("main").getElementsByClassName("element")[0])
           document.getElementById("main").removeChild(document.getElementById("main").lastChild);
         toggleMenu("none", e);
       };
     } else if (e.target.parentElement.id === "main" && e.target.classList.contains("element")) {
+      document.getElementsByClassName("option")[0].innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" focusable="false" width="24px" height="24px" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><path d="M19 21H8V7h11m0-2H8a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2m-3-4H4a2 2 0 0 0-2 2v14h2V3h12V1z" fill="#656565"/></svg><span>Duplicate</span>';
+      document.getElementsByClassName("option")[1].innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" focusable="false" width="24px" height="24px" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><path d="M9 3v1H4v2h1v13a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V6h1V4h-5V3H9M7 6h10v13H7V6m2 2v9h2V8H9m4 0v9h2V8h-2z" fill="#656565"/></svg><span>Remove</span>';
       if (document.getElementsByClassName("selected")[1]) {
-        document.getElementsByClassName("option")[0].innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" focusable="false" width="24px" height="24px" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><path d="M19 21H8V7h11m0-2H8a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2m-3-4H4a2 2 0 0 0-2 2v14h2V3h12V1z" fill="#656565"/></svg><span>Duplicate Atoms</span>';
         document.getElementsByClassName("option")[0].onclick = function () {
           for (var i = 0; i < document.getElementsByClassName("selected").length; i++) {
             var clone = document.getElementsByClassName("selected")[i].cloneNode(true);
@@ -202,14 +203,12 @@ function openMenu(e) {
           }
           toggleMenu("none", e);
         };
-        document.getElementsByClassName("option")[1].innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" focusable="false" width="24px" height="24px" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><path d="M9 3v1H4v2h1v13a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V6h1V4h-5V3H9M7 6h10v13H7V6m2 2v9h2V8H9m4 0v9h2V8h-2z" fill="#656565"/></svg><span>Remove Atoms</span>';
         document.getElementsByClassName("option")[1].onclick = function () {
           while (document.getElementsByClassName("selected")[0])
             document.getElementById("main").removeChild(document.getElementsByClassName("selected")[0]);
           toggleMenu("none", e);
         };
       } else {
-        document.getElementsByClassName("option")[0].innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" focusable="false" width="24px" height="24px" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><path d="M19 21H8V7h11m0-2H8a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2m-3-4H4a2 2 0 0 0-2 2v14h2V3h12V1z" fill="#656565"/></svg><span>Duplicate Atom</span>';
         document.getElementsByClassName("option")[0].onclick = function () {
           var clone = e.target.cloneNode(true);
           clone.classList.remove("selected");
@@ -218,7 +217,6 @@ function openMenu(e) {
           clone.style.top = clone.offsetTop + clone.offsetHeight - 16 + "px";
           toggleMenu("none", e);
         };
-        document.getElementsByClassName("option")[1].innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" focusable="false" width="24px" height="24px" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><path d="M9 3v1H4v2h1v13a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V6h1V4h-5V3H9M7 6h10v13H7V6m2 2v9h2V8H9m4 0v9h2V8h-2z" fill="#656565"/></svg><span>Remove Atom</span>';
         document.getElementsByClassName("option")[1].onclick = function () {
           document.getElementById("main").removeChild(e.target);
           toggleMenu("none", e);
