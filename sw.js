@@ -24,11 +24,12 @@ self.addEventListener("fetch", function(evt) {
     return cache.match(evt.request).then(function (matching) {
       return matching || Promise.reject("no-match");
     });
-  });
+  }));
 
   evt.waitUntil(caches.open(cacheName).then(function (cache) {
     return fetch(evt.request).then(function (response) {
       return cache.put(evt.request, response);
     });
-  });
+  }));
+
 });
