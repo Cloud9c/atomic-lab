@@ -194,20 +194,20 @@ function openMenu(e) {
       document.getElementsByClassName("option")[1].innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" focusable="false" width="24px" height="24px" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><path d="M9 3v1H4v2h1v13a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V6h1V4h-5V3H9M7 6h10v13H7V6m2 2v9h2V8H9m4 0v9h2V8h-2z" fill="#656565"/></svg><span>Remove</span>';
       if (document.getElementsByClassName("selected")[1]) {
         document.getElementsByClassName("option")[0].onclick = function () {
-          var switch = [];
+          var switcheroo = [];
           for (var i = 0; i < document.getElementsByClassName("selected").length; i++) {
             var clone = document.getElementsByClassName("selected")[i].cloneNode(true);
             clone.classList.remove("selected");
             document.getElementById("main").appendChild(clone);
             clone.style.left = clone.offsetLeft + 16 + "px";
             clone.style.top = clone.offsetTop + 16 + "px";
-            switch.push(clone, document.getElementsByClassName("selected")[i]);
+            switcheroo.push(clone, document.getElementsByClassName("selected")[i]);
           }
-          for (var i = 0; i < switch.length; i++) {
-            if (switch[i].classList.contains("selected"))
-              switch.classList.remove("selected");
+          for (var i = 0; i < switcheroo.length; i++) {
+            if (switcheroo[i].classList.contains("selected"))
+              switcheroo[i].classList.remove("selected");
             else
-              switch.classList.add("selected");
+              switcheroo[i].classList.add("selected");
           }
           toggleMenu("none", e);
         };
@@ -219,10 +219,10 @@ function openMenu(e) {
       } else {
         document.getElementsByClassName("option")[0].onclick = function () {
           var clone = e.target.cloneNode(true);
-          e.target.remove("selected");
           document.getElementById("main").appendChild(clone);
           clone.style.left = clone.offsetLeft + 16 + "px";
           clone.style.top = clone.offsetTop + 16 + "px";
+          e.target.classList.remove("selected");
           toggleMenu("none", e);
         };
         document.getElementsByClassName("option")[1].onclick = function () {
