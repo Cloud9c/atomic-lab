@@ -170,14 +170,14 @@ function openMenu(e) {
     }
 
     if (e.target.id === "hotbar") {
-      document.getElementsByClassName("option")[0].innerHTML = "Clear All Slots";
+      document.getElementsByClassName("option")[0].innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" focusable="false" width="24px" height="24px" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><path d="M19 6.41L17.59 5L12 10.59L6.41 5L5 6.41L10.59 12L5 17.59L6.41 19L12 13.41L17.59 19L19 17.59L13.41 12L19 6.41z" fill="#626262"/></svg><span>Clear All Slots</span>';
       document.getElementsByClassName("option")[0].onclick = function () {
         for (var i = 0; i < 9; i++)
           document.getElementsByClassName("slot")[i].innerHTML = "";
         toggleMenu("none", e);
       };
     } else if (e.target.parentElement.classList.contains("slot")) {
-      document.getElementsByClassName("option")[0].innerHTML = "Clear Slot";
+      document.getElementsByClassName("option")[0].innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" focusable="false" width="24px" height="24px" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><path d="M19 6.41L17.59 5L12 10.59L6.41 5L5 6.41L10.59 12L5 17.59L6.41 19L12 13.41L17.59 19L19 17.59L13.41 12L19 6.41z" fill="#626262"/></svg><span>Clear Slot</span>';
       document.getElementsByClassName("option")[0].onclick = function () {
         e.target.parentElement.innerHTML = "";
         toggleMenu("none", e);
