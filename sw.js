@@ -20,7 +20,7 @@ self.addEventListener("install", function(evt) {
 
 self.addEventListener("fetch", function(evt) {
   console.log("The service worker is serving the asset.");
-  evt.respondWith(return caches.open(cacheName).then(function (cache) {
+  evt.respondWith(caches.open(cacheName).then(function (cache) {
     return cache.match(evt.request).then(function (matching) {
       return matching || Promise.reject("no-match");
     });
