@@ -561,18 +561,9 @@ window.addEventListener("beforeunload", function(e) {
 });
 
 window.addEventListener("beforeinstallprompt", function(e) {
-  console.log(e)
+  document.getElementById("install").style.display = "none";
   document.getElementById("install").addEventListener("click", function(e) {
     e.prompt();
-    e.userChoice.then((choiceResult) => {
-        if (choiceResult.outcome === "accepted") {
-          console.log("User accepted the A2HS prompt");
-        } else {
-          console.log("User dismissed the A2HS prompt");
-          document.getElementById("install").style.display = "none";
-        }
-        e = null;
-      });
   });
 });
 
