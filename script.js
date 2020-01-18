@@ -560,6 +560,23 @@ window.addEventListener("beforeunload", function (e) {
   localStorage.setItem("main", main);
 });
 
+window.addEventListener('beforeinstallprompt', (e) => {
+  deferredPrompt = e;
+  document.getElementById("install").addEventListener('click', (e) => {
+    document.getElementById("install").style.display = 'none';
+    deferredPrompt.prompt();
+    deferredPrompt.userChoice
+      .then((choiceResult) => {
+        if (choiceResult.outcome === 'accepted') {
+          console.log('User accepted the A2HS prompt');
+        } else {
+          console.log('User dismissed the A2HS prompt');
+        }
+        deferredPrompt = null;
+      });
+  });
+});
+
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', function() {
     navigator.serviceWorker.register('sw.js').then(function (registration) {
