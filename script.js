@@ -562,8 +562,9 @@ window.addEventListener("beforeunload", function(e) {
 
 window.addEventListener("beforeinstallprompt", function(e) {
   document.getElementById("install").style.display = "block";
+  var installApp = e;
   document.getElementById("install").addEventListener("click", function(e) {
-    e.prompt();
+    installApp.prompt();
   });
 });
 
