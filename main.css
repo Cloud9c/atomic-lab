@@ -500,7 +500,7 @@ body > .element {
 	background: #f5f5f5;
 }
 
-.option span {
+.option > span {
 	margin-left: 6px;
 }
 

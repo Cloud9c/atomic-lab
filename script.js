@@ -28,7 +28,7 @@ window.addEventListener("load", function(e) {
 
     for (var i = 0; i < 9; i++)
       document.getElementsByClassName("slot")[i].innerHTML = slot[i];
-    for (var i = 0; i < main.length; i++)
+    for (i = 0; i < main.length; i++)
       document.getElementById("main").innerHTML += main[i];
   }
 });
@@ -209,7 +209,7 @@ function openMenu(e) {
             clone.style.top = clone.offsetTop + 16 + "px";
             switcheroo.push(clone, document.getElementsByClassName("selected")[i]);
           }
-          for (var i = 0; i < switcheroo.length; i++) {
+          for (i = 0; i < switcheroo.length; i++) {
             if (switcheroo[i].classList.contains("selected"))
               switcheroo[i].classList.remove("selected");
             else
@@ -271,7 +271,7 @@ function overlayToggle() {
 function sliderAdjust(e) {
   if (e.target.id === "slider-thumb") {
     var target = e.target;
-    function mouseMove(e) {
+    var mouseMove = function mouseMove(e) {
       if (mobile)
         var e = e.touches[0];
 
@@ -291,7 +291,7 @@ function sliderAdjust(e) {
       document.getElementById("slider").style.background = "linear-gradient(#e8e8e8 " + pos + "%, #3fc1c9 " + pos + "%)";
     }
 
-    function mouseUp(e) {
+    var mouseUp = function mouseUp(e) {
       if (mobile) {
         document.body.removeEventListener("touchmove", mouseMove);
         document.body.removeEventListener("touchend", mouseUp);
@@ -303,6 +303,7 @@ function sliderAdjust(e) {
       document.getElementById("slider-thumb").style.top = changePX + "px";
       document.getElementById("slider").style.background = "linear-gradient(#e8e8e8 " + changePX + "%, #3fc1c9 " + changePX + "%)";
     }
+
     if (mobile) {
       document.body.addEventListener("touchmove", mouseMove);
       document.body.addEventListener("touchend", mouseUp);
@@ -353,7 +354,7 @@ document.getElementById("react").addEventListener("click", function() {
       document.getElementById("snackbar").classList = "";
     }, 3000);
 
-    function closeSnackBar() {
+    var closeSnackBar = function closeSnackBar() {
       clearTimeout(autoClose);
       document.getElementById("snackbar").classList = "";
       document.getElementById("snackbar-close").removeEventListener("click", closeSnackBar);
@@ -413,40 +414,42 @@ if (mobile) {
     if (event.target.classList.contains("element")) {
       hoverElement = event.target;
       if (event.target.parentElement.id === "periodic-table") {
-        document.getElementById("atomic-number").innerHTML = [].indexOf.call(document.getElementById("periodic-table").getElementsByClassName("element"), event.target) + 1;
-        document.getElementById("atomic-symbol").innerHTML = event.target.children[0].innerHTML;
-        document.getElementById("atomic-name").innerHTML = event.target.children[0].getAttribute("title");
-        document.getElementById("atomic-mass").innerHTML = event.target.getAttribute("amass");
+        document.getElementById("atomic-number").textContent = [].indexOf.call(document.getElementById("periodic-table").getElementsByClassName("element"), event.target) + 1;
+        document.getElementById("atomic-symbol").textContent = event.target.children[0].textContent;
+        document.getElementById("atomic-name").textContent = event.target.children[0].getAttribute("title");
+        document.getElementById("atomic-mass").textContent = event.target.getAttribute("amass");
         if (event.target.getAttribute("amass") % 1 === 0)
-          document.getElementById("atomic-mass").innerHTML = "(" + document.getElementById("atomic-mass").innerHTML + ")";
+          document.getElementById("atomic-mass").textContent = "(" + document.getElementById("atomic-mass").textContent + ")";
         document.getElementById("closeup").style.background = getComputedStyle(event.target).background;
       } else {
-        document.getElementById("atomic-number").innerHTML = "Atomic No.";
-        document.getElementById("atomic-symbol").innerHTML = "Symbol";
-        document.getElementById("atomic-name").innerHTML = "Name";
-        document.getElementById("atomic-mass").innerHTML = "Atomic Mass";
+        document.getElementById("atomic-number").textContent = "Atomic No.";
+        document.getElementById("atomic-symbol").textContent = "Symbol";
+        document.getElementById("atomic-name").textContent = "Name";
+        document.getElementById("atomic-mass").textContent = "Atomic Mass";
         document.getElementById("closeup").style.background = "";
       }
     }
     else {
       hoverElement = undefined;
-      document.getElementById("atomic-number").innerHTML = "Atomic No.";
-      document.getElementById("atomic-symbol").innerHTML = "Symbol";
-      document.getElementById("atomic-name").innerHTML = "Name";
-      document.getElementById("atomic-mass").innerHTML = "Atomic Mass";
+      document.getElementById("atomic-number").textContent = "Atomic No.";
+      document.getElementById("atomic-symbol").textContent = "Symbol";
+      document.getElementById("atomic-name").textContent = "Name";
+      document.getElementById("atomic-mass").textContent = "Atomic Mass";
       document.getElementById("closeup").style.background = "";
     }
   });
 
   document.addEventListener("keydown", function(e) {
     if (/^[1-9]$/i.test(event.key) && typeof hoverElement !== "undefined") {
+      var target = document.getElementsByClassName("slot")[event.key - 1];
       var clone = hoverElement.cloneNode(true);
       clone.removeAttribute("style");
       clone.classList.remove("gu-mirror");
 
-      document.getElementsByClassName("slot")[event.key - 1].innerHTML = "";
-      document.getElementsByClassName("slot")[event.key - 1].appendChild(clone);
-      document.getElementsByClassName("slot")[event.key - 1].classList.add("pulse");
+      target.textContent = "";
+
+      target.appendChild(clone);
+      target.classList.add("pulse");
       setTimeout(function(e) {
         document.getElementsByClassName("slot")[e].classList.remove("pulse");
       }, 500, event.key - 1);
@@ -493,7 +496,7 @@ if (mobile) {
           document.getElementById("main").removeEventListener("mouseup", stillHolding);
         }, 75);
 
-        function stillHolding() {
+        var stillHolding = function stillHolding() {
           clearTimeout(holdWait);
           document.getElementById("main").removeEventListener("mouseup", stillHolding);
         }

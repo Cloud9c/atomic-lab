@@ -14,7 +14,7 @@
       "sizes": "512x512"
     }
   ],
-  "start_url": "/atomic-lab/?source=pwa",
+  "start_url": "/atomic-lab/index.html",
   "background_color": "#f5f5f5",
   "display": "standalone",
   "scope": "/atomic-lab/",
