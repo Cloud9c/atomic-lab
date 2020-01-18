@@ -565,10 +565,6 @@ window.addEventListener("beforeinstallprompt", function(e) {
   var installApp = e;
   document.getElementById("install").addEventListener("click", function(e) {
     installApp.prompt();
-
-    instalApp.userChoice.then(function() {
-      document.getElementById("install").style.display = "none";
-    });
   });
 });
 
