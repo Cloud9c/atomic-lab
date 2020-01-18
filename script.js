@@ -359,7 +359,7 @@ document.getElementById("react").addEventListener("click", function() {
       document.getElementById("snackbar-close").removeEventListener("click", closeSnackBar);
     }
 
-    var closeNow = document.getElementById("snackbar-close").addEventListener("click", closeSnackBar);
+    document.getElementById("snackbar-close").addEventListener("click", closeSnackBar);
   }
 
   function frame() {
