@@ -5,7 +5,7 @@ self.addEventListener("install", function(evt) {
   evt.waitUntil(caches.open(cacheName).then(function (cache) {
     return cache.addAll(
       [
-        "./",
+        // "./",
         "index.html",
         "script.js",
         "main.css",
