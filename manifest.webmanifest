@@ -14,9 +14,9 @@
       "sizes": "512x512"
     }
   ],
-  "start_url": "/atomic-lab",
+  "start_url": "/atomic-lab/",
   "background_color": "#f5f5f5",
   "display": "standalone",
-  "scope": "/atomic-lab/",
+  "scope": "/",
   "theme_color": "#364f6b"
 }
