@@ -546,6 +546,29 @@ dragula([document.getElementById("periodic-table"), document.getElementById("mai
   }
 });
 
+var deferredPrompt;
+
+window.addEventListener('beforeinstallprompt', (e) => {
+  deferredPrompt = e;
+  showInstallPromotion();
+});
+
+document.getElementById("install").addEventListener('click', (e) => {
+  if (deferredPrompt) {
+    document.getElementById("install").style.display = 'none';
+    deferredPrompt.prompt();
+    deferredPrompt.userChoice
+      .then((choiceResult) => {
+        if (choiceResult.outcome === 'accepted') {
+          console.log('User accepted the A2HS prompt');
+        } else {
+          console.log('User dismissed the A2HS prompt');
+        }
+        deferredPrompt = null;
+      });
+  }
+});
+
 window.addEventListener("beforeunload", function (e) {
   var slot = "";
   var main = "";

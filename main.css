@@ -6,11 +6,11 @@
 	box-shadow: 0px 0px 0 2px #fff;
 }
 
-#rack:hover svg {
+#rack:hover > svg {
 	animation: swing 0.825s infinite;
 }
 
-#react:hover svg {
+#react:hover > svg {
 	animation: boom 0.75s infinite;
 }
 
@@ -43,7 +43,7 @@
 	width: 0;
 }
 
-#main .element {
+#main > .element {
 	position: absolute;
 	width: 75px;
 	height: 75px;
@@ -52,7 +52,7 @@
 	border: 1px solid rgba(0,0,0,.12);
 }
 
-#rack-dialog>div {
+#rack-dialog > div {
 	margin: auto;
 	display: flex;
 	background: #fff;
@@ -72,11 +72,11 @@
     list-style-type: none;
 }
 
-#periodic-table>.element {
+#periodic-table > .element {
 	border: 1px solid #fff;
 }
 
-#periodic-table>.element:hover {
+#periodic-table > .element:hover {
 	border: 1px solid rgba(0,0,0,.12);f
 }
 
@@ -208,7 +208,7 @@
 	cursor: pointer;
 }
 
-.slot>li {
+.slot > li {
 	width: calc(100% - 2px);
 	height: calc(100% - 2px);
 	border-radius: 50%;
@@ -216,7 +216,7 @@
 	margin: auto;
 }
 
-#periodic-table>.element:before {
+#periodic-table > .element:before {
 	counter-increment: element;
 	content: counter(element);
 	position: absolute;
@@ -339,11 +339,11 @@
 }
 
 @media all and (max-width: 1320px) {
-	#periodic-table>.element:before {
+	#periodic-table > .element:before {
 		content: none;
 	}
 
-	.element abbr {
+	.element > abbr {
 		font-size: 20px;
 	}
 
@@ -391,17 +391,17 @@
 		grid-template-columns: repeat( 7, 1fr);
 		margin: 48px 16px 16px 16px;
 	}
-	#periodic-table>.element abbr span {
+	#periodic-table > .element abbr span {
 		display: none;
 	}
-	#periodic-table>.element abbr:after {
+	#periodic-table > .element abbr:after {
 		content: attr(title);
 		font-size: 16px;
 	}
-	ol#periodic-table>.element:nth-child(n+58):nth-last-child(n+48) {
+	ol#periodic-table > .element:nth-child(n+58):nth-last-child(n+48) {
 		grid-row-start: auto;
 	}
-	ol#periodic-table>.element:nth-child(n+90):nth-last-child(n+16) {
+	ol#periodic-table > .element:nth-child(n+90):nth-last-child(n+16) {
 		grid-row-start: auto;
 	}
 	ol#periodic-table:before {
@@ -413,14 +413,14 @@
 	#periodic-table {
 		grid-template-columns: repeat( 6, 1fr);
 	}
-	li.element abbr {
+	li.element > abbr {
 		font-size: 20px;
 	}
 	#main > .element {
 		width: 50px;
 		height: 50px;
 	}
-	body>.element {
+	body > .element {
 		width: 50px !important;
 		height: 50px !important;
 	}
@@ -438,16 +438,16 @@
 	}
 }
 
-body>.element {
+body > .element {
 	border-radius: 50%;
 }
 
-body>.element {
+body > .element {
 	box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
 	border: 1px solid rgba(0,0,0,.12);
 }
 
-#main>.gu-transit {
+#main > .gu-transit {
 	display: none;
 }
 
