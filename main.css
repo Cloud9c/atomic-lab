@@ -504,6 +504,10 @@ body>.element {
 	margin-left: 6px;
 }
 
+.option * {
+	pointer-events: none;
+}
+
 #drag-area {
 	position: absolute;
 	background: rgba(252, 81, 133, 0.2);
