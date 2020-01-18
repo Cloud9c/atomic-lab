@@ -560,14 +560,6 @@ window.addEventListener("beforeunload", function (e) {
   localStorage.setItem("main", main);
 });
 
-window.addEventListener("beforeinstallprompt", function(e) { 
-  // log the platforms provided as options in an install prompt 
-  console.log(e.platforms); // e.g., ["web", "android", "windows"] 
-  e.userChoice.then(function(choiceResult) { 
-    console.log(choiceResult.outcome); // either "accepted" or "dismissed"
-  }, handleError); 
-});
-
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', function() {
     navigator.serviceWorker.register('sw.js').then(function (registration) {
