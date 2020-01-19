@@ -486,22 +486,25 @@ if (mobile) {
 
         document.getElementById("main").appendChild(e.target);
 
-        if (document.getElementsByClassName("selected").length < 2)
+        if (document.getElementsByClassName("selected").length < 2 || !e.target.classList.contains("selected"))
           while (document.getElementsByClassName("selected")[0])
             document.getElementsByClassName("selected")[0].classList.remove("selected");
+
         e.target.classList.add("selected");
 
-        var holdWait = setTimeout(function() {
+        var mouseMove = function() {
           followCursor(e.target, diffX, diffY);
-          document.getElementById("main").removeEventListener("mouseup", stillHolding);
-        }, 75);
-
-        var stillHolding = function stillHolding() {
-          clearTimeout(holdWait);
-          document.getElementById("main").removeEventListener("mouseup", stillHolding);
+          document.getElementById("main").removeEventListener("mouseup", mouseUp);
+          document.getElementById("main").removeEventListener("mousemove", mouseMove);
         }
 
-        document.getElementById("main").addEventListener("mouseup", stillHolding);
+        var mouseUp = function() {
+          document.getElementById("main").removeEventListener("mouseup", mouseUp);
+          document.getElementById("main").removeEventListener("mousemove", mouseMove);
+        }
+
+        document.getElementById("main").addEventListener("mouseup", mouseUp);
+        document.getElementById("main").addEventListener("mousemove", mouseMove);
         } else {
           if (e.target.classList.contains("selected"))
             e.target.classList.remove("selected")
