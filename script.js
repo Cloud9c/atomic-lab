@@ -105,7 +105,7 @@ function followCursor(target, diffX, diffY) {
     };
 
     for (var i = 0; i < document.getElementsByClassName("selected").length; i++){
-      document.getElementsByClassName("selected")[i].style.boxShadow = "0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23)";
+      document.getElementsByClassName("selected")[i].style.boxShadow = "0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23), inset 0 0 0 2px #FC5185";
       document.getElementsByClassName("selected")[i].style.cursor = "grabbing"
     }
 
@@ -129,7 +129,7 @@ function followCursor(target, diffX, diffY) {
       document.getElementById("main").removeEventListener("mousemove", mouseMove);
     };
 
-    target.style.boxShadow = "0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23)";
+    target.style.boxShadow = "0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23), inset 0 0 0 2px #FC5185";
     target.style.cursor = "grabbing";
     document.getElementById("main").addEventListener("mousemove", mouseMove);
     document.getElementById("main").addEventListener("mouseup", mouseUp);

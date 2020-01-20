@@ -180,15 +180,9 @@
 	animation: pulse 0.7s;
 }
 
-.selected::before{
-    content: '';
-    position: absolute;
-    height: 24px;
-    width: 24px;
-    top: -8px;
-    right: -8px;
-    border-top: 4px solid #fc5185;
-    border-right: 4px solid #fc5185;
+#main > .selected {
+	border: 1px solid #FC5185;
+	box-shadow: inset 0 0 0 2px #FC5185;
 }
 
 .element {
