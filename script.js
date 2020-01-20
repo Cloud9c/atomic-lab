@@ -572,7 +572,7 @@ window.addEventListener("beforeinstallprompt", function(e) {
   document.getElementById("install").addEventListener("click", function(e) {
     installApp.prompt();
     installApp.userChoice.then(function(choiceResult){
-      console.log(userChoice)
+      console.log(choiceResult)
       if (choiceResult.outcome === 'accepted') {
         console.log('User accepted the A2HS prompt');
       } else {
