@@ -43,7 +43,7 @@
 	width: 0;
 }
 
-#main > .element {
+#main .element {
 	position: absolute;
 	width: 72px;
 	height: 72px;
@@ -180,9 +180,9 @@
 	animation: pulse 0.7s;
 }
 
-#main > .selected {
+#main .selected {
 	border: 1px solid #FC5185;
-	box-shadow: inset 0 0 0 2px #FC5185;
+	box-shadow: inset 0 0 0 1px #FC5185;
 }
 
 .element {
@@ -341,7 +341,7 @@
 		font-size: 20px;
 	}
 
-	#main > .element {
+	#main .element {
 		width: 60px;
 		height: 60px;
 	}
@@ -410,13 +410,13 @@
 	li.element > abbr {
 		font-size: 20px;
 	}
-	#main > .element {
-		width: 50px;
-		height: 50px;
+	#main .element {
+		width: 48px;
+		height: 48px;
 	}
 	body > .element {
-		width: 50px !important;
-		height: 50px !important;
+		width: 48px !important;
+		height: 48px !important;
 	}
 }
 
@@ -441,7 +441,7 @@ body > .element {
 	border: 1px solid rgba(0,0,0,.12);
 }
 
-#main > .gu-transit {
+#main .gu-transit {
 	display: none;
 }
 
@@ -554,4 +554,13 @@ body > .element {
 	visibility: visible;
 	top: 30px;
 	opacity: 1;
+}
+
+#svg {
+	pointer-events: none
+}
+
+#svg > line {
+	stroke: #5f6368;
+	stroke-width: 8px;
 }

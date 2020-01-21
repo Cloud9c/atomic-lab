@@ -219,7 +219,7 @@
     <div id="rack-dialog">
       <div>
         <div id="close">
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+          <svg width="24" height="24" viewBox="0 0 24 24">
             <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" fill="#5f6368"></path>
             <path d="M0 0h24v24H0z" fill="none"></path>
           </svg>
@@ -591,13 +591,14 @@
     </div>
     <div id="main" tabindex="0">
       <div id="drag-area" style="display: none"></div>
+      <svg width="100%" height="100%" id="svg"></svg>
     </div>
     <div id="header">
       <button id="install"><span>Install</span><div class="rippleJS"></div></button>
     </div>
     <div id="toolbar">
       <button id="rack" class="icon-button" tabindex="0" title="Periodic Table">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 512">
+        <svg viewBox="0 0 480 512">
           <path fill="#fff" d="M477.7 186.1L309.5 18.3c-3.1-3.1-8.2-3.1-11.3 0l-34 33.9c-3.1 3.1-3.1 8.2 0 11.3l11.2 11.1L33 316.5c-38.8 38.7-45.1 102-9.4 143.5 20.6 24 49.5 36 78.4 35.9 26.4 0 52.8-10 72.9-30.1l246.3-245.7 11.2 11.1c3.1 3.1 8.2 3.1 11.3 0l34-33.9c3.1-3 3.1-8.1 0-11.2zM318 256H161l148-147.7 78.5 78.3L318 256z"></path>
         </svg>
         <div class="rippleJS"></div>
@@ -605,7 +606,7 @@
       <div id="reaction-rate" title="Reaction Rate">
         <div class="slider-text">1.5x</div>
         <div id="slider">
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+          <svg width="24" height="24" viewBox="0 0 24 24">
             <path fill="#fff" d="M10 17l5-5-5-5v10z"></path>
             <path fill="none" d="M0 24V0h24v24H0z"></path>
           </svg>
@@ -614,7 +615,7 @@
         <div class="slider-text">0.5x</div>
       </div>
       <button id="react" class="icon-button" tabindex="0" title="React!">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+        <svg viewBox="0 0 512 512">
           <path fill=#fff d="M502.78,308.766l-135.17,34.349c-5.921,1.645-9.793,7.318-9.169,13.43l9.827,114.76   c0.618,4.676-1.537,9.284-5.521,11.808c-3.984,2.524-9.072,2.502-13.035-0.055l-91.878-62.461   c-4.557-3.121-10.682-2.6-14.647,1.246l-91.226,86.824c-3.711,3.42-9.161,4.164-13.653,1.863   c-4.492-2.301-7.072-7.159-6.463-12.169l10.105-143.506c0.443-5.373-2.55-10.442-7.469-12.649L7.501,287.843   C2.929,285.737,0,281.162,0,276.127c0-5.035,2.929-9.609,7.501-11.716l126.847-54.306c4.985-2.239,7.984-7.41,7.453-12.849   l-9.959-116.308c-0.618-4.676,1.537-9.284,5.521-11.808s9.072-2.502,13.035,0.055l91.4,62.137c4.782,3.27,11.242,2.522,15.15-1.754   L374.61,3.818c3.819-3.931,9.803-4.804,14.586-2.128c4.783,2.676,7.17,8.233,5.818,13.544l-35.647,181.871   c-1.135,5.507,1.442,11.113,6.361,13.838l139.66,74.238c4.53,2.518,7.107,7.509,6.538,12.66   C511.357,302.992,507.751,307.299,502.78,308.766z"></path>
         </svg>
         <div class="rippleJS"></div>
@@ -643,7 +644,7 @@
     <div id="snackbar">
       <span>Place at least 2 atoms on the Lab!</span>
       <div id="snackbar-close">
-        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24">
+        <svg width="18" height="18" viewBox="0 0 24 24">
           <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" fill="#D5D5D5"></path>
           <path d="M0 0h24v24H0z" fill="none"></path>
         </svg>

@@ -18,8 +18,7 @@
   })();
 }())
 
-var hoverElement, animate;
-var mobile = false;
+var animate;
 
 window.addEventListener("load", function(e) {
   if (localStorage.getItem("slot") !== null) {
@@ -32,10 +31,6 @@ window.addEventListener("load", function(e) {
       document.getElementById("main").innerHTML += main[i];
   }
 });
-
-if (typeof window.orientation !== "undefined" || navigator.userAgent.indexOf('IEMobile') !== -1) {
-  mobile = true;
-}
 
 function mouseDrag(x, y) {
   var target = document.getElementById("drag-area");
@@ -80,18 +75,17 @@ function followCursor(target, diffX, diffY) {
       var oldLeft = target.offsetLeft;
       var oldTop = target.offsetTop;
 
-      if (mobile)
-        var e = e.touches[0];
-
       target.style.left = e.pageX - diffX + "px";
       target.style.top = e.pageY - diffY + "px";
 
       var leftDir = target.offsetLeft - oldLeft;
       var topDir = target.offsetTop - oldTop;
 
-      for (var i = 0; i < document.getElementsByClassName("selected").length - 1; i++) {
-        document.getElementsByClassName("selected")[i].style.left = document.getElementsByClassName("selected")[i].offsetLeft + leftDir + "px";
-        document.getElementsByClassName("selected")[i].style.top = document.getElementsByClassName("selected")[i].offsetTop + topDir + "px";
+      for (var i = 0; i < document.getElementsByClassName("selected").length; i++) {
+        if (document.getElementsByClassName("selected")[i] !== target){
+          document.getElementsByClassName("selected")[i].style.left = document.getElementsByClassName("selected")[i].offsetLeft + leftDir + "px";
+          document.getElementsByClassName("selected")[i].style.top = document.getElementsByClassName("selected")[i].offsetTop + topDir + "px";
+        }
       }
     };
 
@@ -105,17 +99,12 @@ function followCursor(target, diffX, diffY) {
     };
 
     for (var i = 0; i < document.getElementsByClassName("selected").length; i++){
-      document.getElementsByClassName("selected")[i].style.boxShadow = "0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23), inset 0 0 0 2px #FC5185";
+      document.getElementsByClassName("selected")[i].style.boxShadow = "0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23), inset 0 0 0 1px #FC5185";
       document.getElementsByClassName("selected")[i].style.cursor = "grabbing"
     }
 
-    if (mobile) {
-      document.getElementById("main").addEventListener("touchmove", mouseMoveMultiple);
-      document.getElementById("main").addEventListener("touchend", mouseUpMultiple);
-    } else {
-      document.getElementById("main").addEventListener("mousemove", mouseMoveMultiple);
-      document.getElementById("main").addEventListener("mouseup", mouseUpMultiple);
-    }
+    document.getElementById("main").addEventListener("mousemove", mouseMoveMultiple);
+    document.getElementById("main").addEventListener("mouseup", mouseUpMultiple);
   } else {
     var mouseMove = function(e) {
       target.style.left = e.pageX - diffX + "px";
@@ -129,7 +118,7 @@ function followCursor(target, diffX, diffY) {
       document.getElementById("main").removeEventListener("mousemove", mouseMove);
     };
 
-    target.style.boxShadow = "0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23), inset 0 0 0 2px #FC5185";
+    target.style.boxShadow = "0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23), inset 0 0 0 1px #FC5185";
     target.style.cursor = "grabbing";
     document.getElementById("main").addEventListener("mousemove", mouseMove);
     document.getElementById("main").addEventListener("mouseup", mouseUp);
@@ -146,8 +135,9 @@ function toggleMenu(command, e) {
   rect.style.display = command;
 
   if (command === "block") {
-    if (e.pageY + rect.offsetHeight >= window.innerHeight)
-      rect.style.top = window.innerHeight - rect.innerHeight  + "px";
+    if (e.pageY + rect.offsetHeight >= window.innerHeight) {
+      rect.style.top = window.innerHeight - rect.offsetHeight + "px";
+    }
     else
       rect.style.top = e.pageY + "px";
 
@@ -165,34 +155,29 @@ function openMenu(e) {
     document.getElementsByClassName("option")[1].innerHTML = "";
     document.getElementsByClassName("option")[2].innerHTML = "";
 
-    if (mobile) {
-      e.pageX = e.changedTouches[0].pageX;
-      e.pageY = e.changedTouches[0].pageY;
-    }
-
     if (e.target.id === "hotbar") {
-      document.getElementsByClassName("option")[0].innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="#656565" d="M9,3V4H4V6H5V19A2,2 0 0,0 7,21H17A2,2 0 0,0 19,19V6H20V4H15V3H9M7,6H17V19H7V6M9,8V17H11V8H9M13,8V17H15V8H13Z"/></svg><span>Clear All Slots</span>';
+      document.getElementsByClassName("option")[0].innerHTML = '<svg width="24" height="24" viewBox="0 0 24 24"><path fill="#656565" d="M9,3V4H4V6H5V19A2,2 0 0,0 7,21H17A2,2 0 0,0 19,19V6H20V4H15V3H9M7,6H17V19H7V6M9,8V17H11V8H9M13,8V17H15V8H13Z"/></svg><span>Clear All Slots</span>';
       document.getElementsByClassName("option")[0].onclick = function() {
         for (var i = 0; i < 9; i++)
           document.getElementsByClassName("slot")[i].innerHTML = "";
         toggleMenu("none", e);
       };
     } else if (e.target.parentElement.classList.contains("slot")) {
-      document.getElementsByClassName("option")[0].innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="#656565" d="M9,3V4H4V6H5V19A2,2 0 0,0 7,21H17A2,2 0 0,0 19,19V6H20V4H15V3H9M7,6H17V19H7V6M9,8V17H11V8H9M13,8V17H15V8H13Z"/></svg><span>Clear Slot</span>';
+      document.getElementsByClassName("option")[0].innerHTML = '<svg width="24" height="24" viewBox="0 0 24 24"><path fill="#656565" d="M9,3V4H4V6H5V19A2,2 0 0,0 7,21H17A2,2 0 0,0 19,19V6H20V4H15V3H9M7,6H17V19H7V6M9,8V17H11V8H9M13,8V17H15V8H13Z"/></svg><span>Clear Slot</span>';
       document.getElementsByClassName("option")[0].onclick = function() {
         e.target.parentElement.innerHTML = "";
         toggleMenu("none", e);
       };
     } else if (e.target.id === "main") {
-      document.getElementsByClassName("option")[0].innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="#656565" d="M9,3V4H4V6H5V19A2,2 0 0,0 7,21H17A2,2 0 0,0 19,19V6H20V4H15V3H9M7,6H17V19H7V6M9,8V17H11V8H9M13,8V17H15V8H13Z"/></svg><span>Clear Lab</span>';
+      document.getElementsByClassName("option")[0].innerHTML = '<svg width="24" height="24" viewBox="0 0 24 24"><path fill="#656565" d="M9,3V4H4V6H5V19A2,2 0 0,0 7,21H17A2,2 0 0,0 19,19V6H20V4H15V3H9M7,6H17V19H7V6M9,8V17H11V8H9M13,8V17H15V8H13Z"/></svg><span>Clear Lab</span>';
       document.getElementsByClassName("option")[0].onclick = function() {
         while (document.getElementById("main").getElementsByClassName("element")[0])
           document.getElementById("main").removeChild(document.getElementById("main").lastChild);
         toggleMenu("none", e);
       };
     } else if (e.target.parentElement.id === "main" && e.target.classList.contains("element")) {
-      document.getElementsByClassName("option")[0].innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="#656565" d="M19 21H8V7h11m0-2H8a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2m-3-4H4a2 2 0 0 0-2 2v14h2V3h12V1z"/></svg><span>Duplicate</span>';
-      document.getElementsByClassName("option")[1].innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="#656565" d="M9,3V4H4V6H5V19A2,2 0 0,0 7,21H17A2,2 0 0,0 19,19V6H20V4H15V3H9M7,6H17V19H7V6M9,8V17H11V8H9M13,8V17H15V8H13Z"/></svg><span>Remove</span>';
+      document.getElementsByClassName("option")[0].innerHTML = '<svg width="24" height="24" viewBox="0 0 24 24"><path fill="#656565" d="M19 21H8V7h11m0-2H8a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2m-3-4H4a2 2 0 0 0-2 2v14h2V3h12V1z"/></svg><span>Duplicate</span>';
+      document.getElementsByClassName("option")[1].innerHTML = '<svg width="24" height="24" viewBox="0 0 24 24"><path fill="#656565" d="M9,3V4H4V6H5V19A2,2 0 0,0 7,21H17A2,2 0 0,0 19,19V6H20V4H15V3H9M7,6H17V19H7V6M9,8V17H11V8H9M13,8V17H15V8H13Z"/></svg><span>Remove</span>';
       if (!e.target.classList.contains("selected"))
         while (document.getElementsByClassName("selected")[0])
           document.getElementsByClassName("selected")[0].classList.remove("selected");
@@ -219,9 +204,19 @@ function openMenu(e) {
         };
         if (document.getElementsByClassName("selected").length === 2) {
           document.getElementsByClassName("option")[2].innerHTML = document.getElementsByClassName("option")[1].innerHTML;
-          document.getElementsByClassName("option")[1].innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="#656565" d="M18,19C16.89,19 16,18.1 16,17C16,15.89 16.89,15 18,15A2,2 0 0,1 20,17A2,2 0 0,1 18,19M18,13A4,4 0 0,0 14,17A4,4 0 0,0 18,21A4,4 0 0,0 22,17A4,4 0 0,0 18,13M12,11.1A1.9,1.9 0 0,0 10.1,13A1.9,1.9 0 0,0 12,14.9A1.9,1.9 0 0,0 13.9,13A1.9,1.9 0 0,0 12,11.1M6,19C4.89,19 4,18.1 4,17C4,15.89 4.89,15 6,15A2,2 0 0,1 8,17A2,2 0 0,1 6,19M6,13A4,4 0 0,0 2,17A4,4 0 0,0 6,21A4,4 0 0,0 10,17A4,4 0 0,0 6,13M12,4A2,2 0 0,1 14,6A2,2 0 0,1 12,8C10.89,8 10,7.1 10,6C10,4.89 10.89,4 12,4M12,10A4,4 0 0,0 16,6A4,4 0 0,0 12,2A4,4 0 0,0 8,6A4,4 0 0,0 12,10Z"/></svg><span>Create bond</span>'
+          document.getElementsByClassName("option")[1].innerHTML = '<svg width="24" height="24" viewBox="0 0 24 24"><path fill="#656565" d="M18,19C16.89,19 16,18.1 16,17C16,15.89 16.89,15 18,15A2,2 0 0,1 20,17A2,2 0 0,1 18,19M18,13A4,4 0 0,0 14,17A4,4 0 0,0 18,21A4,4 0 0,0 22,17A4,4 0 0,0 18,13M12,11.1A1.9,1.9 0 0,0 10.1,13A1.9,1.9 0 0,0 12,14.9A1.9,1.9 0 0,0 13.9,13A1.9,1.9 0 0,0 12,11.1M6,19C4.89,19 4,18.1 4,17C4,15.89 4.89,15 6,15A2,2 0 0,1 8,17A2,2 0 0,1 6,19M6,13A4,4 0 0,0 2,17A4,4 0 0,0 6,21A4,4 0 0,0 10,17A4,4 0 0,0 6,13M12,4A2,2 0 0,1 14,6A2,2 0 0,1 12,8C10.89,8 10,7.1 10,6C10,4.89 10.89,4 12,4M12,10A4,4 0 0,0 16,6A4,4 0 0,0 12,2A4,4 0 0,0 8,6A4,4 0 0,0 12,10Z"/></svg><span>Create bond</span>'
           document.getElementsByClassName("option")[1].onclick = function() {
-            // CREATE BOND
+            var ele1 = document.getElementsByClassName("selected")[0];
+            var ele2 = document.getElementsByClassName("selected")[1];
+            var svg = document.getElementById("svg");
+            var line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+            svg.setAttribute("width", "100%");
+            svg.setAttribute("height", "100%");
+            svg.appendChild(line);
+            line.setAttribute("x1", ele1.offsetLeft + ele1.offsetWidth/2);
+            line.setAttribute("y1", ele1.offsetTop + ele1.offsetHeight/2);
+            line.setAttribute("x2", ele2.offsetLeft + ele1.offsetWidth/2);
+            line.setAttribute("y2", ele2.offsetTop + ele1.offsetHeight/2);
           }
           placement++;
         }
@@ -272,8 +267,6 @@ function sliderAdjust(e) {
   if (e.target.id === "slider-thumb") {
     var target = e.target;
     var mouseMove = function mouseMove(e) {
-      if (mobile)
-        var e = e.touches[0];
 
       var pos = e.pageY - 141;
 
@@ -292,25 +285,15 @@ function sliderAdjust(e) {
     }
 
     var mouseUp = function mouseUp(e) {
-      if (mobile) {
-        document.body.removeEventListener("touchmove", mouseMove);
-        document.body.removeEventListener("touchend", mouseUp);
-      } else {
-        document.body.removeEventListener("mouseup", mouseUp);
-        document.body.removeEventListener("mousemove", mouseMove);
-      }
+      document.body.removeEventListener("mouseup", mouseUp);
+      document.body.removeEventListener("mousemove", mouseMove);
       var changePX = document.getElementById("slider-thumb").offsetTop;
       document.getElementById("slider-thumb").style.top = changePX + "px";
       document.getElementById("slider").style.background = "linear-gradient(#e8e8e8 " + changePX + "%, #3fc1c9 " + changePX + "%)";
     }
 
-    if (mobile) {
-      document.body.addEventListener("touchmove", mouseMove);
-      document.body.addEventListener("touchend", mouseUp);
-    } else {
-      document.body.addEventListener("mousemove", mouseMove);
-      document.body.addEventListener("mouseup", mouseUp);
-    }
+    document.body.addEventListener("touchmove", mouseMove);
+    document.body.addEventListener("touchend", mouseUp);
   } else {
     var pos = e.pageY - 148;
     if (pos < -7)
@@ -375,155 +358,118 @@ document.getElementById("react").addEventListener("click", function() {
   }
 });
 
-if (mobile) {
-  document.getElementById("slider").addEventListener("touchstart", sliderAdjust, { passive: true });
-
-  document.getElementById("main").addEventListener("touchstart", function(e) {
-    if (e.target.classList.contains("element")) {
-      var diffX = e.pageX - e.target.offsetLeft;
-      var diffY = e.pageY - e.target.offsetTop;
-
-      document.getElementById("main").appendChild(e.target);
-
-      followCursor(e.target, diffX, diffY);
-    }
-  }, { passive: true });
-
-  document.addEventListener("touchstart", function(e) {
-    if (e.target.id !== "menu-option") {
-      toggleMenu("none", e);
-
-      if (document.getElementsByClassName("selected")[0] && document.getElementsByClassName("selected")[0].boxShadow === "")
-        while (document.getElementsByClassName("selected")[0])
-          document.getElementsByClassName("selected")[0].classList.remove("selected");
-    }
-
-    var startTime = e.timeStamp;
-
-    function longPress(e) {
-      if (e.timeStamp - startTime > 500) {
-        openMenu(e);
-      }
-      document.removeEventListener("touchend", longPress);
-    }
-
-    document.addEventListener("touchend", longPress, { passive: true });
-  }, { passive: true });
-} else {
-  document.addEventListener("mouseover", function(e) {
-    if (event.target.classList.contains("element")) {
-      hoverElement = event.target;
-      if (event.target.parentElement.id === "periodic-table") {
-        document.getElementById("atomic-number").textContent = [].indexOf.call(document.getElementById("periodic-table").getElementsByClassName("element"), event.target) + 1;
-        document.getElementById("atomic-symbol").textContent = event.target.children[0].textContent;
-        document.getElementById("atomic-name").textContent = event.target.children[0].getAttribute("title");
-        document.getElementById("atomic-mass").textContent = event.target.getAttribute("amass");
-        if (event.target.getAttribute("amass") % 1 === 0)
-          document.getElementById("atomic-mass").textContent = "(" + document.getElementById("atomic-mass").textContent + ")";
-        document.getElementById("closeup").style.background = getComputedStyle(event.target).background;
-      } else {
-        document.getElementById("atomic-number").textContent = "Atomic No.";
-        document.getElementById("atomic-symbol").textContent = "Symbol";
-        document.getElementById("atomic-name").textContent = "Name";
-        document.getElementById("atomic-mass").textContent = "Atomic Mass";
-        document.getElementById("closeup").style.background = "";
-      }
-    }
-    else {
-      hoverElement = undefined;
+document.getElementById("periodic-table").addEventListener("mouseover", function(e) {
+  if (event.target.classList.contains("element")) {
+    if (event.target.parentElement.id === "periodic-table") {
+      document.getElementById("atomic-number").textContent = [].indexOf.call(document.getElementById("periodic-table").getElementsByClassName("element"), event.target) + 1;
+      document.getElementById("atomic-symbol").textContent = event.target.children[0].textContent;
+      document.getElementById("atomic-name").textContent = event.target.children[0].getAttribute("title");
+      document.getElementById("atomic-mass").textContent = event.target.getAttribute("amass");
+      if (event.target.getAttribute("amass") % 1 === 0)
+        document.getElementById("atomic-mass").textContent = "(" + document.getElementById("atomic-mass").textContent + ")";
+      document.getElementById("closeup").style.background = getComputedStyle(event.target).background;
+    } else {
       document.getElementById("atomic-number").textContent = "Atomic No.";
       document.getElementById("atomic-symbol").textContent = "Symbol";
       document.getElementById("atomic-name").textContent = "Name";
       document.getElementById("atomic-mass").textContent = "Atomic Mass";
       document.getElementById("closeup").style.background = "";
     }
-  });
+  }
+  else {
+    document.getElementById("atomic-number").textContent = "Atomic No.";
+    document.getElementById("atomic-symbol").textContent = "Symbol";
+    document.getElementById("atomic-name").textContent = "Name";
+    document.getElementById("atomic-mass").textContent = "Atomic Mass";
+    document.getElementById("closeup").style.background = "";
+  }
+});
 
-  document.addEventListener("keydown", function(e) {
-    if (/^[1-9]$/i.test(event.key) && typeof hoverElement !== "undefined") {
-      var target = document.getElementsByClassName("slot")[event.key - 1];
-      var clone = hoverElement.cloneNode(true);
-      clone.removeAttribute("style");
-      clone.classList.remove("gu-mirror");
+document.addEventListener("keydown", function(e) {
+  var hoverElement = document.querySelectorAll(":hover")[document.querySelectorAll(":hover").length - 1]
+  if (/^[1-9]$/i.test(event.key) && hoverElement.classList.contains("element")) {
+    var target = document.getElementsByClassName("slot")[event.key - 1];
+    var clone = hoverElement.cloneNode(true);
+    clone.removeAttribute("style");
+    clone.classList.remove("gu-mirror");
 
-      target.textContent = "";
+    target.textContent = "";
 
-      target.appendChild(clone);
-      target.classList.add("pulse");
-      setTimeout(function(e) {
-        document.getElementsByClassName("slot")[e].classList.remove("pulse");
-      }, 500, event.key - 1);
-    } else if (event.key === "ArrowUp" || event.key === "ArrowDown") {
-      var pos = document.getElementById("slider-thumb").offsetTop;
-      if (event.key === "ArrowUp")
-        pos -= 2;
-      else
-        pos += 2;
+    target.appendChild(clone);
+    target.classList.add("pulse");
+    setTimeout(function(e) {
+      document.getElementsByClassName("slot")[e].classList.remove("pulse");
+    }, 500, event.key - 1);
+  } else if (event.key === "ArrowUp" || event.key === "ArrowDown") {
+    var pos = document.getElementById("slider-thumb").offsetTop;
+    if (event.key === "ArrowUp")
+      pos -= 2;
+    else
+      pos += 2;
 
-      if (pos < -7)
-        pos = -7;
-      else if (pos > 93)
-        pos = 93;
-      document.getElementById("slider-thumb").style.top = pos + "px";
-      document.getElementById("slider").style.background = "linear-gradient(#e8e8e8 " + pos + "%, #3fc1c9 " + pos + "%)";
-    }
-  });
+    if (pos < -7)
+      pos = -7;
+    else if (pos > 93)
+      pos = 93;
+    document.getElementById("slider-thumb").style.top = pos + "px";
+    document.getElementById("slider").style.background = "linear-gradient(#e8e8e8 " + pos + "%, #3fc1c9 " + pos + "%)";
+  }
+});
 
-  document.addEventListener("mousedown", function(e) {
-    if (!e.target.classList.contains("option") && !e.target.parentElement.classList.contains("option") && !e.target.parentElement.parentElement.classList.contains("option") && document.getElementById("menu").style.display === "block") {
-      toggleMenu("none", e);
-    }
-  });
+document.addEventListener("mousedown", function(e) {
+  if (!e.target.classList.contains("option") && !e.target.parentElement.classList.contains("option") && !e.target.parentElement.parentElement.classList.contains("option") && document.getElementById("menu").style.display === "block") {
+    toggleMenu("none", e);
+  }
+});
 
-  document.getElementById("slider").addEventListener("mousedown", sliderAdjust);
+document.getElementById("slider").addEventListener("mousedown", sliderAdjust);
 
-  document.getElementById("main").addEventListener("mousedown", function(e) {
-    if (e.button === 0) {
-      if (e.target.classList.contains("element")) {
-        if (!e.ctrlKey && !e.altKey && !e.shiftKey) {
-        var diffX = e.pageX - e.target.offsetLeft;
-        var diffY = e.pageY - e.target.offsetTop;
+document.getElementById("main").addEventListener("mousedown", function(e) {
+  if (e.button === 0) {
+    if (e.target.classList.contains("element")) {
+      if (!e.ctrlKey && !e.altKey && !e.shiftKey) {
+      var diffX = e.pageX - e.target.offsetLeft;
+      var diffY = e.pageY - e.target.offsetTop;
 
-        document.getElementById("main").appendChild(e.target);
+      document.getElementById("main").appendChild(e.target);
 
-        if (document.getElementsByClassName("selected").length < 2 || !e.target.classList.contains("selected"))
-          while (document.getElementsByClassName("selected")[0])
-            document.getElementsByClassName("selected")[0].classList.remove("selected");
-
-        e.target.classList.add("selected");
-
-        var mouseMove = function() {
-          followCursor(e.target, diffX, diffY);
-          document.getElementById("main").removeEventListener("mouseup", mouseUp);
-          document.getElementById("main").removeEventListener("mousemove", mouseMove);
-        }
-
-        var mouseUp = function() {
-          document.getElementById("main").removeEventListener("mouseup", mouseUp);
-          document.getElementById("main").removeEventListener("mousemove", mouseMove);
-        }
-
-        document.getElementById("main").addEventListener("mouseup", mouseUp);
-        document.getElementById("main").addEventListener("mousemove", mouseMove);
-        } else {
-          if (e.target.classList.contains("selected"))
-            e.target.classList.remove("selected")
-          else
-            e.target.classList.add("selected")
-        }
-
-      } else if (e.ctrlKey || e.altKey || e.shiftKey) {
-        openMenu(e);
-      } else {
+      if (document.getElementsByClassName("selected").length < 2 || !e.target.classList.contains("selected"))
         while (document.getElementsByClassName("selected")[0])
           document.getElementsByClassName("selected")[0].classList.remove("selected");
-        mouseDrag(e.pageX, e.pageY);
-      }
-    }
-  });
 
-  document.addEventListener("contextmenu", openMenu);
-}
+      e.target.classList.add("selected");
+
+      var mouseMove = function() {
+        followCursor(e.target, diffX, diffY);
+        document.getElementById("main").removeEventListener("mouseup", mouseUp);
+        document.getElementById("main").removeEventListener("mousemove", mouseMove);
+      }
+
+      var mouseUp = function() {
+        document.getElementById("main").removeEventListener("mouseup", mouseUp);
+        document.getElementById("main").removeEventListener("mousemove", mouseMove);
+      }
+
+      document.getElementById("main").addEventListener("mouseup", mouseUp);
+      document.getElementById("main").addEventListener("mousemove", mouseMove);
+      } else {
+        if (e.target.classList.contains("selected"))
+          e.target.classList.remove("selected")
+        else
+          e.target.classList.add("selected")
+      }
+
+    } else if (e.ctrlKey || e.altKey || e.shiftKey) {
+      openMenu(e);
+    } else {
+      while (document.getElementsByClassName("selected")[0])
+        document.getElementsByClassName("selected")[0].classList.remove("selected");
+      mouseDrag(e.pageX, e.pageY);
+    }
+  }
+});
+
+document.addEventListener("contextmenu", openMenu);
 
 dragula([document.getElementById("periodic-table"), document.getElementById("main"), document.getElementsByClassName("slot")[0], document.getElementsByClassName("slot")[1], document.getElementsByClassName("slot")[2], document.getElementsByClassName("slot")[3], document.getElementsByClassName("slot")[4], document.getElementsByClassName("slot")[5], document.getElementsByClassName("slot")[6], document.getElementsByClassName("slot")[7], document.getElementsByClassName("slot")[8]], {
   copy: function (el, source) {
@@ -536,8 +482,7 @@ dragula([document.getElementById("periodic-table"), document.getElementById("mai
   },
   moves: function (el, source, handle, sibling) {
     return source !== document.getElementById("main") && el.id !== "closeup";
-  }
-}).on("drop", function (el, target, source, sibling) {
+  }}).on("drop", function (el, target, source, sibling) {
   if (target != null && target.classList.contains("slot")) {
     target.classList.add("pulse");
     setTimeout(function() {
