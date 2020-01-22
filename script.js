@@ -47,9 +47,9 @@ function mouseDrag(x, y) {
     if (e.pageY < y)
       target.style.top = e.pageY + "px";
 
+    var rect2 = target.getBoundingClientRect();
     for (var i = 0; i < document.getElementById("main").getElementsByClassName("element").length; i++) {
       var rect1 = document.getElementById("main").getElementsByClassName("element")[i].getBoundingClientRect();
-      var rect2 = target.getBoundingClientRect();
       if (rect1.left < rect2.right && rect1.right > rect2.left && rect1.top < rect2.bottom && rect1.bottom > rect2.top)
         document.getElementById("main").getElementsByClassName("element")[i].classList.add("selected");
       else
@@ -72,20 +72,11 @@ function mouseDrag(x, y) {
 function followCursor(target, diffX, diffY) {
   if (document.getElementsByClassName("selected")[1] && target.classList.contains("selected")) {
     var mouseMoveMultiple = function(e) {
-      var oldLeft = target.offsetLeft;
-      var oldTop = target.offsetTop;
-
-      target.style.left = e.pageX - diffX + "px";
-      target.style.top = e.pageY - diffY + "px";
-
-      var leftDir = target.offsetLeft - oldLeft;
-      var topDir = target.offsetTop - oldTop;
-
+      var x = e.movementX;
+      var y = e.movementY;
       for (var i = 0; i < document.getElementsByClassName("selected").length; i++) {
-        if (document.getElementsByClassName("selected")[i] !== target){
-          document.getElementsByClassName("selected")[i].style.left = document.getElementsByClassName("selected")[i].offsetLeft + leftDir + "px";
-          document.getElementsByClassName("selected")[i].style.top = document.getElementsByClassName("selected")[i].offsetTop + topDir + "px";
-        }
+        var element = document.getElementsByClassName("selected")[i];
+        element.style.transform = "translate(" + (+element.style.transform.match(/-?\d+/g)[0] + x) + "px," + (+element.style.transform.match(/-?\d+/g)[1] + y) + "px)";
       }
     };
 
@@ -97,18 +88,11 @@ function followCursor(target, diffX, diffY) {
       document.getElementById("main").removeEventListener("mouseup", mouseUpMultiple);
       document.getElementById("main").removeEventListener("mousemove", mouseMoveMultiple);
     };
-
-    for (var i = 0; i < document.getElementsByClassName("selected").length; i++){
-      document.getElementsByClassName("selected")[i].style.boxShadow = "0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23), inset 0 0 0 1px #FC5185";
-      document.getElementsByClassName("selected")[i].style.cursor = "grabbing"
-    }
-
     document.getElementById("main").addEventListener("mousemove", mouseMoveMultiple);
     document.getElementById("main").addEventListener("mouseup", mouseUpMultiple);
   } else {
     var mouseMove = function(e) {
-      target.style.left = e.pageX - diffX + "px";
-      target.style.top = e.pageY - diffY + "px";
+      target.style.transform = "translate(" + (+target.style.transform.match(/-?\d+/g)[0] + e.movementX) + "px," + (+target.style.transform.match(/-?\d+/g)[1] + e.movementY) + "px)";
     };
 
     var mouseUp = function() {
@@ -117,11 +101,13 @@ function followCursor(target, diffX, diffY) {
       document.getElementById("main").removeEventListener("mouseup", mouseUp);
       document.getElementById("main").removeEventListener("mousemove", mouseMove);
     };
-
-    target.style.boxShadow = "0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23), inset 0 0 0 1px #FC5185";
-    target.style.cursor = "grabbing";
     document.getElementById("main").addEventListener("mousemove", mouseMove);
     document.getElementById("main").addEventListener("mouseup", mouseUp);
+  }
+
+  for (var i = 0; i < document.getElementsByClassName("selected").length; i++){
+    document.getElementsByClassName("selected")[i].style.boxShadow = "0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23), inset 0 0 0 1px #FC5185";
+    document.getElementsByClassName("selected")[i].style.cursor = "grabbing"
   }
 }
 
@@ -190,8 +176,7 @@ function openMenu(e) {
             var clone = document.getElementsByClassName("selected")[i].cloneNode(true);
             clone.classList.remove("selected");
             document.getElementById("main").appendChild(clone);
-            clone.style.left = clone.offsetLeft + 16 + "px";
-            clone.style.top = clone.offsetTop + 16 + "px";
+            clone.style.transform = "translate(" + (+clone.style.transform.match(/-?\d+/g)[0] + 16) + "px," + (+clone.style.transform.match(/-?\d+/g)[1] + 16) + "px)";
             switcheroo.push(clone, document.getElementsByClassName("selected")[i]);
           }
           for (i = 0; i < switcheroo.length; i++) {
@@ -229,8 +214,7 @@ function openMenu(e) {
         document.getElementsByClassName("option")[0].onclick = function() {
           var clone = e.target.cloneNode(true);
           document.getElementById("main").appendChild(clone);
-          clone.style.left = clone.offsetLeft + 16 + "px";
-          clone.style.top = clone.offsetTop + 16 + "px";
+          clone.style.transform = "translate(" + (+clone.style.transform.match(/-?\d+/g)[0] + 16) + "px," + (+clone.style.transform.match(/-?\d+/g)[1] + 16) + "px)";
           e.target.classList.remove("selected");
           toggleMenu("none", e);
         };
@@ -349,10 +333,8 @@ document.getElementById("react").addEventListener("click", function() {
   function frame() {
     for (var i = 0; i < document.getElementById("main").getElementsByClassName("element").length; i++) {
       var element = document.getElementById("main").getElementsByClassName("element")[i];
-      var x = Number(element.style.transform.match(/\d+/g)[0]) + 1;
-      var y = Number(element.style.transform.match(/\d+/g)[1]) + 1;
 
-      element.style.transform = "translate(" + x + "px, " + y + "px)";
+      element.style.transform = "translate(" + (+element.style.transform.match(/-?\d+/g)[0] + 1) + "px," + (+element.style.transform.match(/-?\d+/g)[1] + 1) + "px)";
     }
     animate = requestAnimationFrame(frame);
   }
@@ -491,9 +473,7 @@ dragula([document.getElementById("periodic-table"), document.getElementById("mai
   }
 
   if (target === document.getElementById("main")) {
-    el.style.left = document.getElementsByClassName("gu-mirror")[0].style.left;
-    el.style.top = document.getElementsByClassName("gu-mirror")[0].style.top;
-    el.style.transform = "translate(0, 0)";
+    el.style.transform = "translate(" + document.getElementsByClassName("gu-mirror")[0].style.left + "," + document.getElementsByClassName("gu-mirror")[0].style.top + ")";
   }
 });
 
