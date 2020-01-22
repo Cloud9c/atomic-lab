@@ -79,6 +79,7 @@ function followCursor(target, diffX, diffY) {
       window.requestAnimationFrame(function() {
         for (var i = 0; i < document.getElementsByClassName("selected").length; i++) {
           var element = document.getElementsByClassName("selected")[i];
+          console.log(+element.style.transform.match(/-?\d+/g))
           element.style.transform = "translate(" + (+element.style.transform.match(/-?\d+/g)[0] + x) + "px," + (+element.style.transform.match(/-?\d+/g)[1] + y) + "px)";
         }
       });
