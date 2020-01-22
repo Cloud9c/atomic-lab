@@ -23,12 +23,12 @@ var animate;
 window.addEventListener("load", function(e) {
   if (localStorage.getItem("slot") !== null) {
     var slot = localStorage.getItem("slot").split(";");
-    var main = localStorage.getItem("main").split("`");
+    var main = localStorage.getItem("main");
 
     for (var i = 0; i < 9; i++)
       document.getElementsByClassName("slot")[i].innerHTML = slot[i];
-    for (i = 0; i < main.length; i++)
-      document.getElementById("main").innerHTML += main[i];
+
+    document.getElementById("main").innerHTML = main;
   }
 });
 
@@ -79,8 +79,8 @@ function followCursor(target, diffX, diffY) {
       window.requestAnimationFrame(function() {
         for (var i = 0; i < document.getElementsByClassName("selected").length; i++) {
           var element = document.getElementsByClassName("selected")[i];
-          console.log(+element.style.transform.match(/-?\d+/g))
-          element.style.transform = "translate(" + (+element.style.transform.match(/-?\d+/g)[0] + x) + "px," + (+element.style.transform.match(/-?\d+/g)[1] + y) + "px)";
+          console.log(element.style.transform)
+          element.style.transform = "translate(" + (+element.style.transform.match(/-?\d+\.?\d*/g)[0] + x) + "px," + (+element.style.transform.match(/-?\d+\.?\d*/g)[1] + y) + "px)";
         }
       });
     };
@@ -98,7 +98,7 @@ function followCursor(target, diffX, diffY) {
     document.getElementById("main").addEventListener("mouseup", mouseUpMultiple);
   } else {
     function mouseMove(e) {
-      target.style.transform = "translate(" + (+target.style.transform.match(/-?\d+/g)[0] + e.movementX) + "px," + (+target.style.transform.match(/-?\d+/g)[1] + e.movementY) + "px)";
+      target.style.transform = "translate(" + (+target.style.transform.match(/-?\d+\.?\d*/g)[0] + e.movementX) + "px," + (+target.style.transform.match(/-?\d+\.?\d*/g)[1] + e.movementY) + "px)";
     };
 
     function mouseUp() {
@@ -182,7 +182,7 @@ function openMenu(e) {
             var clone = document.getElementsByClassName("selected")[i].cloneNode(true);
             clone.classList.remove("selected");
             document.getElementById("main").appendChild(clone);
-            clone.style.transform = "translate(" + (+clone.style.transform.match(/-?\d+/g)[0] + 16) + "px," + (+clone.style.transform.match(/-?\d+/g)[1] + 16) + "px)";
+            clone.style.transform = "translate(" + (+clone.style.transform.match(/-?\d+\.?\d*/g)[0] + 16) + "px," + (+clone.style.transform.match(/-?\d+\.?\d*/g)[1] + 16) + "px)";
             switcheroo.push(clone, document.getElementsByClassName("selected")[i]);
           }
           for (i = 0; i < switcheroo.length; i++) {
@@ -204,10 +204,10 @@ function openMenu(e) {
             svg.setAttribute("width", "100%");
             svg.setAttribute("height", "100%");
             svg.appendChild(line);
-            line.setAttribute("x1", +ele1.style.transform.match(/-?\d+/g)[0] + ele1.offsetWidth/2); //TODO ROTATE BASE ON ANGLE
-            line.setAttribute("y1", +ele1.style.transform.match(/-?\d+/g)[1] + ele1.offsetHeight/2);
-            line.setAttribute("x2", +ele2.style.transform.match(/-?\d+/g)[0] + ele1.offsetWidth/2);
-            line.setAttribute("y2", +ele2.style.transform.match(/-?\d+/g)[1] + ele1.offsetHeight/2);
+            line.setAttribute("x1", +ele1.style.transform.match(/-?\d+\.?\d*/g)[0] + ele1.offsetWidth/2); //TODO ROTATE BASE ON ANGLE
+            line.setAttribute("y1", +ele1.style.transform.match(/-?\d+\.?\d*/g)[1] + ele1.offsetHeight/2);
+            line.setAttribute("x2", +ele2.style.transform.match(/-?\d+\.?\d*/g)[0] + ele1.offsetWidth/2);
+            line.setAttribute("y2", +ele2.style.transform.match(/-?\d+\.?\d*/g)[1] + ele1.offsetHeight/2);
           }
           placement++;
         }
@@ -220,7 +220,7 @@ function openMenu(e) {
         document.getElementsByClassName("option")[0].onclick = function() {
           var clone = e.target.cloneNode(true);
           document.getElementById("main").appendChild(clone);
-          clone.style.transform = "translate(" + (+clone.style.transform.match(/-?\d+/g)[0] + 16) + "px," + (+clone.style.transform.match(/-?\d+/g)[1] + 16) + "px)";
+          clone.style.transform = "translate(" + (+clone.style.transform.match(/-?\d+\.?\d*/g)[0] + 16) + "px," + (+clone.style.transform.match(/-?\d+\.?\d*/g)[1] + 16) + "px)";
           e.target.classList.remove("selected");
           toggleMenu("none", e);
         };
@@ -340,7 +340,7 @@ document.getElementById("react").addEventListener("click", function() {
     for (var i = 0; i < document.getElementById("main").getElementsByClassName("element").length; i++) {
       var element = document.getElementById("main").getElementsByClassName("element")[i];
 
-      element.style.transform = "translate(" + (+element.style.transform.match(/-?\d+/g)[0] + 1) + "px," + (+element.style.transform.match(/-?\d+/g)[1] + 1) + "px)";
+      element.style.transform = "translate(" + (+element.style.transform.match(/-?\d+\.?\d*/g)[0] + 1) + "px," + (+element.style.transform.match(/-?\d+\.?\d*/g)[1] + 1) + "px)";
     }
     animate = requestAnimationFrame(frame);
   }
@@ -485,13 +485,10 @@ dragula([document.getElementById("periodic-table"), document.getElementById("mai
 
 window.addEventListener("beforeunload", function(e) {
   var slot = "";
-  var main = "";
-
   for (var i = 0; i < 9; i++)
     slot += document.getElementsByClassName("slot")[i].innerHTML + ";";
 
-  for (var i = 0; i < document.getElementById("main").getElementsByClassName("element").length; i++)
-    main += document.getElementById("main").getElementsByClassName("element")[i].outerHTML + "`";
+  var main = document.getElementById("main").innerHTML;
 
   localStorage.setItem("slot", slot);
   localStorage.setItem("main", main);
