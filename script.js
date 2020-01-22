@@ -72,44 +72,28 @@ function mouseDrag(x, y) {
 }
 
 function followCursor(target, diffX, diffY) {
-  if (document.getElementsByClassName("selected")[1] && target.classList.contains("selected")) {
-    function mouseMoveMultiple(e) {
-      var x = e.movementX;
-      var y = e.movementY;
-      window.requestAnimationFrame(function() {
-        for (var i = 0; i < document.getElementsByClassName("selected").length; i++) {
-          var element = document.getElementsByClassName("selected")[i];
-          console.log(element.style.transform)
-          element.style.transform = "translate(" + (+element.style.transform.match(/-?\d+\.?\d*/g)[0] + x) + "px," + (+element.style.transform.match(/-?\d+\.?\d*/g)[1] + y) + "px)";
-        }
-      });
-    };
-
-    function mouseUpMultiple() {
+  function mouseMove(e) {
+    var x = e.movementX;
+    var y = e.movementY;
+    window.requestAnimationFrame(function() {
       for (var i = 0; i < document.getElementsByClassName("selected").length; i++) {
-        document.getElementsByClassName("selected")[i].style.boxShadow = "";
-        document.getElementsByClassName("selected")[i].style.cursor = "";
+        var element = document.getElementsByClassName("selected")[i];
+        element.style.transform = "translate(" + (+element.style.transform.match(/-?\d+\.?\d*/g)[0] + x) + "px," + (+element.style.transform.match(/-?\d+\.?\d*/g)[1] + y) + "px)";
       }
-      document.getElementById("main").removeEventListener("mouseup", mouseUpMultiple);
-      document.getElementById("main").removeEventListener("mousemove", mouseMoveMultiple);
-    };
+    });
+  };
 
-    document.getElementById("main").addEventListener("mousemove", mouseMoveMultiple);
-    document.getElementById("main").addEventListener("mouseup", mouseUpMultiple);
-  } else {
-    function mouseMove(e) {
-      target.style.transform = "translate(" + (+target.style.transform.match(/-?\d+\.?\d*/g)[0] + e.movementX) + "px," + (+target.style.transform.match(/-?\d+\.?\d*/g)[1] + e.movementY) + "px)";
-    };
+  function mouseUp() {
+    for (var i = 0; i < document.getElementsByClassName("selected").length; i++) {
+      document.getElementsByClassName("selected")[i].style.boxShadow = "";
+      document.getElementsByClassName("selected")[i].style.cursor = "";
+    }
+    document.getElementById("main").removeEventListener("mousemove", mouseMove);
+    document.getElementById("main").removeEventListener("mouseup", mouseUp);
+  };
 
-    function mouseUp() {
-      target.style.boxShadow = "";
-      target.style.cursor = "";
-      document.getElementById("main").removeEventListener("mouseup", mouseUp);
-      document.getElementById("main").removeEventListener("mousemove", mouseMove);
-    };
-    document.getElementById("main").addEventListener("mousemove", mouseMove);
-    document.getElementById("main").addEventListener("mouseup", mouseUp);
-  }
+  document.getElementById("main").addEventListener("mousemove", mouseMove);
+  document.getElementById("main").addEventListener("mouseup", mouseUp);
 
   for (var i = 0; i < document.getElementsByClassName("selected").length; i++){
     document.getElementsByClassName("selected")[i].style.boxShadow = "0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23), inset 0 0 0 1px #FC5185";
