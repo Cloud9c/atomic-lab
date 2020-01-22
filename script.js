@@ -93,6 +93,7 @@ function followCursor(target, diffX, diffY) {
   } else {
     var mouseMove = function(e) {
       target.style.transform = "translate(" + (+target.style.transform.match(/-?\d+/g)[0] + e.movementX) + "px," + (+target.style.transform.match(/-?\d+/g)[1] + e.movementY) + "px)";
+      console.log(target.style.transform)
     };
 
     var mouseUp = function() {
