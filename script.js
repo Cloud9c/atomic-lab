@@ -42,10 +42,12 @@ function mouseDrag(x, y) {
     target.style.width = Math.abs(e.pageX - x) + "px";
     target.style.height = Math.abs(e.pageY - y) + "px";
 
-    if (e.pageX < x)
-      target.style.left = e.pageX + "px";
-    if (e.pageY < y)
-      target.style.top = e.pageY + "px";
+    window.requestAnimationFrame(function() {
+      if (e.pageX < x)
+        target.style.left = e.pageX + "px";
+      if (e.pageY < y)
+        target.style.top = e.pageY + "px";
+    });
 
     var rect2 = target.getBoundingClientRect();
     for (var i = 0; i < document.getElementById("main").getElementsByClassName("element").length; i++) {
@@ -61,8 +63,8 @@ function mouseDrag(x, y) {
     target.style.display = "none";
     target.style.width = "0";
     target.style.height = "0";
-    document.removeEventListener("mouseup", mouseUp);
     document.removeEventListener("mousemove", mouseMove);
+    document.removeEventListener("mouseup", mouseUp);
   }
 
   document.addEventListener("mousemove", mouseMove);
@@ -71,16 +73,18 @@ function mouseDrag(x, y) {
 
 function followCursor(target, diffX, diffY) {
   if (document.getElementsByClassName("selected")[1] && target.classList.contains("selected")) {
-    var mouseMoveMultiple = function(e) {
+    function mouseMoveMultiple(e) {
       var x = e.movementX;
       var y = e.movementY;
-      for (var i = 0; i < document.getElementsByClassName("selected").length; i++) {
-        var element = document.getElementsByClassName("selected")[i];
-        element.style.transform = "translate(" + (+element.style.transform.match(/-?\d+/g)[0] + x) + "px," + (+element.style.transform.match(/-?\d+/g)[1] + y) + "px)";
-      }
+      window.requestAnimationFrame(function() {
+        for (var i = 0; i < document.getElementsByClassName("selected").length; i++) {
+          var element = document.getElementsByClassName("selected")[i];
+          element.style.transform = "translate(" + (+element.style.transform.match(/-?\d+/g)[0] + x) + "px," + (+element.style.transform.match(/-?\d+/g)[1] + y) + "px)";
+        }
+      });
     };
 
-    var mouseUpMultiple = function() {
+    function mouseUpMultiple() {
       for (var i = 0; i < document.getElementsByClassName("selected").length; i++) {
         document.getElementsByClassName("selected")[i].style.boxShadow = "";
         document.getElementsByClassName("selected")[i].style.cursor = "";
@@ -88,15 +92,15 @@ function followCursor(target, diffX, diffY) {
       document.getElementById("main").removeEventListener("mouseup", mouseUpMultiple);
       document.getElementById("main").removeEventListener("mousemove", mouseMoveMultiple);
     };
+
     document.getElementById("main").addEventListener("mousemove", mouseMoveMultiple);
     document.getElementById("main").addEventListener("mouseup", mouseUpMultiple);
   } else {
-    var mouseMove = function(e) {
+    function mouseMove(e) {
       target.style.transform = "translate(" + (+target.style.transform.match(/-?\d+/g)[0] + e.movementX) + "px," + (+target.style.transform.match(/-?\d+/g)[1] + e.movementY) + "px)";
-      console.log(target.style.transform)
     };
 
-    var mouseUp = function() {
+    function mouseUp() {
       target.style.boxShadow = "";
       target.style.cursor = "";
       document.getElementById("main").removeEventListener("mouseup", mouseUp);
@@ -199,10 +203,10 @@ function openMenu(e) {
             svg.setAttribute("width", "100%");
             svg.setAttribute("height", "100%");
             svg.appendChild(line);
-            line.setAttribute("x1", ele1.offsetLeft + ele1.offsetWidth/2);
-            line.setAttribute("y1", ele1.offsetTop + ele1.offsetHeight/2);
-            line.setAttribute("x2", ele2.offsetLeft + ele1.offsetWidth/2);
-            line.setAttribute("y2", ele2.offsetTop + ele1.offsetHeight/2);
+            line.setAttribute("x1", +ele1.style.transform.match(/-?\d+/g)[0] + ele1.offsetWidth/2); //TODO ROTATE BASE ON ANGLE
+            line.setAttribute("y1", +ele1.style.transform.match(/-?\d+/g)[1] + ele1.offsetHeight/2);
+            line.setAttribute("x2", +ele2.style.transform.match(/-?\d+/g)[0] + ele1.offsetWidth/2);
+            line.setAttribute("y2", +ele2.style.transform.match(/-?\d+/g)[1] + ele1.offsetHeight/2);
           }
           placement++;
         }
