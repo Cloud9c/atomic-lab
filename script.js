@@ -266,8 +266,8 @@ function sliderAdjust(e) {
       document.getElementById("slider").style.background = "linear-gradient(#e8e8e8 " + changePX + "%, #3fc1c9 " + changePX + "%)";
     }
 
-    document.body.addEventListener("touchmove", mouseMove);
-    document.body.addEventListener("touchend", mouseUp);
+    document.body.addEventListener("mousemove", mouseMove);
+    document.body.addEventListener("mouseup", mouseUp);
   } else {
     var pos = e.pageY - 148;
     if (pos < -7)
