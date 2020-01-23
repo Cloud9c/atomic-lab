@@ -508,7 +508,6 @@ body > .element {
 	background: rgba(252, 81, 133, 0.2);
 	border: 1px solid rgba(252, 81, 133, 0.5);
 	display: none;
-	z-index: 1;
 }
 
 #snackbar {
