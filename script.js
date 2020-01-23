@@ -183,7 +183,7 @@ function openMenu(e) {
           document.getElementsByClassName("option")[1].onclick = function() {
             var ele1 = document.getElementsByClassName("selected")[0];
             var ele2 = document.getElementsByClassName("selected")[1];
-            var svg = document.getElementById("svg");
+            var svg = document.body.getElementById("svg");
             var line = document.createElementNS("http://www.w3.org/2000/svg", "line");
             svg.setAttribute("width", "100%");
             svg.setAttribute("height", "100%");
