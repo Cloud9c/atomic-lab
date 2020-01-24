@@ -194,13 +194,10 @@
 	min-height: 40px;
 	font-family: 'Roboto', sans-serif;
 	transition: box-shadow 150ms linear;
-}
-
-#drag-area[style*="display: none"] ~ .element {
 	cursor: pointer;
 }
 
-#periodic-table .element, .slot .element {
+#drag-area[style*="display: none"] ~ .element {
 	cursor: pointer;
 }
 
@@ -451,7 +448,7 @@ body > .element {
 	position: absolute;
 	margin: 0;
 	z-index: 2;
-	cursor: grabbing;
+	cursor: grabbing !important;
 }
 
 .gu-hide {

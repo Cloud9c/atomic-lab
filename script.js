@@ -82,14 +82,20 @@ function followCursor(target, diffX, diffY) {
         var element = document.getElementById("main").getElementsByClassName("selected")[i];
         element.style.transform = "translate(" + (+element.style.transform.match(/-?\d+\.?\d*/g)[0] + x) + "px," + (+element.style.transform.match(/-?\d+\.?\d*/g)[1] + y) + "px)";
         if (element.getAttribute("data-line")) {
-          var line = document.getElementById(element.getAttribute("data-line"));
-          if (element.getAttribute("data-firstPos") !== null) {
-            line.setAttribute("x1", parseInt(line.getAttribute("x1")) + x);
-            line.setAttribute("y1", parseInt(line.getAttribute("y1")) + y);
-          }
-          else {
-            line.setAttribute("x2", parseInt(line.getAttribute("x2")) + x);
-            line.setAttribute("y2", parseInt(line.getAttribute("y2")) + y);
+          var splitLine = element.getAttribute("data-line").split(";");
+          for (var j = 0; j < splitLine.length; j++){
+            var id = splitLine[j];
+            if (id.slice(-1) === "-") {
+              id = id.slice(0, -1);
+              var line = document.getElementById(id);
+              line.setAttribute("x1", parseInt(line.getAttribute("x1")) + x);
+              line.setAttribute("y1", parseInt(line.getAttribute("y1")) + y);
+            }
+            else {
+              var line = document.getElementById(id);
+              line.setAttribute("x2", parseInt(line.getAttribute("x2")) + x);
+              line.setAttribute("y2", parseInt(line.getAttribute("y2")) + y);
+            }
           }
         }
       }
@@ -200,14 +206,25 @@ function openMenu(e) {
             document.getElementById("menu-options").getElementsByClassName("option")[1].onclick = function() {
               var globalCounter = parseInt(localStorage.getItem("globalCounter"), 10) + 1;
               localStorage.setItem("globalCounter", globalCounter);
-              ele1.setAttribute("data-line", "#" + globalCounter);
-              ele1.setAttribute("data-firstPos", "");
-              ele2.setAttribute("data-line", "#" + globalCounter);
-              var molecule = document.createElement("div");
-              molecule.classList.add("molecule");
-              molecule.appendChild(ele1);
-              molecule.appendChild(ele2);
-              document.getElementById("main").appendChild(molecule);
+              if (ele1.getAttribute("data-line") !== null)
+                ele1.setAttribute("data-line", ele1.getAttribute("data-line") + ";#" +  globalCounter + "-");
+              else
+                ele1.setAttribute("data-line", "#" + globalCounter + "-");
+              if (ele2.getAttribute("data-line") !== null)
+                ele2.setAttribute("data-line", ele2.getAttribute("data-line") + ";#" + globalCounter);
+              else
+                ele2.setAttribute("data-line", "#" + globalCounter);
+              if (ele1.parentElement.classList.contains("molecule")) {
+                ele1.parentElement.appendChild(ele2);
+              } else if (ele2.parentElement.classList.contains("molecule")) {
+                ele2.parentElement.appendChild(ele1);
+              } else {
+                var molecule = document.createElement("div");
+                molecule.classList.add("molecule");
+                molecule.appendChild(ele1);
+                molecule.appendChild(ele2);
+                document.getElementById("main").appendChild(molecule);
+              }
               var svg = document.getElementById("svg");
               var line = document.createElementNS("http://www.w3.org/2000/svg", "line");
               line.id = "#" + globalCounter;
@@ -498,7 +515,7 @@ window.addEventListener("beforeunload", function(e) {
     slot += document.getElementById("hotbar").getElementsByClassName("slot")[i].innerHTML + ";";
 
   localStorage.setItem("slot", slot);
-  localStorage.setItem("main", document.getElementById("main").innerHTML);
+  localStorage.setItem("main", document.getElementById("main").innerHTML.replace(/\r?\n|\r/g, ""));
 });
 
 window.addEventListener("beforeinstallprompt", function(e) {
