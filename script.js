@@ -26,9 +26,11 @@ window.addEventListener("load", function(e) {
     var main = localStorage.getItem("main");
 
     for (var i = 0; i < 9; i++)
-      document.getElementsByClassName("slot")[i].innerHTML = slot[i];
+      document.getElementById("hotbar").getElementsByClassName("slot")[i].innerHTML = slot[i];
 
     document.getElementById("main").innerHTML = main;
+  } else {
+    localStorage.setItem("globalCounter", "0");
   }
 });
 
@@ -76,17 +78,28 @@ function followCursor(target, diffX, diffY) {
     var x = e.movementX;
     var y = e.movementY;
     window.requestAnimationFrame(function() {
-      for (var i = 0; i < document.getElementsByClassName("selected").length; i++) {
-        var element = document.getElementsByClassName("selected")[i];
+      for (var i = 0; i < document.getElementById("main").getElementsByClassName("selected").length; i++) {
+        var element = document.getElementById("main").getElementsByClassName("selected")[i];
         element.style.transform = "translate(" + (+element.style.transform.match(/-?\d+\.?\d*/g)[0] + x) + "px," + (+element.style.transform.match(/-?\d+\.?\d*/g)[1] + y) + "px)";
+        if (element.getAttribute("data-line")) {
+          var line = document.getElementById(element.getAttribute("data-line"));
+          if (element.getAttribute("data-firstPos") !== null) {
+            line.setAttribute("x1", parseInt(line.getAttribute("x1")) + x);
+            line.setAttribute("y1", parseInt(line.getAttribute("y1")) + y);
+          }
+          else {
+            line.setAttribute("x2", parseInt(line.getAttribute("x2")) + x);
+            line.setAttribute("y2", parseInt(line.getAttribute("y2")) + y);
+          }
+        }
       }
     });
   };
 
   function mouseUp() {
-    for (var i = 0; i < document.getElementsByClassName("selected").length; i++) {
-      document.getElementsByClassName("selected")[i].style.boxShadow = "";
-      document.getElementsByClassName("selected")[i].style.cursor = "";
+    for (var i = 0; i < document.getElementById("main").getElementsByClassName("selected").length; i++) {
+      document.getElementById("main").getElementsByClassName("selected")[i].style.boxShadow = "";
+      document.getElementById("main").getElementsByClassName("selected")[i].style.cursor = "";
     }
     document.getElementById("main").removeEventListener("mousemove", mouseMove);
     document.getElementById("main").removeEventListener("mouseup", mouseUp);
@@ -95,16 +108,16 @@ function followCursor(target, diffX, diffY) {
   document.getElementById("main").addEventListener("mousemove", mouseMove);
   document.getElementById("main").addEventListener("mouseup", mouseUp);
 
-  for (var i = 0; i < document.getElementsByClassName("selected").length; i++){
-    document.getElementsByClassName("selected")[i].style.boxShadow = "0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23), inset 0 0 0 1px #FC5185";
-    document.getElementsByClassName("selected")[i].style.cursor = "grabbing"
+  for (var i = 0; i < document.getElementById("main").getElementsByClassName("selected").length; i++){
+    document.getElementById("main").getElementsByClassName("selected")[i].style.boxShadow = "0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23), inset 0 0 0 1px #FC5185";
+    document.getElementById("main").getElementsByClassName("selected")[i].style.cursor = "grabbing"
   }
 }
 
 function toggleMenu(command, e) {
   if (!e.target.classList.contains("element"))
-    while (document.getElementsByClassName("selected")[0])
-      document.getElementsByClassName("selected")[0].classList.remove("selected");
+    while (document.getElementById("main").getElementsByClassName("selected")[0])
+      document.getElementById("main").getElementsByClassName("selected")[0].classList.remove("selected");
 
   var rect = document.getElementById("menu");
 
@@ -126,48 +139,49 @@ function toggleMenu(command, e) {
 
 function openMenu(e) {
   e.preventDefault();
+  console.log(e.target)
   if (!e.target.classList.contains("option")) {
-    document.getElementsByClassName("option")[0].innerHTML = "";
-    document.getElementsByClassName("option")[1].innerHTML = "";
-    document.getElementsByClassName("option")[2].innerHTML = "";
+    document.getElementById("menu-options").getElementsByClassName("option")[0].innerHTML = "";
+    document.getElementById("menu-options").getElementsByClassName("option")[1].innerHTML = "";
+    document.getElementById("menu-options").getElementsByClassName("option")[2].innerHTML = "";
 
     if (e.target.id === "hotbar") {
-      document.getElementsByClassName("option")[0].innerHTML = '<svg width="24" height="24" viewBox="0 0 24 24"><path fill="#656565" d="M9,3V4H4V6H5V19A2,2 0 0,0 7,21H17A2,2 0 0,0 19,19V6H20V4H15V3H9M7,6H17V19H7V6M9,8V17H11V8H9M13,8V17H15V8H13Z"/></svg><span>Clear All Slots</span>';
-      document.getElementsByClassName("option")[0].onclick = function() {
+      document.getElementById("menu-options").getElementsByClassName("option")[0].innerHTML = '<svg width="24" height="24" viewBox="0 0 24 24"><path fill="#656565" d="M9,3V4H4V6H5V19A2,2 0 0,0 7,21H17A2,2 0 0,0 19,19V6H20V4H15V3H9M7,6H17V19H7V6M9,8V17H11V8H9M13,8V17H15V8H13Z"/></svg><span>Clear All Slots</span>';
+      document.getElementById("menu-options").getElementsByClassName("option")[0].onclick = function() {
         for (var i = 0; i < 9; i++)
-          document.getElementsByClassName("slot")[i].innerHTML = "";
+          document.getElementById("hotbar").getElementsByClassName("slot")[i].innerHTML = "";
         toggleMenu("none", e);
       };
     } else if (e.target.parentElement.classList.contains("slot")) {
-      document.getElementsByClassName("option")[0].innerHTML = '<svg width="24" height="24" viewBox="0 0 24 24"><path fill="#656565" d="M9,3V4H4V6H5V19A2,2 0 0,0 7,21H17A2,2 0 0,0 19,19V6H20V4H15V3H9M7,6H17V19H7V6M9,8V17H11V8H9M13,8V17H15V8H13Z"/></svg><span>Clear Slot</span>';
-      document.getElementsByClassName("option")[0].onclick = function() {
+      document.getElementById("menu-options").getElementsByClassName("option")[0].innerHTML = '<svg width="24" height="24" viewBox="0 0 24 24"><path fill="#656565" d="M9,3V4H4V6H5V19A2,2 0 0,0 7,21H17A2,2 0 0,0 19,19V6H20V4H15V3H9M7,6H17V19H7V6M9,8V17H11V8H9M13,8V17H15V8H13Z"/></svg><span>Clear Slot</span>';
+      document.getElementById("menu-options").getElementsByClassName("option")[0].onclick = function() {
         e.target.parentElement.innerHTML = "";
         toggleMenu("none", e);
       };
     } else if (e.target.id === "main") {
-      document.getElementsByClassName("option")[0].innerHTML = '<svg width="24" height="24" viewBox="0 0 24 24"><path fill="#656565" d="M9,3V4H4V6H5V19A2,2 0 0,0 7,21H17A2,2 0 0,0 19,19V6H20V4H15V3H9M7,6H17V19H7V6M9,8V17H11V8H9M13,8V17H15V8H13Z"/></svg><span>Clear Lab</span>';
-      document.getElementsByClassName("option")[0].onclick = function() {
+      document.getElementById("menu-options").getElementsByClassName("option")[0].innerHTML = '<svg width="24" height="24" viewBox="0 0 24 24"><path fill="#656565" d="M9,3V4H4V6H5V19A2,2 0 0,0 7,21H17A2,2 0 0,0 19,19V6H20V4H15V3H9M7,6H17V19H7V6M9,8V17H11V8H9M13,8V17H15V8H13Z"/></svg><span>Clear Lab</span>';
+      document.getElementById("menu-options").getElementsByClassName("option")[0].onclick = function() {
         while (document.getElementById("main").getElementsByClassName("element")[0])
           document.getElementById("main").removeChild(document.getElementById("main").lastChild);
         toggleMenu("none", e);
       };
-    } else if (e.target.parentElement.id === "main" && e.target.classList.contains("element")) {
-      document.getElementsByClassName("option")[0].innerHTML = '<svg width="24" height="24" viewBox="0 0 24 24"><path fill="#656565" d="M19 21H8V7h11m0-2H8a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2m-3-4H4a2 2 0 0 0-2 2v14h2V3h12V1z"/></svg><span>Duplicate</span>';
-      document.getElementsByClassName("option")[1].innerHTML = '<svg width="24" height="24" viewBox="0 0 24 24"><path fill="#656565" d="M9,3V4H4V6H5V19A2,2 0 0,0 7,21H17A2,2 0 0,0 19,19V6H20V4H15V3H9M7,6H17V19H7V6M9,8V17H11V8H9M13,8V17H15V8H13Z"/></svg><span>Remove</span>';
+    } else if ((e.target.parentElement.id === "main" || e.target.parentElement.classList.contains("molecule")) && e.target.classList.contains("element")) {
+      document.getElementById("menu-options").getElementsByClassName("option")[0].innerHTML = '<svg width="24" height="24" viewBox="0 0 24 24"><path fill="#656565" d="M19 21H8V7h11m0-2H8a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2m-3-4H4a2 2 0 0 0-2 2v14h2V3h12V1z"/></svg><span>Duplicate</span>';
+      document.getElementById("menu-options").getElementsByClassName("option")[1].innerHTML = '<svg width="24" height="24" viewBox="0 0 24 24"><path fill="#656565" d="M9,3V4H4V6H5V19A2,2 0 0,0 7,21H17A2,2 0 0,0 19,19V6H20V4H15V3H9M7,6H17V19H7V6M9,8V17H11V8H9M13,8V17H15V8H13Z"/></svg><span>Remove</span>';
       if (!e.target.classList.contains("selected"))
-        while (document.getElementsByClassName("selected")[0])
-          document.getElementsByClassName("selected")[0].classList.remove("selected");
+        while (document.getElementById("main").getElementsByClassName("selected")[0])
+          document.getElementById("main").getElementsByClassName("selected")[0].classList.remove("selected");
 
-      if (document.getElementsByClassName("selected")[1]) {
+      if (document.getElementById("main").getElementsByClassName("selected")[1]) {
         var placement = 1;
-        document.getElementsByClassName("option")[0].onclick = function() {
+        document.getElementById("menu-options").getElementsByClassName("option")[0].onclick = function() {
           var switcheroo = [];
-          for (var i = 0; i < document.getElementsByClassName("selected").length; i++) {
-            var clone = document.getElementsByClassName("selected")[i].cloneNode(true);
+          for (var i = 0; i < document.getElementById("main").getElementsByClassName("selected").length; i++) {
+            var clone = document.getElementById("main").getElementsByClassName("selected")[i].cloneNode(true);
             clone.classList.remove("selected");
             document.getElementById("main").appendChild(clone);
             clone.style.transform = "translate(" + (+clone.style.transform.match(/-?\d+\.?\d*/g)[0] + 16) + "px," + (+clone.style.transform.match(/-?\d+\.?\d*/g)[1] + 16) + "px)";
-            switcheroo.push(clone, document.getElementsByClassName("selected")[i]);
+            switcheroo.push(clone, document.getElementById("main").getElementsByClassName("selected")[i]);
           }
           for (i = 0; i < switcheroo.length; i++) {
             if (switcheroo[i].classList.contains("selected"))
@@ -177,38 +191,49 @@ function openMenu(e) {
           }
           toggleMenu("none", e);
         };
-        if (document.getElementsByClassName("selected").length === 2) {
-          document.getElementsByClassName("option")[2].innerHTML = document.getElementsByClassName("option")[1].innerHTML;
-          document.getElementsByClassName("option")[1].innerHTML = '<svg width="24" height="24" viewBox="0 0 24 24"><path fill="#656565" d="M18,19C16.89,19 16,18.1 16,17C16,15.89 16.89,15 18,15A2,2 0 0,1 20,17A2,2 0 0,1 18,19M18,13A4,4 0 0,0 14,17A4,4 0 0,0 18,21A4,4 0 0,0 22,17A4,4 0 0,0 18,13M12,11.1A1.9,1.9 0 0,0 10.1,13A1.9,1.9 0 0,0 12,14.9A1.9,1.9 0 0,0 13.9,13A1.9,1.9 0 0,0 12,11.1M6,19C4.89,19 4,18.1 4,17C4,15.89 4.89,15 6,15A2,2 0 0,1 8,17A2,2 0 0,1 6,19M6,13A4,4 0 0,0 2,17A4,4 0 0,0 6,21A4,4 0 0,0 10,17A4,4 0 0,0 6,13M12,4A2,2 0 0,1 14,6A2,2 0 0,1 12,8C10.89,8 10,7.1 10,6C10,4.89 10.89,4 12,4M12,10A4,4 0 0,0 16,6A4,4 0 0,0 12,2A4,4 0 0,0 8,6A4,4 0 0,0 12,10Z"/></svg><span>Create bond</span>'
-          document.getElementsByClassName("option")[1].onclick = function() {
-            var ele1 = document.getElementsByClassName("selected")[0];
-            var ele2 = document.getElementsByClassName("selected")[1];
-            var svg = document.body.getElementById("svg");
-            var line = document.createElementNS("http://www.w3.org/2000/svg", "line");
-            svg.setAttribute("width", "100%");
-            svg.setAttribute("height", "100%");
-            svg.appendChild(line);
-            line.setAttribute("x1", +ele1.style.transform.match(/-?\d+\.?\d*/g)[0] + ele1.offsetWidth/2); //TODO ROTATE BASE ON ANGLE
-            line.setAttribute("y1", +ele1.style.transform.match(/-?\d+\.?\d*/g)[1] + ele1.offsetHeight/2);
-            line.setAttribute("x2", +ele2.style.transform.match(/-?\d+\.?\d*/g)[0] + ele1.offsetWidth/2);
-            line.setAttribute("y2", +ele2.style.transform.match(/-?\d+\.?\d*/g)[1] + ele1.offsetHeight/2);
+        if (document.getElementById("main").getElementsByClassName("selected").length === 2) {
+          var ele1 = document.getElementById("main").getElementsByClassName("selected")[0];
+          var ele2 = document.getElementById("main").getElementsByClassName("selected")[1];
+          if (ele1.getAttribute("data-line") === null || ele1.getAttribute("data-line") !== ele2.getAttribute("data-line")) {
+            document.getElementById("menu-options").getElementsByClassName("option")[2].innerHTML = document.getElementById("menu-options").getElementsByClassName("option")[1].innerHTML;
+            document.getElementById("menu-options").getElementsByClassName("option")[1].innerHTML = '<svg width="24" height="24" viewBox="0 0 24 24"><path fill="#656565" d="M18,19C16.89,19 16,18.1 16,17C16,15.89 16.89,15 18,15A2,2 0 0,1 20,17A2,2 0 0,1 18,19M18,13A4,4 0 0,0 14,17A4,4 0 0,0 18,21A4,4 0 0,0 22,17A4,4 0 0,0 18,13M12,11.1A1.9,1.9 0 0,0 10.1,13A1.9,1.9 0 0,0 12,14.9A1.9,1.9 0 0,0 13.9,13A1.9,1.9 0 0,0 12,11.1M6,19C4.89,19 4,18.1 4,17C4,15.89 4.89,15 6,15A2,2 0 0,1 8,17A2,2 0 0,1 6,19M6,13A4,4 0 0,0 2,17A4,4 0 0,0 6,21A4,4 0 0,0 10,17A4,4 0 0,0 6,13M12,4A2,2 0 0,1 14,6A2,2 0 0,1 12,8C10.89,8 10,7.1 10,6C10,4.89 10.89,4 12,4M12,10A4,4 0 0,0 16,6A4,4 0 0,0 12,2A4,4 0 0,0 8,6A4,4 0 0,0 12,10Z"/></svg><span>Create bond</span>'
+            document.getElementById("menu-options").getElementsByClassName("option")[1].onclick = function() {
+              var globalCounter = parseInt(localStorage.getItem("globalCounter"), 10) + 1;
+              localStorage.setItem("globalCounter", globalCounter);
+              ele1.setAttribute("data-line", "#" + globalCounter);
+              ele1.setAttribute("data-firstPos", "");
+              ele2.setAttribute("data-line", "#" + globalCounter);
+              var molecule = document.createElement("div");
+              molecule.classList.add("molecule");
+              molecule.appendChild(ele1);
+              molecule.appendChild(ele2);
+              document.getElementById("main").appendChild(molecule);
+              var svg = document.getElementById("svg");
+              var line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+              line.id = "#" + globalCounter;
+              svg.appendChild(line);
+              line.setAttribute("x1", +ele1.style.transform.match(/-?\d+\.?\d*/g)[0] + ele1.offsetWidth/2);
+              line.setAttribute("y1", +ele1.style.transform.match(/-?\d+\.?\d*/g)[1] + ele1.offsetHeight/2);
+              line.setAttribute("x2", +ele2.style.transform.match(/-?\d+\.?\d*/g)[0] + ele1.offsetWidth/2);
+              line.setAttribute("y2", +ele2.style.transform.match(/-?\d+\.?\d*/g)[1] + ele1.offsetHeight/2);
+            }
+            placement++;
           }
-          placement++;
         }
-        document.getElementsByClassName("option")[placement].onclick = function() {
-          while (document.getElementsByClassName("selected")[0])
-            document.getElementById("main").removeChild(document.getElementsByClassName("selected")[0]);
+        document.getElementById("menu-options").getElementsByClassName("option")[placement].onclick = function() {
+          while (document.getElementById("main").getElementsByClassName("selected")[0])
+            document.getElementById("main").removeChild(document.getElementById("main").getElementsByClassName("selected")[0]);
           toggleMenu("none", e);
         };
       } else {
-        document.getElementsByClassName("option")[0].onclick = function() {
+        document.getElementById("menu-options").getElementsByClassName("option")[0].onclick = function() {
           var clone = e.target.cloneNode(true);
           document.getElementById("main").appendChild(clone);
           clone.style.transform = "translate(" + (+clone.style.transform.match(/-?\d+\.?\d*/g)[0] + 16) + "px," + (+clone.style.transform.match(/-?\d+\.?\d*/g)[1] + 16) + "px)";
           e.target.classList.remove("selected");
           toggleMenu("none", e);
         };
-        document.getElementsByClassName("option")[1].onclick = function() {
+        document.getElementById("menu-options").getElementsByClassName("option")[1].onclick = function() {
           document.getElementById("main").removeChild(e.target);
           toggleMenu("none", e);
         };
@@ -216,7 +241,7 @@ function openMenu(e) {
       }
     }
 
-    if (document.getElementsByClassName("option")[0].innerHTML.length > 0)
+    if (document.getElementById("menu-options").getElementsByClassName("option")[0].innerHTML.length > 0)
       toggleMenu("block", e);
   }
 }
@@ -336,8 +361,8 @@ document.getElementById("periodic-table").addEventListener("mouseover", function
       document.getElementById("atomic-number").textContent = [].indexOf.call(document.getElementById("periodic-table").getElementsByClassName("element"), event.target) + 1;
       document.getElementById("atomic-symbol").textContent = event.target.children[0].textContent;
       document.getElementById("atomic-name").textContent = event.target.children[0].getAttribute("title");
-      document.getElementById("atomic-mass").textContent = event.target.getAttribute("amass");
-      if (event.target.getAttribute("amass") % 1 === 0)
+      document.getElementById("atomic-mass").textContent = event.target.getAttribute("data-amass");
+      if (event.target.getAttribute("data-amass") % 1 === 0)
         document.getElementById("atomic-mass").textContent = "(" + document.getElementById("atomic-mass").textContent + ")";
       document.getElementById("closeup").style.background = getComputedStyle(event.target).background;
     } else {
@@ -360,7 +385,7 @@ document.getElementById("periodic-table").addEventListener("mouseover", function
 document.addEventListener("keydown", function(e) {
   var hoverElement = document.querySelectorAll(":hover")[document.querySelectorAll(":hover").length - 1]
   if (/^[1-9]$/i.test(event.key) && hoverElement.classList.contains("element")) {
-    var target = document.getElementsByClassName("slot")[event.key - 1];
+    var target = document.getElementById("hotbar").getElementsByClassName("slot")[event.key - 1];
     var clone = hoverElement.cloneNode(true);
     clone.removeAttribute("style");
     clone.classList.remove("gu-mirror");
@@ -370,7 +395,7 @@ document.addEventListener("keydown", function(e) {
     target.appendChild(clone);
     target.classList.add("pulse");
     setTimeout(function(e) {
-      document.getElementsByClassName("slot")[e].classList.remove("pulse");
+      document.getElementById("hotbar").getElementsByClassName("slot")[e].classList.remove("pulse");
     }, 500, event.key - 1);
   } else if (event.key === "ArrowUp" || event.key === "ArrowDown") {
     var pos = document.getElementById("slider-thumb").offsetTop;
@@ -403,11 +428,11 @@ document.getElementById("main").addEventListener("mousedown", function(e) {
       var diffX = e.pageX - e.target.offsetLeft;
       var diffY = e.pageY - e.target.offsetTop;
 
-      document.getElementById("main").appendChild(e.target);
+      // document.getElementById("main").appendChild(e.target);
 
-      if (document.getElementsByClassName("selected").length < 2 || !e.target.classList.contains("selected"))
-        while (document.getElementsByClassName("selected")[0])
-          document.getElementsByClassName("selected")[0].classList.remove("selected");
+      if (document.getElementById("main").getElementsByClassName("selected").length < 2 || !e.target.classList.contains("selected"))
+        while (document.getElementById("main").getElementsByClassName("selected")[0])
+          document.getElementById("main").getElementsByClassName("selected")[0].classList.remove("selected");
 
       e.target.classList.add("selected");
 
@@ -434,8 +459,8 @@ document.getElementById("main").addEventListener("mousedown", function(e) {
     } else if (e.ctrlKey || e.altKey || e.shiftKey) {
       openMenu(e);
     } else {
-      while (document.getElementsByClassName("selected")[0])
-        document.getElementsByClassName("selected")[0].classList.remove("selected");
+      while (document.getElementById("main").getElementsByClassName("selected")[0])
+        document.getElementById("main").getElementsByClassName("selected")[0].classList.remove("selected");
       mouseDrag(e.pageX, e.pageY);
     }
   }
@@ -443,7 +468,7 @@ document.getElementById("main").addEventListener("mousedown", function(e) {
 
 document.addEventListener("contextmenu", openMenu);
 
-dragula([document.getElementById("periodic-table"), document.getElementById("main"), document.getElementsByClassName("slot")[0], document.getElementsByClassName("slot")[1], document.getElementsByClassName("slot")[2], document.getElementsByClassName("slot")[3], document.getElementsByClassName("slot")[4], document.getElementsByClassName("slot")[5], document.getElementsByClassName("slot")[6], document.getElementsByClassName("slot")[7], document.getElementsByClassName("slot")[8]], {
+dragula([document.getElementById("periodic-table"), document.getElementById("main"), document.getElementById("hotbar").getElementsByClassName("slot")[0], document.getElementById("hotbar").getElementsByClassName("slot")[1], document.getElementById("hotbar").getElementsByClassName("slot")[2], document.getElementById("hotbar").getElementsByClassName("slot")[3], document.getElementById("hotbar").getElementsByClassName("slot")[4], document.getElementById("hotbar").getElementsByClassName("slot")[5], document.getElementById("hotbar").getElementsByClassName("slot")[6], document.getElementById("hotbar").getElementsByClassName("slot")[7], document.getElementById("hotbar").getElementsByClassName("slot")[8]], {
   copy: function (el, source) {
     return source !== document.getElementById("main");
   },
@@ -470,12 +495,10 @@ dragula([document.getElementById("periodic-table"), document.getElementById("mai
 window.addEventListener("beforeunload", function(e) {
   var slot = "";
   for (var i = 0; i < 9; i++)
-    slot += document.getElementsByClassName("slot")[i].innerHTML + ";";
-
-  var main = document.getElementById("main").innerHTML;
+    slot += document.getElementById("hotbar").getElementsByClassName("slot")[i].innerHTML + ";";
 
   localStorage.setItem("slot", slot);
-  localStorage.setItem("main", main);
+  localStorage.setItem("main", document.getElementById("main").innerHTML);
 });
 
 window.addEventListener("beforeinstallprompt", function(e) {

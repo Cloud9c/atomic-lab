@@ -50,7 +50,8 @@
 	border-radius: 50%;
 	box-shadow: 0px 2px 1px -1px rgba(0, 0, 0, 0.2), 0px 1px 1px 0px rgba(0, 0, 0, 0.14), 0px 1px 3px 0px rgba(0,0,0,.12);
 	border: 1px solid rgba(0,0,0,.12);
-	backface-visibility: hidden
+	backface-visibility: hidden;
+	pointer-events: all;
 }
 
 #rack-dialog > div {
@@ -563,4 +564,9 @@ body > .element {
 #svg > line {
 	stroke: #5f6368;
 	stroke-width: 8px;
+}
+
+.molecule {
+	position: absolute;
+	pointer-events: none;
 }
