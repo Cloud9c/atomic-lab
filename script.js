@@ -30,7 +30,8 @@ window.addEventListener("load", function(e) {
 
     document.getElementById("main").innerHTML = main;
   } else {
-    localStorage.setItem("globalCounter", "0");
+    localStorage.setItem("lineCounter", "0");
+    localStorage.setItem("elementCounter", "0");
   }
 });
 
@@ -52,12 +53,13 @@ function mouseDrag(x, y) {
     });
 
     var rect2 = target.getBoundingClientRect();
-    for (var i = 0; i < document.getElementById("main").getElementsByClassName("element").length; i++) {
-      var rect1 = document.getElementById("main").getElementsByClassName("element")[i].getBoundingClientRect();
+    var elements = document.getElementById("main").getElementsByClassName("element");
+    for (var i = 0; i < elements.length; i++) {
+      var rect1 = elements[i].getBoundingClientRect();
       if (rect1.left < rect2.right && rect1.right > rect2.left && rect1.top < rect2.bottom && rect1.bottom > rect2.top)
-        document.getElementById("main").getElementsByClassName("element")[i].classList.add("selected");
+        elements[i].classList.add("selected");
       else
-        document.getElementById("main").getElementsByClassName("element")[i].classList.remove("selected");
+        elements[i].classList.remove("selected");
     }
   }
 
@@ -74,50 +76,78 @@ function mouseDrag(x, y) {
 }
 
 function followCursor(target, diffX, diffY) {
+  var elements = document.querySelectorAll("#main > .element.selected");
+  var molecules = document.getElementById("main").getElementsByClassName("molecule");
+
   function mouseMove(e) {
     var x = e.movementX;
     var y = e.movementY;
     window.requestAnimationFrame(function() {
-      for (var i = 0; i < document.getElementById("main").getElementsByClassName("selected").length; i++) {
-        var element = document.getElementById("main").getElementsByClassName("selected")[i];
+      for (var i = 0; i < elements.length; i++) {
+        var element = elements[i];
         element.style.transform = "translate(" + (+element.style.transform.match(/-?\d+\.?\d*/g)[0] + x) + "px," + (+element.style.transform.match(/-?\d+\.?\d*/g)[1] + y) + "px)";
-        if (element.getAttribute("data-line")) {
-          var splitLine = element.getAttribute("data-line").split(";");
-          for (var j = 0; j < splitLine.length; j++){
-            var id = splitLine[j];
-            if (id.slice(-1) === "-") {
-              id = id.slice(0, -1);
-              var line = document.getElementById(id);
-              line.setAttribute("x1", parseInt(line.getAttribute("x1")) + x);
-              line.setAttribute("y1", parseInt(line.getAttribute("y1")) + y);
-            }
-            else {
-              var line = document.getElementById(id);
-              line.setAttribute("x2", parseInt(line.getAttribute("x2")) + x);
-              line.setAttribute("y2", parseInt(line.getAttribute("y2")) + y);
-            }
-          }
+        // if (element.getAttribute("data-line")) {
+        //   var splitLine = element.getAttribute("data-line").split(";");
+        //   var id = splitLine[j];
+        //   var line = document.getElementById(id);
+        //   line.setAttribute("x2", parseInt(line.getAttribute("x2")) + x);
+        //   line.setAttribute("y2", parseInt(line.getAttribute("y2")) + y);
+        // }
+      }
+      for (i = 0; i < selectedMolecules.length; i++) {
+        var sm = selectedMolecules[i].getAttribute("data-line").split(";");
+        for (var j = 0; j < sm.length; j++) {
+          var line = document.getElementById(sm[j]);
+          line.setAttribute("x1", parseInt(line.getAttribute("x1")) + x);
+          line.setAttribute("x2", parseInt(line.getAttribute("x2")) + x);
+          line.setAttribute("y1", parseInt(line.getAttribute("y1")) + y);
+          line.setAttribute("y2", parseInt(line.getAttribute("y2")) + y);
+        }
+        var moleculeElements = selectedMolecules[i].children;
+        for (j = 0; j < moleculeElements.length; j++) {
+          var element = moleculeElements[j];
+          element.style.transform = "translate(" + (+element.style.transform.match(/-?\d+\.?\d*/g)[0] + x) + "px," + (+element.style.transform.match(/-?\d+\.?\d*/g)[1] + y) + "px)";
         }
       }
     });
   };
 
   function mouseUp() {
-    for (var i = 0; i < document.getElementById("main").getElementsByClassName("selected").length; i++) {
-      document.getElementById("main").getElementsByClassName("selected")[i].style.boxShadow = "";
-      document.getElementById("main").getElementsByClassName("selected")[i].style.cursor = "";
-    }
+    for (var i = 0; i < elements.length; i++)
+      elements[i].style.boxShadow = "";
+
+    var shadows = document.getElementById("main").getElementsByClassName("m-shadow");
+    while (shadows.length !== 0)
+      shadows[0].classList.remove("m-shadow");
+
+    target.style.cursor = "";
     document.getElementById("main").removeEventListener("mousemove", mouseMove);
     document.getElementById("main").removeEventListener("mouseup", mouseUp);
   };
 
+  for (var i = 0; i < molecules.length; i++) {
+    var lines = molecules[i].getAttribute("data-line").split(";");
+    for (var j = 0; j < molecules[i].children.length; j++) {
+      if (molecules[i].children[j].classList.contains("selected")) {
+        molecules[i].classList.add("selected");
+        molecules[i].classList.add("m-shadow");
+        for (i= 0; i < lines.length; i++) {
+          document.getElementById(lines[i]).classList.add("selected");
+        }
+        break;
+      }
+    }
+  }
+
+  var selectedMolecules = document.getElementById("main").querySelectorAll(".molecule.selected");
+
   document.getElementById("main").addEventListener("mousemove", mouseMove);
   document.getElementById("main").addEventListener("mouseup", mouseUp);
 
-  for (var i = 0; i < document.getElementById("main").getElementsByClassName("selected").length; i++){
-    document.getElementById("main").getElementsByClassName("selected")[i].style.boxShadow = "0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23), inset 0 0 0 1px #FC5185";
-    document.getElementById("main").getElementsByClassName("selected")[i].style.cursor = "grabbing"
+  for (var i = 0; i < elements.length; i++){
+    elements[i].style.boxShadow = "0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23), inset 0 0 0 1px #FC5185";
   }
+  target.style.cursor = "grabbing"
 }
 
 function toggleMenu(command, e) {
@@ -145,7 +175,6 @@ function toggleMenu(command, e) {
 
 function openMenu(e) {
   e.preventDefault();
-  console.log(e.target)
   if (!e.target.classList.contains("option")) {
     document.getElementById("menu-options").getElementsByClassName("option")[0].innerHTML = "";
     document.getElementById("menu-options").getElementsByClassName("option")[1].innerHTML = "";
@@ -167,8 +196,8 @@ function openMenu(e) {
     } else if (e.target.id === "main") {
       document.getElementById("menu-options").getElementsByClassName("option")[0].innerHTML = '<svg width="24" height="24" viewBox="0 0 24 24"><path fill="#656565" d="M9,3V4H4V6H5V19A2,2 0 0,0 7,21H17A2,2 0 0,0 19,19V6H20V4H15V3H9M7,6H17V19H7V6M9,8V17H11V8H9M13,8V17H15V8H13Z"/></svg><span>Clear Lab</span>';
       document.getElementById("menu-options").getElementsByClassName("option")[0].onclick = function() {
-        while (document.getElementById("main").getElementsByClassName("element")[0])
-          document.getElementById("main").removeChild(document.getElementById("main").lastChild);
+        document.getElementById("svg").innerHTML = "";
+        document.getElementById("main").innerHTML = document.getElementById("svg").outerHTML;
         toggleMenu("none", e);
       };
     } else if ((e.target.parentElement.id === "main" || e.target.parentElement.classList.contains("molecule")) && e.target.classList.contains("element")) {
@@ -204,20 +233,32 @@ function openMenu(e) {
             document.getElementById("menu-options").getElementsByClassName("option")[2].innerHTML = document.getElementById("menu-options").getElementsByClassName("option")[1].innerHTML;
             document.getElementById("menu-options").getElementsByClassName("option")[1].innerHTML = '<svg width="24" height="24" viewBox="0 0 24 24"><path fill="#656565" d="M18,19C16.89,19 16,18.1 16,17C16,15.89 16.89,15 18,15A2,2 0 0,1 20,17A2,2 0 0,1 18,19M18,13A4,4 0 0,0 14,17A4,4 0 0,0 18,21A4,4 0 0,0 22,17A4,4 0 0,0 18,13M12,11.1A1.9,1.9 0 0,0 10.1,13A1.9,1.9 0 0,0 12,14.9A1.9,1.9 0 0,0 13.9,13A1.9,1.9 0 0,0 12,11.1M6,19C4.89,19 4,18.1 4,17C4,15.89 4.89,15 6,15A2,2 0 0,1 8,17A2,2 0 0,1 6,19M6,13A4,4 0 0,0 2,17A4,4 0 0,0 6,21A4,4 0 0,0 10,17A4,4 0 0,0 6,13M12,4A2,2 0 0,1 14,6A2,2 0 0,1 12,8C10.89,8 10,7.1 10,6C10,4.89 10.89,4 12,4M12,10A4,4 0 0,0 16,6A4,4 0 0,0 12,2A4,4 0 0,0 8,6A4,4 0 0,0 12,10Z"/></svg><span>Create bond</span>'
             document.getElementById("menu-options").getElementsByClassName("option")[1].onclick = function() {
-              var globalCounter = parseInt(localStorage.getItem("globalCounter"), 10) + 1;
-              localStorage.setItem("globalCounter", globalCounter);
+              var lineCounter = parseInt(localStorage.getItem("lineCounter"), 10) + 1;
+              localStorage.setItem("lineCounter", lineCounter);
               if (ele1.getAttribute("data-line") !== null)
-                ele1.setAttribute("data-line", ele1.getAttribute("data-line") + ";#" +  globalCounter + "-");
+                ele1.setAttribute("data-line", ele1.getAttribute("data-line") + ";#" +  lineCounter);
               else
-                ele1.setAttribute("data-line", "#" + globalCounter + "-");
+                ele1.setAttribute("data-line", "#" + lineCounter);
               if (ele2.getAttribute("data-line") !== null)
-                ele2.setAttribute("data-line", ele2.getAttribute("data-line") + ";#" + globalCounter);
+                ele2.setAttribute("data-line", ele2.getAttribute("data-line") + ";#" + lineCounter);
               else
-                ele2.setAttribute("data-line", "#" + globalCounter);
-              if (ele1.parentElement.classList.contains("molecule")) {
-                ele1.parentElement.appendChild(ele2);
-              } else if (ele2.parentElement.classList.contains("molecule")) {
-                ele2.parentElement.appendChild(ele1);
+                ele2.setAttribute("data-line", "#" + lineCounter);
+              var m1 = ele1.parentElement;
+              var m2 = ele2.parentElement;
+              if (m1.classList.contains("molecule")) {
+                var molecule = m1;
+                if (m2.classList.contains("molecule") && m1 !== m2) {
+                  console.log(m2.children)
+                  while(m2.children.length != 0) 
+                    molecule.appendChild(m2.children[0]);
+                  molecule.setAttribute("data-line", molecule.getAttribute("data-line") + ";" + m2.getAttribute("data-line"))
+                  m2.remove();
+                } else {
+                  molecule.appendChild(ele2);
+                }
+              } else if (m2.classList.contains("molecule")) {
+                var molecule = m2;
+                molecule.appendChild(ele1);
               } else {
                 var molecule = document.createElement("div");
                 molecule.classList.add("molecule");
@@ -225,9 +266,13 @@ function openMenu(e) {
                 molecule.appendChild(ele2);
                 document.getElementById("main").appendChild(molecule);
               }
+              if (molecule.getAttribute("data-line") !== null)
+                molecule.setAttribute("data-line", molecule.getAttribute("data-line") + ";#" + lineCounter)
+              else
+                molecule.setAttribute("data-line", "#" + lineCounter);
               var svg = document.getElementById("svg");
               var line = document.createElementNS("http://www.w3.org/2000/svg", "line");
-              line.id = "#" + globalCounter;
+              line.id = "#" + lineCounter;
               svg.appendChild(line);
               line.setAttribute("x1", +ele1.style.transform.match(/-?\d+\.?\d*/g)[0] + ele1.offsetWidth/2);
               line.setAttribute("y1", +ele1.style.transform.match(/-?\d+\.?\d*/g)[1] + ele1.offsetHeight/2);
@@ -251,7 +296,15 @@ function openMenu(e) {
           toggleMenu("none", e);
         };
         document.getElementById("menu-options").getElementsByClassName("option")[1].onclick = function() {
-          document.getElementById("main").removeChild(e.target);
+          var lines = e.target.getAttribute("data-line");
+          if (lines !== null) {
+            lines = lines.split(";");
+            for (var i = 0; i < lines.length; i++)
+              if (document.getElementById(lines[i]) !== null) {
+                document.getElementById(lines[i]).remove();
+              }
+          }
+          e.target.remove();
           toggleMenu("none", e);
         };
         e.target.classList.add("selected");
@@ -326,6 +379,12 @@ document.getElementById("rack").addEventListener("click", overlayToggle);
 document.getElementById("overlay").addEventListener("click", overlayToggle);
 
 document.getElementById("close").addEventListener("click", overlayToggle);
+
+document.getElementById("clear-progress").addEventListener("click", function() {
+  window.removeEventListener("beforeunload", saveProgress);
+  localStorage.clear();
+  location.reload();
+})
 
 document.getElementById("react").addEventListener("click", function() {
   if (animate) {
@@ -430,16 +489,13 @@ document.addEventListener("keydown", function(e) {
   }
 });
 
-document.addEventListener("mousedown", function(e) {
-  if (!e.target.classList.contains("option") && !e.target.parentElement.classList.contains("option") && !e.target.parentElement.parentElement.classList.contains("option") && document.getElementById("menu").style.display === "block") {
-    toggleMenu("none", e);
-  }
-});
-
 document.getElementById("slider").addEventListener("mousedown", sliderAdjust);
 
-document.getElementById("main").addEventListener("mousedown", function(e) {
-  if (e.button === 0) {
+document.addEventListener("mousedown", function(e) {
+  if (!e.path.includes(document.getElementById("menu"))) {
+    toggleMenu("none", e);
+  }
+  if (e.path.includes(document.getElementById("main")) && e.button === 0) {
     if (e.target.classList.contains("element")) {
       if (!e.ctrlKey && !e.altKey && !e.shiftKey) {
       var diffX = e.pageX - e.target.offsetLeft;
@@ -506,29 +562,34 @@ dragula([document.getElementById("periodic-table"), document.getElementById("mai
 
   if (target === document.getElementById("main")) {
     el.style.transform = "translate(" + document.getElementsByClassName("gu-mirror")[0].style.left + "," + document.getElementsByClassName("gu-mirror")[0].style.top + ")";
+    var elementCounter = parseInt(localStorage.getItem("elementCounter")) + 1;
+    localStorage.setItem("elementCounter", elementCounter);
+    el.setAttribute("data-id", elementCounter);
   }
 });
 
-window.addEventListener("beforeunload", function(e) {
+function saveProgress() {
   var slot = "";
   for (var i = 0; i < 9; i++)
     slot += document.getElementById("hotbar").getElementsByClassName("slot")[i].innerHTML + ";";
 
   localStorage.setItem("slot", slot);
   localStorage.setItem("main", document.getElementById("main").innerHTML.replace(/\r?\n|\r/g, ""));
-});
+}
+
+window.addEventListener("beforeunload", saveProgress);
 
 window.addEventListener("beforeinstallprompt", function(e) {
-  document.getElementById("install").style.display = "block";
-  var installApp = e;
-  document.getElementById("install").addEventListener("click", function(e) {
-    installApp.prompt();
-    installApp.userChoice.then(function(choiceResult){
-      if (choiceResult.outcome === "accepted") {
-        document.getElementById("install").style.display = "none";
-      }
+    document.getElementById("install").style.display = "block";
+    var installApp = e;
+    document.getElementById("install").addEventListener("click", function(e) {
+      installApp.prompt();
+      installApp.userChoice.then(function(choiceResult){
+        if (choiceResult.outcome === "accepted") {
+          document.getElementById("install").style.display = "none";
+        }
+      });
     });
-  });
 });
 
 if ('serviceWorker' in navigator) {

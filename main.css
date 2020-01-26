@@ -182,9 +182,22 @@
 	animation: pulse 0.7s;
 }
 
-#main .selected {
+#main .element.selected {
 	border: 1px solid #FC5185;
 	box-shadow: inset 0 0 0 1px #FC5185;
+}
+
+#main > .molecule.selected > * {
+	border: 1px solid #FC5185;
+	box-shadow: inset 0 0 0 1px #FC5185;
+}
+
+#main > .molecule.m-shadow > * {
+	box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23), inset 0 0 0 1px #FC5185;
+}
+
+#svg > line.selected {
+	stroke: #FC5185;
 }
 
 .element {
