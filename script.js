@@ -502,7 +502,7 @@ document.getElementById("react").addEventListener("click", function() {
 document.getElementById("periodic-table").addEventListener("mouseover", function(e) {
   if (event.target.classList.contains("element")) {
     if (event.target.parentElement.id === "periodic-table") {
-      document.getElementById("atomic-number").textContent = [].indexOf.call(document.getElementById("periodic-table").getElementsByClassName("element"), event.target) + 1;
+      document.getElementById("atomic-number").textContent = event.target.getAttribute("data-an");
       document.getElementById("atomic-symbol").textContent = event.target.children[0].textContent;
       document.getElementById("atomic-name").textContent = event.target.children[0].getAttribute("title");
       document.getElementById("atomic-mass").textContent = event.target.getAttribute("data-amass");
