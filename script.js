@@ -270,18 +270,17 @@ function openMenu(e) {
               let placement1 = ele1.style.transform.match(/-?\d+\.?\d*/g);
               let placement2 = ele2.style.transform.match(/-?\d+\.?\d*/g);
 
-              const diffX = +placement1[0] - +placement2[0];
-              const diffY = +placement1[1] - +placement2[1];
+              const rad =  Math.PI/2 - Math.atan2(+placement2[0] - +placement1[0], +placement2[1] - +placement1[1]);
+              console.log(+placement2[0] - +placement1[0], +placement2[1] - +placement1[1])
 
-              console.log(Math.atan2(diffX, diffY) * 180 / Math.PI)
+              const x = +ele1.style.transform.match(/-?\d+\.?\d*/g)[0] + (30 + ele1.offsetWidth) * Math.cos(rad);
+              const y = +ele1.style.transform.match(/-?\d+\.?\d*/g)[1] + (30 + ele1.offsetWidth) * Math.sin(rad);
 
-              // ele2.style.transform = "translate(" + (+ele2.style.transform.match(/-?\d+\.?\d*/g)[0] + diffX) + "px," + (+ele2.style.transform.match(/-?\d+\.?\d*/g)[1] + diffY) + "px)";
-
-              placement2 = ele2.style.transform.match(/-?\d+\.?\d*/g);
+              ele2.style.transform = "translate(" + x + "px," + y + "px)";
               line.setAttribute("x1", +placement1[0] + ele1.offsetWidth/2);
               line.setAttribute("y1", +placement1[1] + ele1.offsetHeight/2);
-              line.setAttribute("x2", +placement2[0] + ele1.offsetWidth/2);
-              line.setAttribute("y2", +placement2[1] + ele1.offsetHeight/2);
+              line.setAttribute("x2", x + ele1.offsetWidth/2);
+              line.setAttribute("y2", y + ele1.offsetHeight/2);
               line.setAttribute("ele1", ele1.id);
               line.setAttribute("ele2", ele2.id);
             }
