@@ -274,10 +274,19 @@ function openMenu(e) {
               var line = document.createElementNS("http://www.w3.org/2000/svg", "line");
               line.id = "#" + lineCounter;
               svg.appendChild(line);
-              line.setAttribute("x1", +ele1.style.transform.match(/-?\d+\.?\d*/g)[0] + ele1.offsetWidth/2);
-              line.setAttribute("y1", +ele1.style.transform.match(/-?\d+\.?\d*/g)[1] + ele1.offsetHeight/2);
-              line.setAttribute("x2", +ele2.style.transform.match(/-?\d+\.?\d*/g)[0] + ele1.offsetWidth/2);
-              line.setAttribute("y2", +ele2.style.transform.match(/-?\d+\.?\d*/g)[1] + ele1.offsetHeight/2);
+              var placement1 = ele1.style.transform.match(/-?\d+\.?\d*/g);
+              var placement2 = ele2.style.transform.match(/-?\d+\.?\d*/g);
+
+              var diffX = +placement1[0] - +placement2[0];
+              var diffY = +placement1[1] - +placement2[1];
+
+              ele2.style.transform = "translate(" + (+ele2.style.transform.match(/-?\d+\.?\d*/g)[0] + diffX) + "px," + (+ele2.style.transform.match(/-?\d+\.?\d*/g)[1] + diffY) + "px)";
+
+              placement2 = ele2.style.transform.match(/-?\d+\.?\d*/g);
+              line.setAttribute("x1", +placement1[0] + ele1.offsetWidth/2);
+              line.setAttribute("y1", +placement1[1] + ele1.offsetHeight/2);
+              line.setAttribute("x2", +placement2[0] + ele1.offsetWidth/2);
+              line.setAttribute("y2", +placement2[1] + ele1.offsetHeight/2);
             }
             placement++;
           }
