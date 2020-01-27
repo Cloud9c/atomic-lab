@@ -273,7 +273,7 @@ function openMenu(e) {
               const diffX = +placement1[0] - +placement2[0];
               const diffY = +placement1[1] - +placement2[1];
 
-              console.log(Math.atan(diffX, diffY) * 180 / Math.PI)
+              console.log(Math.atan2(diffX, diffY) * 180 / Math.PI)
 
               // ele2.style.transform = "translate(" + (+ele2.style.transform.match(/-?\d+\.?\d*/g)[0] + diffX) + "px," + (+ele2.style.transform.match(/-?\d+\.?\d*/g)[1] + diffY) + "px)";
 
