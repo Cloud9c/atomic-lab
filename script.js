@@ -220,8 +220,15 @@ function openMenu(e) {
           toggleMenu("none", e);
         };
         if (document.getElementById("main").getElementsByClassName("selected").length === 2) {
-          const ele1 = document.getElementById("main").getElementsByClassName("selected")[0];
-          const ele2 = document.getElementById("main").getElementsByClassName("selected")[1];
+          let ele1 = document.getElementById("main").getElementsByClassName("selected")[0];
+          let ele2 = document.getElementById("main").getElementsByClassName("selected")[1];
+
+          if ((ele2.parentElement.classList.contains("molecule") && !ele1.parentElement.classList.contains("molecules")) || +ele2.getAttribute("data-en") < +ele2.getAttribute("data-en")) {
+            const temp = ele2;
+            ele2 = ele1;
+            ele1 = temp;
+          }
+
           if (ele1.getAttribute("data-line") === null || ele1.getAttribute("data-line") !== ele2.getAttribute("data-line")) {
             document.getElementById("menu-options").getElementsByClassName("option")[2].innerHTML = document.getElementById("menu-options").getElementsByClassName("option")[1].innerHTML;
             document.getElementById("menu-options").getElementsByClassName("option")[1].innerHTML = '<svg width="24" height="24" viewBox="0 0 24 24"><path fill="#656565" d="M18,19C16.89,19 16,18.1 16,17C16,15.89 16.89,15 18,15A2,2 0 0,1 20,17A2,2 0 0,1 18,19M18,13A4,4 0 0,0 14,17A4,4 0 0,0 18,21A4,4 0 0,0 22,17A4,4 0 0,0 18,13M12,11.1A1.9,1.9 0 0,0 10.1,13A1.9,1.9 0 0,0 12,14.9A1.9,1.9 0 0,0 13.9,13A1.9,1.9 0 0,0 12,11.1M6,19C4.89,19 4,18.1 4,17C4,15.89 4.89,15 6,15A2,2 0 0,1 8,17A2,2 0 0,1 6,19M6,13A4,4 0 0,0 2,17A4,4 0 0,0 6,21A4,4 0 0,0 10,17A4,4 0 0,0 6,13M12,4A2,2 0 0,1 14,6A2,2 0 0,1 12,8C10.89,8 10,7.1 10,6C10,4.89 10.89,4 12,4M12,10A4,4 0 0,0 16,6A4,4 0 0,0 12,2A4,4 0 0,0 8,6A4,4 0 0,0 12,10Z"/></svg><span>Create bond</span>'
@@ -239,9 +246,13 @@ function openMenu(e) {
               const m1 = ele1.parentElement;
               const m2 = ele2.parentElement;
               let molecule;
+              let changeLocation = [];
+              let changeLocationLine;
               if (m1.classList.contains("molecule")) {
                 molecule = m1;
                 if (m2.classList.contains("molecule") && m1 !== m2) {
+                  changeLocation = [...m2.children];
+                  changeLocationLine = m2.getAttribute("data-line");
                   while(m2.children.length != 0) 
                     molecule.appendChild(m2.children[0]);
                   molecule.setAttribute("data-line", molecule.getAttribute("data-line") + ";" + m2.getAttribute("data-line"))
@@ -263,20 +274,46 @@ function openMenu(e) {
                 molecule.setAttribute("data-line", molecule.getAttribute("data-line") + ";#" + lineCounter)
               else
                 molecule.setAttribute("data-line", "#" + lineCounter);
+
               const svg = document.getElementById("svg");
               const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
               line.id = "#" + lineCounter;
               svg.appendChild(line);
-              let placement1 = ele1.style.transform.match(/-?\d+\.?\d*/g);
-              let placement2 = ele2.style.transform.match(/-?\d+\.?\d*/g);
+              const placement1 = ele1.style.transform.match(/-?\d+\.?\d*/g);
+              const placement2 = ele2.style.transform.match(/-?\d+\.?\d*/g);
 
               const rad =  Math.PI/2 - Math.atan2(+placement2[0] - +placement1[0], +placement2[1] - +placement1[1]);
-              console.log(+placement2[0] - +placement1[0], +placement2[1] - +placement1[1])
 
-              const x = +ele1.style.transform.match(/-?\d+\.?\d*/g)[0] + (30 + ele1.offsetWidth) * Math.cos(rad);
-              const y = +ele1.style.transform.match(/-?\d+\.?\d*/g)[1] + (30 + ele1.offsetWidth) * Math.sin(rad);
+              const x = +placement1[0] + (30 + ele1.offsetWidth) * Math.cos(rad);
+              const y = +placement1[1] + (30 + ele1.offsetWidth) * Math.sin(rad);
 
-              ele2.style.transform = "translate(" + x + "px," + y + "px)";
+              console.log(changeLocation)
+              if (changeLocation[0]) {
+                const diffX = x - +placement2[0];
+                const diffY = y - +placement2[1];
+                for (let i = 0; i < changeLocation.length; i++) {
+                  const coord = changeLocation[i].style.transform.match(/-?\d+\.?\d*/g);
+                  changeLocation[i].style.transform = "translate(" + (diffX + +coord[0]) + "px," + (diffY + +coord[1]) + "px)";
+                }
+
+                if (changeLocationLine !== null) {
+                  let lines = changeLocationLine.split(";");
+                  console.log(lines);
+                  if (typeof lines === "string")
+                    lines = [lines];
+
+
+                  for (i = 0; i < lines.length; i++) {
+                    const moveLine = document.getElementById(lines[i]);
+                    moveLine.setAttribute("x1", +moveLine.getAttribute("x1") + diffX);
+                    moveLine.setAttribute("y1", +moveLine.getAttribute("y1") + diffY);
+                    moveLine.setAttribute("x2", +moveLine.getAttribute("x2") + diffX);
+                    moveLine.setAttribute("y2", +moveLine.getAttribute("y2") + diffY);
+                  }
+                }
+              } else {
+                ele2.style.transform = "translate(" + x + "px," + y + "px)";
+              }
               line.setAttribute("x1", +placement1[0] + ele1.offsetWidth/2);
               line.setAttribute("y1", +placement1[1] + ele1.offsetHeight/2);
               line.setAttribute("x2", x + ele1.offsetWidth/2);
@@ -315,16 +352,21 @@ function openMenu(e) {
                 lines2.splice(lines2.indexOf(lines[i]), 1);
                 const ele2 = document.getElementById(document.getElementById(lines[i]).getAttribute("ele2"))
                 ele2.setAttribute("data-line", lines1.join(";"));
-                if (lines2.length === 0)
+                if (lines2.length === 0){
+                  ele2.removeAttribute("data-line")
                   document.getElementById("main").appendChild(ele2);
+                }
 
                 document.getElementById(lines[i]).remove();
                 if (parentLines !== null)
                   parentLines.splice(parentLines.indexOf(lines[i]), 1);
               }
-              parent.setAttribute("data-line", parentLines.join(";"))
-              if (parentLines.length === 0)
-                removeParent = true;
+
+              if (parentLines !== null) {
+                parent.setAttribute("data-line", parentLines.join(";"));
+                if (parentLines.length === 0)
+                  removeParent = true;
+              }
             }
             selected.remove();
             if (removeParent)
