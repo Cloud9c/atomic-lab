@@ -346,7 +346,6 @@ function openMenu(e) {
                 }
                 else
                   ele1.setAttribute("data-line", lines1.join(";"));
-
                 
                 let lines2 = document.getElementById(document.getElementById(lines[i]).getAttribute("ele2")).getAttribute("data-line").split(";");
                 lines2.splice(lines2.indexOf(lines[i]), 1);
