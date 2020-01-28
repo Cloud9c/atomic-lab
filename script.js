@@ -303,9 +303,12 @@ function openMenu(e) {
                 let lines1 = document.getElementById(document.getElementById(lines[i]).getAttribute("ele1")).getAttribute("data-line").split(";");
                 lines1.splice(lines1.indexOf(lines[i]), 1);
                 const ele1 = document.getElementById(document.getElementById(lines[i]).getAttribute("ele1"));
-                ele1.setAttribute("data-line", lines1.join(";"));
-                if (lines1.length === 0)
+                if (lines1.length === 0) {
+                  ele1.removeAttribute("data-line");
                   document.getElementById("main").appendChild(ele1);
+                }
+                else
+                  ele1.setAttribute("data-line", lines1.join(";"));
 
                 
                 let lines2 = document.getElementById(document.getElementById(lines[i]).getAttribute("ele2")).getAttribute("data-line").split(";");
@@ -350,9 +353,12 @@ function openMenu(e) {
               let lines1 = document.getElementById(document.getElementById(lines[i]).getAttribute("ele1")).getAttribute("data-line").split(";");
               lines1.splice(lines1.indexOf(lines[i]), 1);
               const ele1 = document.getElementById(document.getElementById(lines[i]).getAttribute("ele1"));
-              ele1.setAttribute("data-line", lines1.join(";"));
-              if (lines1.length === 0)
+              if (lines1.length === 0) {
+                ele1.removeAttribute("data-line");
                 document.getElementById("main").appendChild(ele1);
+              }
+              else
+                ele1.setAttribute("data-line", lines1.join(";"));
 
               
               let lines2 = document.getElementById(document.getElementById(lines[i]).getAttribute("ele2")).getAttribute("data-line").split(";");
