@@ -698,9 +698,7 @@ window.addEventListener("beforeinstallprompt", function(e) {
     document.getElementById("install").addEventListener("click", function(e) {
       installApp.prompt();
       installApp.userChoice.then(function(choiceResult){
-        if (choiceResult.outcome === "accepted") {
-          document.getElementById("install").style.display = "none";
-        }
+        document.getElementById("install").style.display = "none";
       });
     });
 });
