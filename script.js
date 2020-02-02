@@ -287,7 +287,6 @@ function openMenu(e) {
               const x = +placement1[0] + (30 + ele1.offsetWidth) * Math.cos(rad);
               const y = +placement1[1] + (30 + ele1.offsetWidth) * Math.sin(rad);
 
-              console.log(changeLocation)
               if (changeLocation[0]) {
                 const diffX = x - +placement2[0];
                 const diffY = y - +placement2[1];
@@ -406,16 +405,20 @@ function openMenu(e) {
               lines2.splice(lines2.indexOf(lines[i]), 1);
               const ele2 = document.getElementById(document.getElementById(lines[i]).getAttribute("ele2"))
               ele2.setAttribute("data-line", lines1.join(";"));
-              if (lines2.length === 0)
+              if (lines2.length === 0) 
                 document.getElementById("main").appendChild(ele2);
 
               document.getElementById(lines[i]).remove();
               if (parentLines !== null)
                 parentLines.splice(parentLines.indexOf(lines[i]), 1);
+
             }
             parent.setAttribute("data-line", parentLines.join(";"))
             if (parentLines.length === 0)
               removeParent = true;
+            else {
+              
+            }
           }
           e.target.remove();
           if (removeParent)
