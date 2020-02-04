@@ -85,7 +85,7 @@ function followCursor(target) {
         const element = elements[i];
         element.style.transform = "translate(" + (+element.style.transform.match(/-?\d+\.?\d*/g)[0] + x) + "px," + (+element.style.transform.match(/-?\d+\.?\d*/g)[1] + y) + "px)";
       }
-      for (i = 0; i < selectedMolecules.length; i++) {
+      for (let i = 0; i < selectedMolecules.length; i++) {
         const sm = selectedMolecules[i].getAttribute("data-line").split(";");
         for (let j = 0; j < sm.length; j++) {
           const line = document.getElementById(sm[j]);
@@ -95,7 +95,7 @@ function followCursor(target) {
           line.setAttribute("y2", parseInt(line.getAttribute("y2")) + y);
         }
         const moleculeElements = selectedMolecules[i].children;
-        for (j = 0; j < moleculeElements.length; j++) {
+        for (let j = 0; j < moleculeElements.length; j++) {
           const element = moleculeElements[j];
           element.style.transform = "translate(" + (+element.style.transform.match(/-?\d+\.?\d*/g)[0] + x) + "px," + (+element.style.transform.match(/-?\d+\.?\d*/g)[1] + y) + "px)";
         }
@@ -210,7 +210,7 @@ function openMenu(e) {
             clone.style.transform = "translate(" + (+clone.style.transform.match(/-?\d+\.?\d*/g)[0] + 16) + "px," + (+clone.style.transform.match(/-?\d+\.?\d*/g)[1] + 16) + "px)";
             switcheroo.push(clone, document.getElementById("main").getElementsByClassName("selected")[i]);
           }
-          for (i = 0; i < switcheroo.length; i++) {
+          for (let i = 0; i < switcheroo.length; i++) {
             if (switcheroo[i].classList.contains("selected"))
               switcheroo[i].classList.remove("selected");
             else
@@ -301,7 +301,7 @@ function openMenu(e) {
                     lines = [lines];
 
 
-                  for (i = 0; i < lines.length; i++) {
+                  for (let i = 0; i < lines.length; i++) {
                     const moveLine = document.getElementById(lines[i]);
                     moveLine.setAttribute("x1", +moveLine.getAttribute("x1") + diffX);
                     moveLine.setAttribute("y1", +moveLine.getAttribute("y1") + diffY);
