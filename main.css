@@ -457,19 +457,16 @@ body > .element {
 	display: none;
 }
 
-.gu-mirror {
+#mirror {
 	position: absolute;
 	margin: 0;
 	z-index: 2;
 	cursor: grabbing !important;
+	pointer-events: none;
 }
 
-.gu-hide {
+#hidden-temp {
 	display: none;
-}
-
-.gu-unselectable {
-	user-select: none;
 }
 
 #menu {
