@@ -496,10 +496,11 @@ function createElement(target, x, y, table) {
   newElement.id = "mirror";
   document.body.appendChild(newElement);
 
-  let left = x - newElement.offsetWidth / 2 + 16;
-  let top = y - newElement.offsetWidth / 2 + 16;
+  let left = x - newElement.offsetWidth / 2;
+  let top = y - newElement.offsetWidth / 1.25;
   newElement.style.left = left + "px";
   newElement.style.top = top  + "px";
+  document.body.setAttribute("grabbing", "");
 
   function tableMove(e) {
     left = left + e.movementX;
@@ -524,15 +525,17 @@ function createElement(target, x, y, table) {
 
   function tableMouseUp(e) {
     const tempElement = document.getElementById("temp");
-    if (tempElement)
+    if (tempElement) {
       tempElement.id = "";
-    tempElement.parentElement.classList.add("pulse");
-    setTimeout(function() {
-      tempElement.parentElement.classList.remove("pulse");
-    }, 500);
+      tempElement.parentElement.classList.add("pulse");
+      setTimeout(function() {
+        tempElement.parentElement.classList.remove("pulse");
+      }, 500);
+    }
     document.removeEventListener("mousemove", tableMove);
     document.removeEventListener("mouseup", tableMouseUp);
     newElement.remove();
+    document.body.removeAttribute("grabbing");
   }
 
   function hotbarMove(e) {
@@ -551,7 +554,7 @@ function createElement(target, x, y, table) {
     localStorage.setItem("elementCounter", elementCounter);
     newElement.id = elementCounter;
     document.getElementById("main").appendChild(newElement);
-    
+    document.body.removeAttribute("grabbing");
   }
   if (table) {
     document.addEventListener("mousemove", tableMove);

@@ -207,7 +207,14 @@
 	min-height: 40px;
 	font-family: 'Roboto', sans-serif;
 	transition: box-shadow 150ms linear;
+}
+
+.element:hover {
 	cursor: pointer;
+}
+
+body[grabbing], body[grabbing] .element:hover {
+	cursor: grabbing;
 }
 
 #drag-area[style*="display: none"] ~ .element {
@@ -461,7 +468,6 @@ body > .element {
 	position: absolute;
 	margin: 0;
 	z-index: 2;
-	cursor: grabbing !important;
 	pointer-events: none;
 }
 
