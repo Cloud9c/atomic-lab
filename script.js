@@ -386,7 +386,8 @@ function openMenu(e) {
             lines = lines.split(";");
             parent = e.target.parentElement;
             let parentLines = parent.getAttribute("data-line");
-            if (parentLines !== null)
+            const nullCheck = parentLines !== null;
+            if (nullCheck)
               parentLines = parentLines.split(";");
             for (let i = 0; i < lines.length; i++) {
               let lines1 = document.getElementById(document.getElementById(lines[i]).getAttribute("ele1")).getAttribute("data-line").split(";");
@@ -408,13 +409,14 @@ function openMenu(e) {
                 document.getElementById("main").appendChild(ele2);
 
               document.getElementById(lines[i]).remove();
-              if (parentLines !== null)
+              if (nullCheck)
                 parentLines.splice(parentLines.indexOf(lines[i]), 1);
-
             }
-            parent.setAttribute("data-line", parentLines.join(";"))
-            if (parentLines.length === 0)
-              removeParent = true;
+            if (nullCheck) {
+              parent.setAttribute("data-line", parentLines.join(";"))
+              if (parentLines.length === 0)
+                removeParent = true;
+            }
             else {
               // TODO
             }
