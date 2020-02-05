@@ -166,7 +166,6 @@ function toggleMenu(command, e) {
 
 function openMenu(e) {
   e.preventDefault();
-  console.log(e.target)
   if (!e.path.includes(document.getElementById("menu-options"))) {
     document.getElementById("menu-options").getElementsByClassName("option")[0].innerHTML = "";
     document.getElementById("menu-options").getElementsByClassName("option")[1].innerHTML = "";
@@ -219,8 +218,12 @@ function openMenu(e) {
           toggleMenu("none", e);
         };
         if (document.getElementById("main").getElementsByClassName("selected").length === 2) {
-          let ele1 = document.getElementById("main").getElementsByClassName("selected")[0];
-          let ele2 = document.getElementById("main").getElementsByClassName("selected")[1];
+          let ele1 = e.target;
+          let ele2;
+          if (document.getElementById("main").getElementsByClassName("selected")[1] === e.target)
+            ele2 = document.getElementById("main").getElementsByClassName("selected")[0];
+          else
+            ele2 = document.getElementById("main").getElementsByClassName("selected")[1];
 
           if ((ele2.parentElement.classList.contains("molecule") && !ele1.parentElement.classList.contains("molecules")) || +ele2.getAttribute("data-en") < +ele2.getAttribute("data-en")) {
             const temp = ele2;
@@ -228,7 +231,10 @@ function openMenu(e) {
             ele1 = temp;
           }
 
-          if (ele1.getAttribute("data-line") === null || ele1.getAttribute("data-line") !== ele2.getAttribute("data-line")) {
+          const dataLine1 = ele1.getAttribute("data-line");
+          const dataLine2 = ele2.getAttribute("data-line");
+
+          if (!dataLine1 || !dataLine2 || (dataLine1 && dataLine2 && !dataLine1.split(";").some(r=> dataLine2.split(";").includes(r)))) {
             document.getElementById("menu-options").getElementsByClassName("option")[2].innerHTML = document.getElementById("menu-options").getElementsByClassName("option")[1].innerHTML;
             document.getElementById("menu-options").getElementsByClassName("option")[1].innerHTML = '<svg width="24" height="24" viewBox="0 0 24 24"><path fill="#656565" d="M18,19C16.89,19 16,18.1 16,17C16,15.89 16.89,15 18,15A2,2 0 0,1 20,17A2,2 0 0,1 18,19M18,13A4,4 0 0,0 14,17A4,4 0 0,0 18,21A4,4 0 0,0 22,17A4,4 0 0,0 18,13M12,11.1A1.9,1.9 0 0,0 10.1,13A1.9,1.9 0 0,0 12,14.9A1.9,1.9 0 0,0 13.9,13A1.9,1.9 0 0,0 12,11.1M6,19C4.89,19 4,18.1 4,17C4,15.89 4.89,15 6,15A2,2 0 0,1 8,17A2,2 0 0,1 6,19M6,13A4,4 0 0,0 2,17A4,4 0 0,0 6,21A4,4 0 0,0 10,17A4,4 0 0,0 6,13M12,4A2,2 0 0,1 14,6A2,2 0 0,1 12,8C10.89,8 10,7.1 10,6C10,4.89 10.89,4 12,4M12,10A4,4 0 0,0 16,6A4,4 0 0,0 12,2A4,4 0 0,0 8,6A4,4 0 0,0 12,10Z"/></svg><span>Create bond</span>'
             document.getElementById("menu-options").getElementsByClassName("option")[1].onclick = function() {
@@ -580,6 +586,9 @@ document.getElementById("clear-progress").addEventListener("click", function() {
 })
 
 document.getElementById("react").addEventListener("click", function() {
+  let elements;
+  let positions;
+
   if (animate) {
     cancelAnimationFrame(animate);
     animate = undefined;
@@ -597,6 +606,13 @@ document.getElementById("react").addEventListener("click", function() {
 
   } else if (document.getElementById("main").getElementsByClassName("element").length > 1) {
     animate = requestAnimationFrame(frame);
+    elements = document.getElementById("main").getElementsByClassName("element");
+    positions = [];
+    for (let i = 0; i < elements.length; i++) {
+      const currentPosition = elements[i].style.transform.match(/-?\d+\.?\d*/g);
+      positions.push([+currentPosition[0], +currentPosition[1]]);
+      elements[i].setAttribute("data-pos", +currentPosition[0], +currentPosition[1])
+    }
   } else {
     document.getElementById("snackbar").className = "show";
     document.getElementById("snackbar").style.transition = "all 0.5s"
@@ -616,9 +632,7 @@ document.getElementById("react").addEventListener("click", function() {
 
   function frame() {
     for (let i = 0; i < document.getElementById("main").getElementsByClassName("element").length; i++) {
-      const element = document.getElementById("main").getElementsByClassName("element")[i];
-
-      element.style.transform = "translate(" + (+element.style.transform.match(/-?\d+\.?\d*/g)[0] + 1) + "px," + (+element.style.transform.match(/-?\d+\.?\d*/g)[1] + 1) + "px)";
+      elements[i].style.transform = "translate(" + ++positions[i][0] + "px," + ++positions[i][1] + "px)";
     }
     animate = requestAnimationFrame(frame);
   }
@@ -727,7 +741,7 @@ document.addEventListener("mousedown", function(e) {
           document.getElementById("main").getElementsByClassName("selected")[0].classList.remove("selected");
         mouseDrag(e.pageX, e.pageY);
       }
-    } else if (!document.getElementById("mirror") && (path.includes(document.getElementById("periodic-table")) || path.includes(document.getElementById("bottom-container")))) {
+    } else if (!document.getElementById("mirror") && e.target.classList.contains("element") && (path.includes(document.getElementById("periodic-table")) || path.includes(document.getElementById("bottom-container")))) {
       function mouseMove() {
         createElement(e.target, e.pageX, e.pageY, path.includes(document.getElementById("periodic-table")));
         document.removeEventListener("mouseup", mouseUp);
