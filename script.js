@@ -1,24 +1,23 @@
 (function() {
-  function h(c) { c = c.target; var a = c.childNodes.length; if ("button" !== c.localName || !a) return c.classList.contains("rippleJS") ? c : null; for (var b = 0; b < a; ++b) { var g = c.childNodes[b], e = g.classList; if (e && e.contains("rippleJS")) return g } return null }
+  function h(c) { c = c.target; var a = c.childNodes.length; if ("button" !== c.localName || !a) return c.classList.contains("rippleJS") ? c : null; for (var b = 0; b < a; ++b) { var g = c.childNodes[b], e = g.classList; if (e && e.contains("rippleJS")) return g; } return null; }
   function n(c, a) {
     var b = h(a); if (b) {
       var g = b.classList, e = b.getAttribute("data-event"); if (!e || e === c) {
-        b.setAttribute("data-event", c); var d = b.getBoundingClientRect(); e = a.offsetX; void 0 !== e ? a = a.offsetY : (e = a.clientX - d.left, a = a.clientY - d.top); var f = document.createElement("div"); d = d.width === d.height ? 1.412 * d.width : Math.sqrt(d.width * d.width + d.height * d.height); var k = 2 * d + "px"; f.style.width = k; f.style.height = k; f.style.marginLeft = -d + e + "px"; f.style.marginTop = -d + a + "px"; f.className = "ripple"; b.appendChild(f); window.setTimeout(function() { f.classList.add("held") },
-          0); var l = "mousedown" === c ? "mouseup" : "touchend", m = function() { document.removeEventListener(l, m); f.classList.add("done"); window.setTimeout(function() { b.removeChild(f); b.children.length || (g.remove("active"), b.removeAttribute("data-event")) }, 650) }; document.addEventListener(l, m)
+        b.setAttribute("data-event", c); var d = b.getBoundingClientRect(); e = a.offsetX; void 0 !== e ? a = a.offsetY : (e = a.clientX - d.left, a = a.clientY - d.top); var f = document.createElement("div"); d = d.width === d.height ? 1.412 * d.width : Math.sqrt(d.width * d.width + d.height * d.height); var k = 2 * d + "px"; f.style.width = k; f.style.height = k; f.style.marginLeft = -d + e + "px"; f.style.marginTop = -d + a + "px"; f.className = "ripple"; b.appendChild(f); window.setTimeout(function() { f.classList.add("held"); },
+          0); var l = "mousedown" === c ? "mouseup" : "touchend", m = function() { document.removeEventListener(l, m); f.classList.add("done"); window.setTimeout(function() { b.removeChild(f); b.children.length || (g.remove("active"), b.removeAttribute("data-event")); }, 650); }; document.addEventListener(l, m);
       }
     }
   }
-  function p() { var c = c || document; c.addEventListener("mousedown", function (a) { 0 === a.button && n(a.type, a) }, { passive: !0 }); c.addEventListener("touchstart", function (a) { for (var b = 0; b < a.changedTouches.length; ++b)n(a.type, a.changedTouches[b]) }, { passive: !0 }) }; (function() {
+  function p() { var c = c || document; c.addEventListener("mousedown", function (a) { 0 === a.button && n(a.type, a); }, { passive: !0 }); c.addEventListener("touchstart", function (a) { for (var b = 0; b < a.changedTouches.length; ++b)n(a.type, a.changedTouches[b]); }, { passive: !0 }); }; (function() {
     function c() {
       var a = document.createElement("div"); a.className = "rippleJS"; document.body.appendChild(a); var b = "absolute" === window.getComputedStyle(a).position; document.body.removeChild(a); b || (a = document.createElement("style"), a.textContent = '/*rippleJS*/.rippleJS,.rippleJS.fill::after{position:absolute;top:0;left:0;right:0;bottom:0}.rippleJS{display:block;overflow:hidden;border-radius:inherit;-webkit-mask-image:-webkit-radial-gradient(circle,#fff,#000)}.rippleJS.fill::after{content:""}.rippleJS.fill{border-radius:1000000px}.rippleJS .ripple{position:absolute;border-radius:100%;background:currentColor;opacity:.2;width:0;height:0;-webkit-transition:-webkit-transform .4s ease-out,opacity .4s ease-out;transition:transform .4s ease-out,opacity .4s ease-out;-webkit-transform:scale(0);transform:scale(0);pointer-events:none;-webkit-touch-callout:none;-webkit-user-select:none;-khtml-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}.rippleJS .ripple.held{opacity:.4;-webkit-transform:scale(1);transform:scale(1)}.rippleJS .ripple.done{opacity:0}',
-        document.head.insertBefore(a, document.head.firstChild)); p()
-    } "complete" === document.readyState ? c() : window.addEventListener("load", c)
+        document.head.insertBefore(a, document.head.firstChild)); p();
+    } "complete" === document.readyState ? c() : window.addEventListener("load", c);
   })();
-}())
+}());
 
-let animate;
-let atomDict;
-
+'use strict';
+let animate, atomDict;
 
 window.addEventListener("load", function(e) {
   if (localStorage.getItem("slot") !== null) {
@@ -34,7 +33,7 @@ window.addEventListener("load", function(e) {
     localStorage.setItem("elementCounter", "0");
   }
 
-  atomDict = JSON.parse('{"1":[1.008,2.2],"2":[4.0026,0],"3":[6.94,0.98],"4":[9.0112,1.57],"5":[10.81,2.04],"6":[12.011,2.55],"7":[14.007,3.04],"8":[15.999,3.44],"9":[18.998,3.98],"10":[20.18,0],"11":[22.99,0.93],"12":[24.305,1.31],"13":[26.982,1.61],"14":[28.085,1.9],"15":[30.974,2.19],"16":[32.06,2.58],"17":[35.45,3.16],"18":[39.948,0],"19":[39.098,0.82],"20":[40.078,1],"21":[44.956,1.36],"22":[47.867,1.54],"23":[50.942,1.63],"24":[51.996,1.66],"25":[54.938,1.55],"26":[55.845,1.83],"27":[58.933,1.88],"28":[58.693,1.91],"29":[63.546,1.9],"30":[65.38,1.65],"31":[69.723,1.81],"32":[72.63,2.01],"33":[74.992,2.18],"34":[78.971,2.55],"35":[79.904,2.96],"36":[83.798,3],"37":[85.468,0.82],"38":[87.62,0.95],"39":[88.906,1.22],"40":[91.224,1.33],"41":[92.906,1.6],"42":[95.95,2.16],"43":[98,1.9],"44":[101.07,2.2],"45":[102.91,2.28],"46":[106.42,2.2],"47":[107.87,1.93],"48":[112.41,1.69],"49":[114.82,1.78],"50":[118.71,1.96],"51":[121.76,2.05],"52":[127.6,2.1],"53":[126.9,2.66],"54":[131.29,2.6],"55":[132.91,0.79],"56":[137.33,0.89],"57":[138.91,1.1],"58":[140.12,1.12],"59":[140.91,1.13],"60":[144.24,1.14],"61":[145,1.13],"62":[150.36,1.17],"63":[151.96,1.2],"64":[157.25,1.2],"65":[158.93,1.1],"66":[162.5,1.22],"67":[164.93,1.23],"68":[167.26,1.24],"69":[168.93,1.25],"70":[173.05,1.1],"71":[174.97,1.27],"72":[178.49,1.3],"73":[180.95,1.5],"74":[183.84,2.36],"75":[186.21,1.9],"76":[190.23,2.2],"77":[192.22,2.2],"78":[195.08,2.28],"79":[196.97,2.54],"80":[200.59,2],"81":[204.38,1.62],"82":[207.2,1.87],"83":[208.98,2.02],"84":[209,2],"85":[210,2.2],"86":[222,2.2],"87":[223,0.79],"88":[226,0.9],"89":[227,1.1],"90":[232.04,1.3],"91":[231.04,1.5],"92":[238.03,1.38],"93":[237,1.36],"94":[244,1.28],"95":[243,1.13],"96":[247,1.28],"97":[247,1.3],"98":[251,1.3],"99":[252,1.3],"100":[257,1.3],"101":[258,1.3],"102":[259,1.3],"103":[266,1.3],"104":[267,0],"105":[268,0],"106":[269,0],"107":[270,0],"108":[270,0],"109":[278,0],"110":[281,0],"111":[282,0],"112":[285,0],"113":[286,0],"114":[289,0],"115":[290,0],"116":[293,0],"117":[294,0],"118":[294,0]}')
+  atomDict = JSON.parse('{"1":[1.008,2.2],"2":[4.0026,0],"3":[6.94,0.98],"4":[9.0112,1.57],"5":[10.81,2.04],"6":[12.011,2.55],"7":[14.007,3.04],"8":[15.999,3.44],"9":[18.998,3.98],"10":[20.18,0],"11":[22.99,0.93],"12":[24.305,1.31],"13":[26.982,1.61],"14":[28.085,1.9],"15":[30.974,2.19],"16":[32.06,2.58],"17":[35.45,3.16],"18":[39.948,0],"19":[39.098,0.82],"20":[40.078,1],"21":[44.956,1.36],"22":[47.867,1.54],"23":[50.942,1.63],"24":[51.996,1.66],"25":[54.938,1.55],"26":[55.845,1.83],"27":[58.933,1.88],"28":[58.693,1.91],"29":[63.546,1.9],"30":[65.38,1.65],"31":[69.723,1.81],"32":[72.63,2.01],"33":[74.992,2.18],"34":[78.971,2.55],"35":[79.904,2.96],"36":[83.798,3],"37":[85.468,0.82],"38":[87.62,0.95],"39":[88.906,1.22],"40":[91.224,1.33],"41":[92.906,1.6],"42":[95.95,2.16],"43":[98,1.9],"44":[101.07,2.2],"45":[102.91,2.28],"46":[106.42,2.2],"47":[107.87,1.93],"48":[112.41,1.69],"49":[114.82,1.78],"50":[118.71,1.96],"51":[121.76,2.05],"52":[127.6,2.1],"53":[126.9,2.66],"54":[131.29,2.6],"55":[132.91,0.79],"56":[137.33,0.89],"57":[138.91,1.1],"58":[140.12,1.12],"59":[140.91,1.13],"60":[144.24,1.14],"61":[145,1.13],"62":[150.36,1.17],"63":[151.96,1.2],"64":[157.25,1.2],"65":[158.93,1.1],"66":[162.5,1.22],"67":[164.93,1.23],"68":[167.26,1.24],"69":[168.93,1.25],"70":[173.05,1.1],"71":[174.97,1.27],"72":[178.49,1.3],"73":[180.95,1.5],"74":[183.84,2.36],"75":[186.21,1.9],"76":[190.23,2.2],"77":[192.22,2.2],"78":[195.08,2.28],"79":[196.97,2.54],"80":[200.59,2],"81":[204.38,1.62],"82":[207.2,1.87],"83":[208.98,2.02],"84":[209,2],"85":[210,2.2],"86":[222,2.2],"87":[223,0.79],"88":[226,0.9],"89":[227,1.1],"90":[232.04,1.3],"91":[231.04,1.5],"92":[238.03,1.38],"93":[237,1.36],"94":[244,1.28],"95":[243,1.13],"96":[247,1.28],"97":[247,1.3],"98":[251,1.3],"99":[252,1.3],"100":[257,1.3],"101":[258,1.3],"102":[259,1.3],"103":[266,1.3],"104":[267,0],"105":[268,0],"106":[269,0],"107":[270,0],"108":[270,0],"109":[278,0],"110":[281,0],"111":[282,0],"112":[285,0],"113":[286,0],"114":[289,0],"115":[290,0],"116":[293,0],"117":[294,0],"118":[294,0]}');
 });
 
 function mouseDrag(x, y) {
@@ -105,7 +104,7 @@ function followCursor(target) {
         }
       }
     });
-  };
+  }
 
   function mouseUp() {
     for (let i = 0; i < elements.length; i++)
@@ -118,7 +117,7 @@ function followCursor(target) {
     target.style.cursor = "";
     document.getElementById("main").removeEventListener("mousemove", mouseMove);
     document.getElementById("main").removeEventListener("mouseup", mouseUp);
-  };
+  }
 
   for (let i = 0; i < molecules.length; i++) {
     const lines = molecules[i].getAttribute("data-line").split(";");
@@ -142,7 +141,7 @@ function followCursor(target) {
   for (let i = 0; i < elements.length; i++){
     elements[i].style.boxShadow = "0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23), inset 0 0 0 1px #FC5185";
   }
-  target.style.cursor = "grabbing"
+  target.style.cursor = "grabbing";
 }
 
 function toggleMenu(command, e) {
@@ -240,7 +239,7 @@ function openMenu(e) {
 
           if (!dataLine1 || !dataLine2 || (dataLine1 && dataLine2 && !dataLine1.split(";").some(r=> dataLine2.split(";").includes(r)))) {
             document.getElementById("menu-options").getElementsByClassName("option")[2].innerHTML = document.getElementById("menu-options").getElementsByClassName("option")[1].innerHTML;
-            document.getElementById("menu-options").getElementsByClassName("option")[1].innerHTML = '<svg width="24" height="24" viewBox="0 0 24 24"><path fill="#656565" d="M18,19C16.89,19 16,18.1 16,17C16,15.89 16.89,15 18,15A2,2 0 0,1 20,17A2,2 0 0,1 18,19M18,13A4,4 0 0,0 14,17A4,4 0 0,0 18,21A4,4 0 0,0 22,17A4,4 0 0,0 18,13M12,11.1A1.9,1.9 0 0,0 10.1,13A1.9,1.9 0 0,0 12,14.9A1.9,1.9 0 0,0 13.9,13A1.9,1.9 0 0,0 12,11.1M6,19C4.89,19 4,18.1 4,17C4,15.89 4.89,15 6,15A2,2 0 0,1 8,17A2,2 0 0,1 6,19M6,13A4,4 0 0,0 2,17A4,4 0 0,0 6,21A4,4 0 0,0 10,17A4,4 0 0,0 6,13M12,4A2,2 0 0,1 14,6A2,2 0 0,1 12,8C10.89,8 10,7.1 10,6C10,4.89 10.89,4 12,4M12,10A4,4 0 0,0 16,6A4,4 0 0,0 12,2A4,4 0 0,0 8,6A4,4 0 0,0 12,10Z"/></svg><span>Create bond</span>'
+            document.getElementById("menu-options").getElementsByClassName("option")[1].innerHTML = '<svg width="24" height="24" viewBox="0 0 24 24"><path fill="#656565" d="M18,19C16.89,19 16,18.1 16,17C16,15.89 16.89,15 18,15A2,2 0 0,1 20,17A2,2 0 0,1 18,19M18,13A4,4 0 0,0 14,17A4,4 0 0,0 18,21A4,4 0 0,0 22,17A4,4 0 0,0 18,13M12,11.1A1.9,1.9 0 0,0 10.1,13A1.9,1.9 0 0,0 12,14.9A1.9,1.9 0 0,0 13.9,13A1.9,1.9 0 0,0 12,11.1M6,19C4.89,19 4,18.1 4,17C4,15.89 4.89,15 6,15A2,2 0 0,1 8,17A2,2 0 0,1 6,19M6,13A4,4 0 0,0 2,17A4,4 0 0,0 6,21A4,4 0 0,0 10,17A4,4 0 0,0 6,13M12,4A2,2 0 0,1 14,6A2,2 0 0,1 12,8C10.89,8 10,7.1 10,6C10,4.89 10.89,4 12,4M12,10A4,4 0 0,0 16,6A4,4 0 0,0 12,2A4,4 0 0,0 8,6A4,4 0 0,0 12,10Z"/></svg><span>Create bond</span>';
             document.getElementById("menu-options").getElementsByClassName("option")[1].onclick = function() {
               const lineCounter = parseInt(localStorage.getItem("lineCounter"), 10) + 1;
               localStorage.setItem("lineCounter", lineCounter);
@@ -264,7 +263,7 @@ function openMenu(e) {
                   changeLocationLine = m2.getAttribute("data-line");
                   while(m2.children.length != 0) 
                     molecule.appendChild(m2.children[0]);
-                  molecule.setAttribute("data-line", molecule.getAttribute("data-line") + ";" + m2.getAttribute("data-line"))
+                  molecule.setAttribute("data-line", molecule.getAttribute("data-line") + ";" + m2.getAttribute("data-line"));
                   m2.remove();
                 } else {
                   molecule.appendChild(ele2);
@@ -280,7 +279,7 @@ function openMenu(e) {
                 document.getElementById("main").appendChild(molecule);
               }
               if (molecule.getAttribute("data-line") !== null)
-                molecule.setAttribute("data-line", molecule.getAttribute("data-line") + ";#" + lineCounter)
+                molecule.setAttribute("data-line", molecule.getAttribute("data-line") + ";#" + lineCounter);
               else
                 molecule.setAttribute("data-line", "#" + lineCounter);
 
@@ -301,7 +300,7 @@ function openMenu(e) {
                 const diffY = y - +placement2[1];
                 for (let i = 0; i < changeLocation.length; i++) {
                   const coord = changeLocation[i].style.transform.match(/-?\d+\.?\d*/g);
-                  changeLocation[i].style.transform = "translate(" + (diffX + +coord[0]) + "px," + (diffY + +coord[1]) + "px)";
+                  changeLocation[i].style.transform = "translate(" + (diffX + (+coord[0])) + "px," + (diffY + (+coord[1])) + "px)";
                 }
 
                 if (changeLocationLine !== null) {
@@ -328,7 +327,7 @@ function openMenu(e) {
               line.setAttribute("y2", y + ele1.offsetHeight/2);
               line.setAttribute("ele1", ele1.id);
               line.setAttribute("ele2", ele2.id);
-            }
+            };
             placement++;
           }
         }
@@ -357,10 +356,10 @@ function openMenu(e) {
                 
                 let lines2 = document.getElementById(document.getElementById(lines[i]).getAttribute("ele2")).getAttribute("data-line").split(";");
                 lines2.splice(lines2.indexOf(lines[i]), 1);
-                const ele2 = document.getElementById(document.getElementById(lines[i]).getAttribute("ele2"))
+                const ele2 = document.getElementById(document.getElementById(lines[i]).getAttribute("ele2"));
                 ele2.setAttribute("data-line", lines1.join(";"));
                 if (lines2.length === 0){
-                  ele2.removeAttribute("data-line")
+                  ele2.removeAttribute("data-line");
                   document.getElementById("main").appendChild(ele2);
                 }
 
@@ -394,7 +393,7 @@ function openMenu(e) {
           let removeParent = false;
           if (lines !== null) {
             lines = lines.split(";");
-            parent = e.target.parentElement;
+            const parent = e.target.parentElement;
             let parentLines = parent.getAttribute("data-line");
             const nullCheck = parentLines !== null;
             if (nullCheck)
@@ -413,7 +412,7 @@ function openMenu(e) {
               
               let lines2 = document.getElementById(document.getElementById(lines[i]).getAttribute("ele2")).getAttribute("data-line").split(";");
               lines2.splice(lines2.indexOf(lines[i]), 1);
-              const ele2 = document.getElementById(document.getElementById(lines[i]).getAttribute("ele2"))
+              const ele2 = document.getElementById(document.getElementById(lines[i]).getAttribute("ele2"));
               ele2.setAttribute("data-line", lines1.join(";"));
               if (lines2.length === 0) 
                 document.getElementById("main").appendChild(ele2);
@@ -423,7 +422,7 @@ function openMenu(e) {
                 parentLines.splice(parentLines.indexOf(lines[i]), 1);
             }
             if (nullCheck) {
-              parent.setAttribute("data-line", parentLines.join(";"))
+              parent.setAttribute("data-line", parentLines.join(";"));
               if (parentLines.length === 0)
                 removeParent = true;
             }
@@ -457,7 +456,7 @@ function overlayToggle() {
     setTimeout(function() {
       document.getElementById("rack-dialog").style.display = "none";
       document.getElementById("overlay").style.display = "none";
-    }, 500)
+    }, 500);
   }
 }
 
@@ -480,7 +479,7 @@ function sliderAdjust(e) {
         pos = 0;
 
       document.getElementById("slider").style.background = "linear-gradient(#e8e8e8 " + pos + "%, #3fc1c9 " + pos + "%)";
-    }
+    };
 
     const mouseUp = function mouseUp(e) {
       document.body.removeEventListener("mouseup", mouseUp);
@@ -488,7 +487,7 @@ function sliderAdjust(e) {
       const changePX = document.getElementById("slider-thumb").offsetTop;
       document.getElementById("slider-thumb").style.top = changePX + "px";
       document.getElementById("slider").style.background = "linear-gradient(#e8e8e8 " + changePX + "%, #3fc1c9 " + changePX + "%)";
-    }
+    };
 
     document.body.addEventListener("mousemove", mouseMove);
     document.body.addEventListener("mouseup", mouseUp);
@@ -504,7 +503,7 @@ function sliderAdjust(e) {
 }
 
 function createElement(target, x, y, table) {
-  newElement = target.cloneNode(true);
+  let newElement = target.cloneNode(true);
   newElement.id = "mirror";
   document.body.appendChild(newElement);
 
@@ -561,7 +560,7 @@ function createElement(target, x, y, table) {
   function hotbarMouseUp(e) {
     document.removeEventListener("mousemove", hotbarMove);
     document.removeEventListener("mouseup", hotbarMouseUp);
-    newElement.style = "transform: translate(" + mirror.style.left + "," + mirror.style.top + ")";
+    newElement.style = "transform: translate(" + newElement.style.left + "," + newElement.style.top + ")";
     const elementCounter = parseInt(localStorage.getItem("elementCounter")) + 1;
     localStorage.setItem("elementCounter", elementCounter);
     newElement.id = elementCounter;
@@ -587,7 +586,7 @@ document.getElementById("clear-progress").addEventListener("click", function() {
   window.removeEventListener("beforeunload", saveProgress);
   localStorage.clear();
   location.reload();
-})
+});
 
 document.getElementById("react").addEventListener("click", function() {
   let elements;
@@ -615,28 +614,28 @@ document.getElementById("react").addEventListener("click", function() {
     for (let i = 0; i < elements.length; i++) {
       const currentPosition = elements[i].style.transform.match(/-?\d+\.?\d*/g);
       positions.push([+currentPosition[0], +currentPosition[1]]);
-      elements[i].setAttribute("data-pos", +currentPosition[0], +currentPosition[1])
+      elements[i].setAttribute("data-pos", +currentPosition[0], +currentPosition[1]);
     }
   } else {
     document.getElementById("snackbar").className = "show";
-    document.getElementById("snackbar").style.transition = "all 0.5s"
+    document.getElementById("snackbar").style.transition = "all 0.5s";
 
     const autoClose = setTimeout(function() {
       document.getElementById("snackbar").classList = "";
     }, 3000);
 
-    function closeSnackBar() {
+    const closeSnackBar = function() {
       clearTimeout(autoClose);
       document.getElementById("snackbar").classList = "";
       document.getElementById("snackbar-close").removeEventListener("click", closeSnackBar);
-    }
+    };
 
     document.getElementById("snackbar-close").addEventListener("click", closeSnackBar);
   }
 
   function frame() {
     for (let i = 0; i < document.getElementById("main").getElementsByClassName("element").length; i++) {
-      elements[i].style.transform = "translate(" + ++positions[i][0] + "px," + ++positions[i][1] + "px)";
+      elements[i].style.transform = "translate(" + (+positions[i][0]) + "px," + (+positions[i][1]) + "px)";
     }
     animate = requestAnimationFrame(frame);
   }
@@ -671,7 +670,7 @@ document.getElementById("periodic-table").addEventListener("mouseover", function
 });
 
 document.addEventListener("keydown", function(e) {
-  const hoverElement = document.querySelectorAll(":hover")[document.querySelectorAll(":hover").length - 1]
+  const hoverElement = document.querySelectorAll(":hover")[document.querySelectorAll(":hover").length - 1];
   if (/^[1-9]$/i.test(event.key) && hoverElement.classList.contains("element")) {
     const target = document.getElementById("hotbar").getElementsByClassName("slot")[event.key - 1];
     const clone = hoverElement.cloneNode(true);
@@ -720,24 +719,24 @@ document.addEventListener("mousedown", function(e) {
 
             target.classList.add("selected");
 
-            function mouseMove() {
+            const mouseMove = function() {
               followCursor(e.target);
               document.getElementById("main").removeEventListener("mouseup", mouseUp);
               document.getElementById("main").removeEventListener("mousemove", mouseMove);
-            }
+            };
 
-            function mouseUp() {
+            const mouseUp = function() {
               document.getElementById("main").removeEventListener("mouseup", mouseUp);
               document.getElementById("main").removeEventListener("mousemove", mouseMove);
-            }
+            };
 
             document.getElementById("main").addEventListener("mouseup", mouseUp);
             document.getElementById("main").addEventListener("mousemove", mouseMove);
           } else {
             if (target.classList.contains("selected"))
-              target.classList.remove("selected")
+              target.classList.remove("selected");
             else
-              target.classList.add("selected")
+              target.classList.add("selected");
           }
       } else if (e.ctrlKey || e.altKey || e.shiftKey) {
         openMenu(e);
@@ -747,16 +746,16 @@ document.addEventListener("mousedown", function(e) {
         mouseDrag(e.pageX, e.pageY);
       }
     } else if (!document.getElementById("mirror") && e.target.classList.contains("element") && (path.includes(document.getElementById("periodic-table")) || path.includes(document.getElementById("bottom-container")))) {
-      function mouseMove() {
+      const mouseMove = function() {
         createElement(e.target, e.pageX, e.pageY, path.includes(document.getElementById("periodic-table")));
         document.removeEventListener("mouseup", mouseUp);
         document.removeEventListener("mousemove", mouseMove);
-      }
+      };
 
-      function mouseUp() {
+      const mouseUp = function() {
         document.removeEventListener("mouseup", mouseUp);
         document.removeEventListener("mousemove", mouseMove);
-      }
+      };
 
       document.addEventListener("mouseup", mouseUp);
       document.addEventListener("mousemove", mouseMove);      
