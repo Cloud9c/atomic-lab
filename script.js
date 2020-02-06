@@ -17,6 +17,8 @@
 }())
 
 let animate;
+let atomDict;
+
 
 window.addEventListener("load", function(e) {
   if (localStorage.getItem("slot") !== null) {
@@ -31,6 +33,8 @@ window.addEventListener("load", function(e) {
     localStorage.setItem("lineCounter", "0");
     localStorage.setItem("elementCounter", "0");
   }
+
+  atomDict = JSON.parse('{"1":[1.008,2.2],"2":[4.0026,0],"3":[6.94,0.98],"4":[9.0112,1.57],"5":[10.81,2.04],"6":[12.011,2.55],"7":[14.007,3.04],"8":[15.999,3.44],"9":[18.998,3.98],"10":[20.18,0],"11":[22.99,0.93],"12":[24.305,1.31],"13":[26.982,1.61],"14":[28.085,1.9],"15":[30.974,2.19],"16":[32.06,2.58],"17":[35.45,3.16],"18":[39.948,0],"19":[39.098,0.82],"20":[40.078,1],"21":[44.956,1.36],"22":[47.867,1.54],"23":[50.942,1.63],"24":[51.996,1.66],"25":[54.938,1.55],"26":[55.845,1.83],"27":[58.933,1.88],"28":[58.693,1.91],"29":[63.546,1.9],"30":[65.38,1.65],"31":[69.723,1.81],"32":[72.63,2.01],"33":[74.992,2.18],"34":[78.971,2.55],"35":[79.904,2.96],"36":[83.798,3],"37":[85.468,0.82],"38":[87.62,0.95],"39":[88.906,1.22],"40":[91.224,1.33],"41":[92.906,1.6],"42":[95.95,2.16],"43":[98,1.9],"44":[101.07,2.2],"45":[102.91,2.28],"46":[106.42,2.2],"47":[107.87,1.93],"48":[112.41,1.69],"49":[114.82,1.78],"50":[118.71,1.96],"51":[121.76,2.05],"52":[127.6,2.1],"53":[126.9,2.66],"54":[131.29,2.6],"55":[132.91,0.79],"56":[137.33,0.89],"57":[138.91,1.1],"58":[140.12,1.12],"59":[140.91,1.13],"60":[144.24,1.14],"61":[145,1.13],"62":[150.36,1.17],"63":[151.96,1.2],"64":[157.25,1.2],"65":[158.93,1.1],"66":[162.5,1.22],"67":[164.93,1.23],"68":[167.26,1.24],"69":[168.93,1.25],"70":[173.05,1.1],"71":[174.97,1.27],"72":[178.49,1.3],"73":[180.95,1.5],"74":[183.84,2.36],"75":[186.21,1.9],"76":[190.23,2.2],"77":[192.22,2.2],"78":[195.08,2.28],"79":[196.97,2.54],"80":[200.59,2],"81":[204.38,1.62],"82":[207.2,1.87],"83":[208.98,2.02],"84":[209,2],"85":[210,2.2],"86":[222,2.2],"87":[223,0.79],"88":[226,0.9],"89":[227,1.1],"90":[232.04,1.3],"91":[231.04,1.5],"92":[238.03,1.38],"93":[237,1.36],"94":[244,1.28],"95":[243,1.13],"96":[247,1.28],"97":[247,1.3],"98":[251,1.3],"99":[252,1.3],"100":[257,1.3],"101":[258,1.3],"102":[259,1.3],"103":[266,1.3],"104":[267,0],"105":[268,0],"106":[269,0],"107":[270,0],"108":[270,0],"109":[278,0],"110":[281,0],"111":[282,0],"112":[285,0],"113":[286,0],"114":[289,0],"115":[290,0],"116":[293,0],"117":[294,0],"118":[294,0]}')
 });
 
 function mouseDrag(x, y) {
@@ -641,11 +645,12 @@ document.getElementById("react").addEventListener("click", function() {
 document.getElementById("periodic-table").addEventListener("mouseover", function(e) {
   if (event.target.classList.contains("element")) {
     if (event.target.parentElement.id === "periodic-table") {
-      document.getElementById("atomic-number").textContent = event.target.getAttribute("data-an");
+      const atomicNumber = event.target.getAttribute("data-an");
+      document.getElementById("atomic-number").textContent = atomicNumber;
       document.getElementById("atomic-symbol").textContent = event.target.children[0].textContent;
       document.getElementById("atomic-name").textContent = event.target.children[0].getAttribute("title");
-      document.getElementById("atomic-mass").textContent = event.target.getAttribute("data-amass");
-      if (event.target.getAttribute("data-amass") % 1 === 0)
+      document.getElementById("atomic-mass").textContent = atomDict[atomicNumber][0];
+      if (atomDict[atomicNumber][0] % 1 === 0)
         document.getElementById("atomic-mass").textContent = "(" + document.getElementById("atomic-mass").textContent + ")";
       document.getElementById("closeup").style.background = getComputedStyle(event.target).background;
     } else {
