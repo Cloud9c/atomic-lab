@@ -78,7 +78,11 @@ function followCursor(target) {
     window.requestAnimationFrame(() => {
       for (let i = 0; i < elements.length; i++) {
         const element = elements[i];
-        element.style.transform = "translate(" + (+element.style.transform.match(/-?\d+\.?\d*/g)[0] + x) + "px," + (+element.style.transform.match(/-?\d+\.?\d*/g)[1] + y) + "px)";
+        const id = element.id;
+        elementDict[element.id].left += x;
+        elementDict[element.id].top += y;
+
+        element.style.transform = "translate(" + elementDict[element.id].left + "px," + elementDict[element.id].top + "px)";
       }
       for (let i = 0; i < selectedMolecules.length; i++) {
         const sm = selectedMolecules[i].getAttribute("data-line").split(";");
@@ -194,20 +198,35 @@ function openMenu(e) {
     } else if ((e.target.parentElement.id === "main" || e.target.parentElement.classList.contains("molecule")) && e.target.classList.contains("element")) {
       document.getElementById("menu-options").getElementsByClassName("option")[0].innerHTML = '<svg width="24" height="24" viewBox="0 0 24 24"><path fill="#656565" d="M19 21H8V7h11m0-2H8a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2m-3-4H4a2 2 0 0 0-2 2v14h2V3h12V1z"/></svg><span>Duplicate</span>';
       document.getElementById("menu-options").getElementsByClassName("option")[1].innerHTML = '<svg width="24" height="24" viewBox="0 0 24 24"><path fill="#656565" d="M9,3V4H4V6H5V19A2,2 0 0,0 7,21H17A2,2 0 0,0 19,19V6H20V4H15V3H9M7,6H17V19H7V6M9,8V17H11V8H9M13,8V17H15V8H13Z"/></svg><span>Remove</span>';
+      const selected = document.getElementById("main").getElementsByClassName("selected");
       if (!e.target.classList.contains("selected"))
-        while (document.getElementById("main").getElementsByClassName("selected")[0])
-          document.getElementById("main").getElementsByClassName("selected")[0].classList.remove("selected");
+        while (selected[0])
+          selected[0].classList.remove("selected");
 
-      if (document.getElementById("main").getElementsByClassName("selected")[1]) {
+      if (selected[1]) {
         let placement = 1;
         document.getElementById("menu-options").getElementsByClassName("option")[0].onclick = () => {
           let switcheroo = [];
-          for (let i = 0; i < document.getElementById("main").getElementsByClassName("selected").length; i++) {
-            const clone = document.getElementById("main").getElementsByClassName("selected")[i].cloneNode(true);
+          const elements = document.querySelectorAll("#main > .element.selected"); // ADD MOLECULE
+          for (let i = 0; i < elements.length; i++) {
+            const clone = elements[i].cloneNode(true);
             clone.classList.remove("selected");
             document.getElementById("main").appendChild(clone);
-            clone.style.transform = "translate(" + (+clone.style.transform.match(/-?\d+\.?\d*/g)[0] + 16) + "px," + (+clone.style.transform.match(/-?\d+\.?\d*/g)[1] + 16) + "px)";
-            switcheroo.push(clone, document.getElementById("main").getElementsByClassName("selected")[i]);
+
+            clone.style.transform = "translate(" + (elementDict[clone.id].left + 16) + "px," + (+elementDict[clone.id].top + 16) + "px)";
+
+            let index = elementDict.findIndex(i => i === undefined)
+            if (index === -1)
+              index = elementDict.length;
+            console.log(index)
+            clone.id = index;
+            elementDict[index] = {
+              "an": elementDict[elements[i].id].an,
+              "left": elementDict[elements[i].id].left + 16,
+              "top": elementDict[elements[i].id].top + 16
+            }
+
+            switcheroo.push(clone, selected[i]);
           }
           for (let i = 0; i < switcheroo.length; i++) {
             if (switcheroo[i].classList.contains("selected"))
@@ -217,13 +236,13 @@ function openMenu(e) {
           }
           toggleMenu("none", e);
         };
-        if (document.getElementById("main").getElementsByClassName("selected").length === 2) {
+        if (selected.length === 2) {
           let ele1 = e.target;
           let ele2;
-          if (document.getElementById("main").getElementsByClassName("selected")[1] === e.target)
-            ele2 = document.getElementById("main").getElementsByClassName("selected")[0];
+          if (selected[1] === e.target)
+            ele2 = selected[0];
           else
-            ele2 = document.getElementById("main").getElementsByClassName("selected")[1];
+            ele2 = selected[1];
 
           if ((ele2.parentElement.classList.contains("molecule") && !ele1.parentElement.classList.contains("molecules")) || +ele2.getAttribute("data-en") < +ele2.getAttribute("data-en")) {
             const temp = ele2;
@@ -310,14 +329,15 @@ function openMenu(e) {
 
                   for (let i = 0; i < lines.length; i++) {
                     const moveLine = document.getElementById(lines[i]);
-                    lineDict[moveLine.id].x1 += diffX;
-                    lineDict[moveLine.id].y1 += diffY;
-                    lineDict[moveLine.id].x2 += diffX;
-                    lineDict[moveLine.id].y2 += diffY;
-                    moveLine.setAttribute("x1", lineDict[moveLine.id].x1);
-                    moveLine.setAttribute("y1", lineDict[moveLine.id].y1);
-                    moveLine.setAttribute("x2", lineDict[moveLine.id].x2);
-                    moveLine.setAttribute("y2", lineDict[moveLine.id].y2);
+                    const id = lines[i].substring(1);
+                    lineDict[id].x1 += diffX;
+                    lineDict[id].y1 += diffY;
+                    lineDict[id].x2 += diffX;
+                    lineDict[id].y2 += diffY;
+                    moveLine.setAttribute("x1", lineDict[id].x1);
+                    moveLine.setAttribute("y1", lineDict[id].y1);
+                    moveLine.setAttribute("x2", lineDict[id].x2);
+                    moveLine.setAttribute("y2", lineDict[id].y2);
                   }
                 }
               } else {
@@ -336,13 +356,13 @@ function openMenu(e) {
           }
         }
         document.getElementById("menu-options").getElementsByClassName("option")[placement].onclick = () => {
-          while (document.getElementById("main").getElementsByClassName("selected")[0]) {
-            const selected = document.getElementById("main").getElementsByClassName("selected")[0];
-            let lines = selected.getAttribute("data-line");
+          while (selected[0]) {
+            const select = selected[0];
+            let lines = select.id;
             let removeParent = false;
-            if (lines !== null && selected.classList.contains("element")) {
-              lines = lines.split(";");
-              const parent = selected.parentElement;
+
+            if (lines !== null && select.classList.contains("element")) {
+              const parent = select.parentElement;
               let parentLines = parent.getAttribute("data-line");
               if (parentLines !== null)
                 parentLines = parentLines.split(";");
@@ -377,7 +397,7 @@ function openMenu(e) {
                   removeParent = true;
               }
             }
-            selected.remove();
+            select.remove();
             if (removeParent)
               parent.outerHTML = parent.innerHTML;
           }
@@ -387,7 +407,20 @@ function openMenu(e) {
         document.getElementById("menu-options").getElementsByClassName("option")[0].onclick = () => {
           const clone = e.target.cloneNode(true);
           document.getElementById("main").appendChild(clone);
-          clone.style.transform = "translate(" + (+clone.style.transform.match(/-?\d+\.?\d*/g)[0] + 16) + "px," + (+clone.style.transform.match(/-?\d+\.?\d*/g)[1] + 16) + "px)";
+
+          let index = elementDict.findIndex(i => i === undefined)
+          if (index === -1)
+            index = elementDict.length;
+
+          clone.id = index;
+          elementDict[index] = {
+            "an": elementDict[e.target.id].an,
+            "left": elementDict[e.target.id].left + 16,
+            "top": elementDict[e.target.id].top + 16
+          }
+
+          clone.style.transform = "translate(" + elementDict[index].left + "px," + elementDict[index].top + "px)";
+
           e.target.classList.remove("selected");
           toggleMenu("none", e);
         };
