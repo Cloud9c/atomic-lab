@@ -88,21 +88,25 @@ function followCursor(target) {
         const sm = selectedMolecules[i].getAttribute("data-line").split(";");
         for (let j = 0; j < sm.length; j++) {
           const line = document.getElementById(sm[j]);
-          const id = sm[j].slice(1);
-          lineDict[id].x1 += x;
-          lineDict[id].x2 += x;
-          lineDict[id].y1 += y;
-          lineDict[id].y2 += y;
+          const id = lineDict[line.id.substring(1)];
+          id.x1 += x;
+          id.x2 += x;
+          id.y1 += y;
+          id.y2 += y;
 
-          line.setAttribute("x1", lineDict[id].x1);
-          line.setAttribute("x2", lineDict[id].x2);
-          line.setAttribute("y1", lineDict[id].y1);
-          line.setAttribute("y2", lineDict[id].y2);
+          line.setAttribute("x1", id.x1);
+          line.setAttribute("x2", id.x2);
+          line.setAttribute("y1", id.y1);
+          line.setAttribute("y2", id.y2);
         }
         const moleculeElements = selectedMolecules[i].children;
-        for (let j = 0; j < moleculeElements.length; j++) {
+        for (let j = 0; j < moleculeElements.length; j++) { // FIX
           const element = moleculeElements[j];
-          element.style.transform = "translate(" + (+element.style.transform.match(/-?\d+\.?\d*/g)[0] + x) + "px," + (+element.style.transform.match(/-?\d+\.?\d*/g)[1] + y) + "px)";
+          const id = element.id;
+          elementDict[element.id].left += x;
+          elementDict[element.id].top += y;
+
+          element.style.transform = "translate(" + elementDict[element.id].left + "px," + elementDict[element.id].top + "px)";
         }
       }
     });
@@ -213,18 +217,19 @@ function openMenu(e) {
             clone.classList.remove("selected");
             document.getElementById("main").appendChild(clone);
 
-            clone.style.transform = "translate(" + (elementDict[clone.id].left + 16) + "px," + (+elementDict[clone.id].top + 16) + "px)";
-
             let index = elementDict.findIndex(i => i === undefined)
             if (index === -1)
               index = elementDict.length;
-            console.log(index)
             clone.id = index;
+
+            const oldElement = elementDict[elements[i].id];
+            const currentElement = elementDict[clone.id];
             elementDict[index] = {
-              "an": elementDict[elements[i].id].an,
-              "left": elementDict[elements[i].id].left + 16,
-              "top": elementDict[elements[i].id].top + 16
+              "an": oldElement.an,
+              "left": oldElement.left + 16,
+              "top": oldElement.top + 16
             }
+            clone.style.transform = "translate(" + currentElement.left + "px," + currentElement.top + "px)";
 
             switcheroo.push(clone, selected[i]);
           }
@@ -300,7 +305,7 @@ function openMenu(e) {
               const svg = document.getElementById("svg");
               const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
               line.id = "#" + index;
-              lineDict[index] = {
+              const currentLine = lineDict[index] = {
                 ele1: ele1.id,
                 ele2: ele2.id
               }
@@ -329,28 +334,28 @@ function openMenu(e) {
 
                   for (let i = 0; i < lines.length; i++) {
                     const moveLine = document.getElementById(lines[i]);
-                    const id = lines[i].substring(1);
-                    lineDict[id].x1 += diffX;
-                    lineDict[id].y1 += diffY;
-                    lineDict[id].x2 += diffX;
-                    lineDict[id].y2 += diffY;
-                    moveLine.setAttribute("x1", lineDict[id].x1);
-                    moveLine.setAttribute("y1", lineDict[id].y1);
-                    moveLine.setAttribute("x2", lineDict[id].x2);
-                    moveLine.setAttribute("y2", lineDict[id].y2);
+                    const id = lineDict[lines[i].substring(1)];
+                    id.x1 += diffX;
+                    id.y1 += diffY;
+                    id.x2 += diffX;
+                    id.y2 += diffY;
+                    moveLine.setAttribute("x1", id.x1);
+                    moveLine.setAttribute("y1", id.y1);
+                    moveLine.setAttribute("x2", id.x2);
+                    moveLine.setAttribute("y2", id.y2);
                   }
                 }
               } else {
                 ele2.style.transform = "translate(" + x + "px," + y + "px)";
               }
-              lineDict[index].x1 = placement1.left + ele1.offsetWidth / 2;
-              lineDict[index].y1 = placement1.top + ele1.offsetHeight / 2;
-              lineDict[index].x2 = x + ele1.offsetWidth / 2;
-              lineDict[index].y2 = y + ele1.offsetHeight / 2;
-              line.setAttribute("x1", lineDict[index].x1);
-              line.setAttribute("y1", lineDict[index].y1);
-              line.setAttribute("x2", lineDict[index].x2);
-              line.setAttribute("y2", lineDict[index].y2);
+              currentLine.x1 = placement1.left + ele1.offsetWidth / 2;
+              currentLine.y1 = placement1.top + ele1.offsetHeight / 2;
+              currentLine.x2 = x + ele1.offsetWidth / 2;
+              currentLine.y2 = y + ele1.offsetHeight / 2;
+              line.setAttribute("x1", currentLine.x1);
+              line.setAttribute("y1", currentLine.y1);
+              line.setAttribute("x2", currentLine.x2);
+              line.setAttribute("y2", currentLine.y2);
             };
             placement++;
           }
