@@ -70,7 +70,7 @@ function mouseDrag(x, y) {
 
 function followCursor(target) {
   const elements = document.querySelectorAll("#main > .element.selected");
-  const molecules = document.getElementById("main").getElementsByClassName("molecule");
+  const molecules = document.getElementsByClassName("molecule");
 
   const mouseMove = function(e) {
     const x = e.movementX;
@@ -85,10 +85,10 @@ function followCursor(target) {
         element.style.transform = "translate(" + elementDict[element.id].left + "px," + elementDict[element.id].top + "px)";
       }
       for (let i = 0; i < selectedMolecules.length; i++) {
-        const sm = selectedMolecules[i].getAttribute("data-line").split(";");
+        const sm = moleculeDict[selectedMolecules[i].id.substring(1)].line
         for (let j = 0; j < sm.length; j++) {
-          const line = document.getElementById(sm[j]);
-          const id = lineDict[line.id.substring(1)];
+          const line = document.getElementById("#" + sm[j]);
+          const id = lineDict[sm[j]];
           id.x1 += x;
           id.x2 += x;
           id.y1 += y;
@@ -116,33 +116,33 @@ function followCursor(target) {
     for (let i = 0; i < elements.length; i++)
       elements[i].style.boxShadow = "";
 
-    const shadows = document.getElementById("main").getElementsByClassName("m-shadow");
+    const shadows = document.getElementsByClassName("m-shadow");
     while (shadows.length !== 0)
       shadows[0].classList.remove("m-shadow");
 
     target.style.cursor = "";
-    document.getElementById("main").removeEventListener("mousemove", mouseMove);
-    document.getElementById("main").removeEventListener("mouseup", mouseUp);
+    document.removeEventListener("mousemove", mouseMove);
+    document.removeEventListener("mouseup", mouseUp);
   }
 
   for (let i = 0; i < molecules.length; i++) {
-    const lines = molecules[i].getAttribute("data-line").split(";");
+    const lines = moleculeDict[molecules[i].id.substring(1)].line;
     for (let j = 0; j < molecules[i].children.length; j++) {
       if (molecules[i].children[j].classList.contains("selected")) {
         molecules[i].classList.add("selected");
         molecules[i].classList.add("m-shadow");
         for (let k = 0; k < lines.length; k++) {
-          document.getElementById(lines[k]).classList.add("selected");
+          document.getElementById("#" + lines[k]).classList.add("selected");
         }
         break;
       }
     }
   }
 
-  const selectedMolecules = document.getElementById("main").querySelectorAll(".molecule.selected");
+  const selectedMolecules = document.querySelectorAll(".molecule.selected");
 
-  document.getElementById("main").addEventListener("mousemove", mouseMove);
-  document.getElementById("main").addEventListener("mouseup", mouseUp);
+  document.addEventListener("mousemove", mouseMove);
+  document.addEventListener("mouseup", mouseUp);
 
   for (let i = 0; i < elements.length; i++) {
     elements[i].style.boxShadow = "0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23), inset 0 0 0 1px #FC5185";
@@ -152,8 +152,8 @@ function followCursor(target) {
 
 function toggleMenu(command, e) {
   if (!e.target.classList.contains("element"))
-    while (document.getElementById("main").getElementsByClassName("selected")[0])
-      document.getElementById("main").getElementsByClassName("selected")[0].classList.remove("selected");
+    while (document.getElementsByClassName("selected")[0])
+      document.getElementsByClassName("selected")[0].classList.remove("selected");
 
   const rect = document.getElementById("menu");
 
@@ -197,24 +197,28 @@ function openMenu(e) {
       document.getElementById("menu-options").getElementsByClassName("option")[0].onclick = () => {
         document.getElementById("svg").innerHTML = "";
         document.getElementById("main").innerHTML = document.getElementById("svg").outerHTML;
+        elementDict = [];
+        lineDict = [];
+        moleculeDict = [];
         toggleMenu("none", e);
       };
     } else if ((e.target.parentElement.id === "main" || e.target.parentElement.classList.contains("molecule")) && e.target.classList.contains("element")) {
       document.getElementById("menu-options").getElementsByClassName("option")[0].innerHTML = '<svg width="24" height="24" viewBox="0 0 24 24"><path fill="#656565" d="M19 21H8V7h11m0-2H8a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2m-3-4H4a2 2 0 0 0-2 2v14h2V3h12V1z"/></svg><span>Duplicate</span>';
       document.getElementById("menu-options").getElementsByClassName("option")[1].innerHTML = '<svg width="24" height="24" viewBox="0 0 24 24"><path fill="#656565" d="M9,3V4H4V6H5V19A2,2 0 0,0 7,21H17A2,2 0 0,0 19,19V6H20V4H15V3H9M7,6H17V19H7V6M9,8V17H11V8H9M13,8V17H15V8H13Z"/></svg><span>Remove</span>';
-      const selected = document.getElementById("main").getElementsByClassName("selected");
+      const selected = document.getElementsByClassName("selected");
       if (!e.target.classList.contains("selected"))
         while (selected[0])
           selected[0].classList.remove("selected");
 
+      let placement = 1;
+
       if (selected[1]) {
-        let placement = 1;
         document.getElementById("menu-options").getElementsByClassName("option")[0].onclick = () => {
-          let switcheroo = [];
-          const elements = document.querySelectorAll("#main > .element.selected"); // ADD MOLECULE
+          const elements = document.querySelectorAll("#main > .element.selected");
+          const molecules = document.querySelectorAll(".molecule.selected");
           for (let i = 0; i < elements.length; i++) {
             const clone = elements[i].cloneNode(true);
-            clone.classList.remove("selected");
+            elements[i].classList.remove("selected");
             document.getElementById("main").appendChild(clone);
 
             let index = elementDict.findIndex(i => i === undefined)
@@ -223,33 +227,99 @@ function openMenu(e) {
             clone.id = index;
 
             const oldElement = elementDict[elements[i].id];
-            const currentElement = elementDict[clone.id];
             elementDict[index] = {
               "an": oldElement.an,
               "left": oldElement.left + 16,
-              "top": oldElement.top + 16
+              "top": oldElement.top + 16,
+              "line": []
             }
+            const currentElement = elementDict[index];
             clone.style.transform = "translate(" + currentElement.left + "px," + currentElement.top + "px)";
-
-            switcheroo.push(clone, selected[i]);
           }
-          for (let i = 0; i < switcheroo.length; i++) {
-            if (switcheroo[i].classList.contains("selected"))
-              switcheroo[i].classList.remove("selected");
-            else
-              switcheroo[i].classList.add("selected");
+          for (let i = 0; i < molecules.length; i++) {
+            const clone = molecules[i].cloneNode(true);
+            molecules[i].classList.remove("selected");
+            document.getElementById("main").appendChild(clone);
+
+            const elements = molecules[i].children;
+            const switchElements = {};
+            for (let j = 0; j < elements.length; j++) {
+              let index = elementDict.findIndex(i => i === undefined)
+              if (index === -1)
+                index = elementDict.length;
+
+              elementDict[index] = {
+                "an": elementDict[elements[j].id].an,
+                "left": elementDict[elements[j].id].left + 16,
+                "top": elementDict[elements[j].id].top + 16,
+                "line": elementDict[elements[j].id].line
+              };
+              switchElements[elements[j].id] = index;
+              clone.children[j].id = index;
+              clone.children[j].style.transform = "translate(" + elementDict[index].left + "px," + elementDict[index].top + "px)";
+            }
+
+            const lines = moleculeDict[molecules[i].id.substring(1)].line;
+            const switchLines = {};
+            for (let j = 0; j < lines.length; j++) {
+              let index = lineDict.findIndex(i => i === undefined)
+              if (index === -1)
+                index = lineDict.length;
+              lineDict[index] = {
+                "x1": lineDict[lines[j]].x1 + 16,
+                "y1": lineDict[lines[j]].y1 + 16,
+                "x2": lineDict[lines[j]].x2 + 16,
+                "y2": lineDict[lines[j]].y2 + 16
+              }
+              switchLines[lines[j]] = index;
+              let newLine = document.getElementById("#" + lines[j]).cloneNode(true);
+              newLine.id = "#" + index;
+              newLine.setAttribute("x1", lineDict[index].x1);
+              newLine.setAttribute("y1", lineDict[index].y1);
+              newLine.setAttribute("x2", lineDict[index].x2);
+              newLine.setAttribute("y2", lineDict[index].y2);
+              
+              document.getElementById("svg").appendChild(newLine);
+            }
+
+            console.log(elementDict)
+
+            for (let j = 0; j < clone.children.length; j++) {
+              let convertedLine = [];
+              const child = clone.children[j];
+              for (let k = 0; k < elementDict[child.id].line.length; k++) {
+                console.log(switchLines[elementDict[child.id].line[k]])
+                convertedLine.push(switchLines[elementDict[child.id].line[k]]);
+              }
+              elementDict[child.id].line = convertedLine;
+            }
+
+            for (let j = 0; j < lines.length; j++) {
+
+            }
+
+            let index = moleculeDict.findIndex(i => i === undefined)
+            if (index === -1)
+              index = moleculeDict.length;
+            clone.id = "m" + index;
+
+            moleculeDict[index] = {
+              "line": [Object.values(switchLines)]
+            }
+            
+            for (let j = 0; j < molecules[i].children.length; j++) {
+              molecules[i].children[j].classList.remove("selected");
+            }
+            for (let j = 0; j < moleculeDict[molecules[i].id.substring(1)].line.length; j++) {
+              document.getElementById("#" + moleculeDict[molecules[i].id.substring(1)].line[j]).classList.remove("selected")
+            }
           }
           toggleMenu("none", e);
         };
         if (selected.length === 2) {
           let ele1 = e.target;
-          let ele2;
-          if (selected[1] === e.target)
-            ele2 = selected[0];
-          else
-            ele2 = selected[1];
-
-          if ((ele2.parentElement.classList.contains("molecule") && !ele1.parentElement.classList.contains("molecules")) || +ele2.getAttribute("data-en") < +ele2.getAttribute("data-en")) {
+          let ele2 = selected[0] === e.target ? selected[1] : selected[0];
+          if ((ele2.parentElement.classList.contains("molecule") && !ele1.parentElement.classList.contains("molecules")) || atomDict[elementDict[ele2.id].an] < atomDict[elementDict[ele1.id].an]) {
             const temp = ele2;
             ele2 = ele1;
             ele1 = temp;
@@ -257,6 +327,7 @@ function openMenu(e) {
 
           const dataLine1 = elementDict[ele1.id].line;
           const dataLine2 = elementDict[ele2.id].line;
+          console.log(elementDict[ele2.id])
 
           if (dataLine1.length === 0 || dataLine2.length === 0 || !dataLine1.some(r => dataLine2.includes(r))) {
             document.getElementById("menu-options").getElementsByClassName("option")[2].innerHTML = document.getElementById("menu-options").getElementsByClassName("option")[1].innerHTML;
@@ -279,10 +350,11 @@ function openMenu(e) {
                 molecule = m1;
                 if (m2.classList.contains("molecule") && m1 !== m2) {
                   changeLocation = [...m2.children];
-                  changeLocationLine = m2.getAttribute("data-line");
+                  changeLocationLine = [...moleculeDict[m2.id.substring(1)].line];
                   while (m2.children.length != 0)
                     molecule.appendChild(m2.children[0]);
-                  molecule.setAttribute("data-line", molecule.getAttribute("data-line") + ";" + m2.getAttribute("data-line"));
+                  moleculeDict[m1.id.substring(1)].line.push(changeLocationLine);
+                  moleculeDict[m2.id.substring(1)] = undefined;
                   m2.remove();
                 } else {
                   molecule.appendChild(ele2);
@@ -291,16 +363,25 @@ function openMenu(e) {
                 molecule = m2;
                 molecule.appendChild(ele1);
               } else {
+                console.log("here")
                 molecule = document.createElement("div");
                 molecule.classList.add("molecule");
                 molecule.appendChild(ele1);
                 molecule.appendChild(ele2);
                 document.getElementById("main").appendChild(molecule);
               }
-              if (molecule.getAttribute("data-line") !== null)
-                molecule.setAttribute("data-line", molecule.getAttribute("data-line") + ";#" + index);
-              else
-                molecule.setAttribute("data-line", "#" + index);
+
+              if (molecule.id) {
+                moleculeDict[molecule.id.substring(1)].line.push(index);
+              } else {
+                let moleculeIndex = moleculeDict.findIndex(i => i === undefined)
+                if (moleculeIndex === -1)
+                  moleculeIndex = moleculeDict.length;
+                molecule.id = "m" + moleculeIndex;
+                moleculeDict[moleculeIndex] = {
+                  "line": [index]
+                }
+              }
 
               const svg = document.getElementById("svg");
               const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
@@ -323,18 +404,17 @@ function openMenu(e) {
                 const diffY = y - placement2.top;
                 for (let i = 0; i < changeLocation.length; i++) {
                   const coord = elementDict[changeLocation[i].id];
-                  changeLocation[i].style.transform = "translate(" + (diffX + coord.left) + "px," + (diffY + coord.top) + "px)";
+                  coord.left += diffX;
+                  coord.top += diffY;
+                  changeLocation[i].style.transform = "translate(" + coord.left + "px," + coord.top + "px)";
                 }
 
                 if (changeLocationLine !== null) {
-                  let lines = changeLocationLine.split(";");
-                  console.log(lines);
-                  if (typeof lines === "string")
-                    lines = [lines];
+                  let lines = changeLocationLine;
 
                   for (let i = 0; i < lines.length; i++) {
-                    const moveLine = document.getElementById(lines[i]);
-                    const id = lineDict[lines[i].substring(1)];
+                    const moveLine = document.getElementById("#" + lines[i]);
+                    const id = lineDict[lines[i]];
                     id.x1 += diffX;
                     id.y1 += diffY;
                     id.x2 += diffX;
@@ -346,6 +426,8 @@ function openMenu(e) {
                   }
                 }
               } else {
+                elementDict[ele2.id].left = x;
+                elementDict[ele2.id].top = y;
                 ele2.style.transform = "translate(" + x + "px," + y + "px)";
               }
               currentLine.x1 = placement1.left + ele1.offsetWidth / 2;
@@ -360,54 +442,6 @@ function openMenu(e) {
             placement++;
           }
         }
-        document.getElementById("menu-options").getElementsByClassName("option")[placement].onclick = () => {
-          while (selected[0]) {
-            const select = selected[0];
-            let lines = select.id;
-            let removeParent = false;
-
-            if (lines !== null && select.classList.contains("element")) {
-              const parent = select.parentElement;
-              let parentLines = parent.getAttribute("data-line");
-              if (parentLines !== null)
-                parentLines = parentLines.split(";");
-
-              for (let i = 0; i < lines.length; i++) {
-                let lines1 = document.getElementById(document.getElementById(lines[i]).getAttribute("ele1")).getAttribute("data-line").split(";");
-                lines1.splice(lines1.indexOf(lines[i]), 1);
-                const ele1 = document.getElementById(document.getElementById(lines[i]).getAttribute("ele1"));
-                if (lines1.length === 0) {
-                  ele1.removeAttribute("data-line");
-                  document.getElementById("main").appendChild(ele1);
-                } else
-                  ele1.setAttribute("data-line", lines1.join(";"));
-
-                let lines2 = document.getElementById(document.getElementById(lines[i]).getAttribute("ele2")).getAttribute("data-line").split(";");
-                lines2.splice(lines2.indexOf(lines[i]), 1);
-                const ele2 = document.getElementById(document.getElementById(lines[i]).getAttribute("ele2"));
-                ele2.setAttribute("data-line", lines1.join(";"));
-                if (lines2.length === 0) {
-                  ele2.removeAttribute("data-line");
-                  document.getElementById("main").appendChild(ele2);
-                }
-
-                document.getElementById(lines[i]).remove();
-                if (parentLines !== null)
-                  parentLines.splice(parentLines.indexOf(lines[i]), 1);
-              }
-
-              if (parentLines !== null) {
-                parent.setAttribute("data-line", parentLines.join(";"));
-                if (parentLines.length === 0)
-                  removeParent = true;
-              }
-            }
-            select.remove();
-            if (removeParent)
-              parent.outerHTML = parent.innerHTML;
-          }
-          toggleMenu("none", e);
-        };
       } else {
         document.getElementById("menu-options").getElementsByClassName("option")[0].onclick = () => {
           const clone = e.target.cloneNode(true);
@@ -421,7 +455,8 @@ function openMenu(e) {
           elementDict[index] = {
             "an": elementDict[e.target.id].an,
             "left": elementDict[e.target.id].left + 16,
-            "top": elementDict[e.target.id].top + 16
+            "top": elementDict[e.target.id].top + 16,
+            "line": []
           }
 
           clone.style.transform = "translate(" + elementDict[index].left + "px," + elementDict[index].top + "px)";
@@ -429,53 +464,50 @@ function openMenu(e) {
           e.target.classList.remove("selected");
           toggleMenu("none", e);
         };
-        document.getElementById("menu-options").getElementsByClassName("option")[1].onclick = () => {
-          let lines = e.target.getAttribute("data-line");
-          let removeParent = false;
-          if (lines !== null) {
-            lines = lines.split(";");
-            const parent = e.target.parentElement;
-            let parentLines = parent.getAttribute("data-line");
-            const nullCheck = parentLines !== null;
-            if (nullCheck)
-              parentLines = parentLines.split(";");
-            for (let i = 0; i < lines.length; i++) {
-              let lines1 = document.getElementById(document.getElementById(lines[i]).getAttribute("ele1")).getAttribute("data-line").split(";");
-              lines1.splice(lines1.indexOf(lines[i]), 1);
-              const ele1 = document.getElementById(document.getElementById(lines[i]).getAttribute("ele1"));
-              if (lines1.length === 0) {
-                ele1.removeAttribute("data-line");
-                document.getElementById("main").appendChild(ele1);
-              } else
-                ele1.setAttribute("data-line", lines1.join(";"));
-
-
-              let lines2 = document.getElementById(document.getElementById(lines[i]).getAttribute("ele2")).getAttribute("data-line").split(";");
-              lines2.splice(lines2.indexOf(lines[i]), 1);
-              const ele2 = document.getElementById(document.getElementById(lines[i]).getAttribute("ele2"));
-              ele2.setAttribute("data-line", lines1.join(";"));
-              if (lines2.length === 0)
-                document.getElementById("main").appendChild(ele2);
-
-              document.getElementById(lines[i]).remove();
-              if (nullCheck)
-                parentLines.splice(parentLines.indexOf(lines[i]), 1);
-            }
-            if (nullCheck) {
-              parent.setAttribute("data-line", parentLines.join(";"));
-              if (parentLines.length === 0)
-                removeParent = true;
-            } else {
-              // TODO
-            }
-          }
-          e.target.remove();
-          if (removeParent)
-            parent.outerHTML = parent.innerHTML;
-          toggleMenu("none", e);
-        };
         e.target.classList.add("selected");
       }
+      document.getElementById("menu-options").getElementsByClassName("option")[placement].onclick = () => {
+        const molecules = document.querySelectorAll("#main > .molecule.selected");
+        for (let i = 0; i < molecules.length; i++) {
+          const elements = molecules[i].children;
+          const lines = moleculeDict[molecules[i].id.substring(1)].line;
+          for (let j = 0; j < elements.length; j++) {
+            elementDict[elements[j].id] = undefined;
+            elements[j].remove();
+          }
+          for (let j = 0; j < lines.length; j++) {
+            lineDict[lines[j]] = undefined;
+            document.getElementById("#" + lines[j]).remove();
+          }
+          moleculeDict[molecules[i].id.substring(1)] = undefined;
+          molecules[i].remove();
+        }
+        const elements = document.querySelectorAll("#main .element.selected");
+        for (let i = 0; i < elements.length; i++) {
+          let element = elementDict[elements[i].id];
+          if (element.line.length > 0) {
+            for (let j = 0; j < element.line.length; j++) {
+              lineDict[element.line[j]] = undefined;
+              document.getElementById("#" + element.line[j]).remove();
+            }
+            let molecule = moleculeDict[elements[i].parentElement.id.substring(1)];
+            console.log(molecule)
+            molecule.line = molecule.line.filter((el) => !element.line.includes(el));
+          }
+          element = undefined;
+          elements[i].remove();
+        }
+        const checkMolecules = document.getElementsByClassName("molecule");
+        for (let i = 0; i < checkMolecules.length; i++) {
+          if (checkMolecules[i].children.length === 1) {
+            const molecule = checkMolecules[i];
+            document.getElementById("main").appendChild(molecule.children[0]);
+            moleculeDict[molecule.id.substring(1)] = undefined;
+            molecule.remove();
+          }
+        }
+        toggleMenu("none", e);
+      };
     }
 
     if (document.getElementById("menu-options").getElementsByClassName("option")[0].innerHTML.length > 0)
@@ -657,8 +689,8 @@ document.getElementById("react").addEventListener("click", () => {
     }
 
     setTimeout(() => {
-      for (let i = 0; i < document.getElementById("main").getElementsByClassName("element").length; i++) {
-        document.getElementById("main").getElementsByClassName("element")[i].style.transition = "";
+      for (let i = 0; i < elements.length; i++) {
+        elements[i].style.transition = "";
       }
     }, 500);
 
@@ -737,19 +769,37 @@ document.addEventListener("keydown", () => {
     setTimeout(function(e) {
       document.getElementById("hotbar").getElementsByClassName("slot")[e].classList.remove("pulse");
     }, 500, event.key - 1);
-  } else if (event.key === "ArrowUp" || event.key === "ArrowDown") {
-    let pos = document.getElementById("slider-thumb").offsetTop;
-    if (event.key === "ArrowUp")
-      pos -= 2;
-    else
-      pos += 2;
+  } else if (event.key === "ArrowUp" || event.key === "ArrowDown" || event.key === "Up" || event.key === "Down") {
+      let pos = document.getElementById("slider-thumb").offsetTop;
+      if (event.key === "ArrowUp" || event.key === "Up")
+        pos -= 2;
+      else
+        pos += 2;
 
-    if (pos < -7)
-      pos = -7;
-    else if (pos > 93)
-      pos = 93;
-    document.getElementById("slider-thumb").style.top = pos + "px";
-    document.getElementById("slider").style.background = "linear-gradient(#e8e8e8 " + pos + "%, #3fc1c9 " + pos + "%)";
+      if (pos < -7)
+        pos = -7;
+      else if (pos > 93)
+        pos = 93;
+      document.getElementById("slider-thumb").style.top = pos + "px";
+      document.getElementById("slider").style.background = "linear-gradient(#e8e8e8 " + pos + "%, #3fc1c9 " + pos + "%)";
+  } else if (event.ctrlKey) {
+      if (event.key === "a" || event.key === "A") {
+        const elements = document.querySelectorAll("#main > .element");
+        const molecules = document.getElementsByClassName("molecule");
+        const lines = document.getElementById("svg").children;
+
+        for (let i = 0; i < elements.length; i++) {
+          elements[i].classList.add("selected")
+        }
+
+        for (let i = 0; i < molecules.length; i++) {
+          molecules[i].classList.add("selected")
+        }
+
+        for (let i = 0; i < lines.length; i++) {
+          lines[i].classList.add("selected")
+        }
+      }
   }
 });
 
@@ -766,25 +816,25 @@ document.addEventListener("mousedown", function(e) {
       const target = e.target;
       if (target.classList.contains("element")) {
         if (!e.ctrlKey && !e.altKey && !e.shiftKey) {
-          if (document.getElementById("main").getElementsByClassName("selected").length < 2 || !e.target.classList.contains("selected"))
-            while (document.getElementById("main").getElementsByClassName("selected")[0])
-              document.getElementById("main").getElementsByClassName("selected")[0].classList.remove("selected");
+          if (document.getElementsByClassName("selected").length < 2 || !e.target.classList.contains("selected"))
+            while (document.getElementsByClassName("selected")[0])
+              document.getElementsByClassName("selected")[0].classList.remove("selected");
 
           target.classList.add("selected");
 
           const mouseMove = () => {
             followCursor(e.target);
-            document.getElementById("main").removeEventListener("mouseup", mouseUp);
-            document.getElementById("main").removeEventListener("mousemove", mouseMove);
+            document.removeEventListener("mouseup", mouseUp);
+            document.removeEventListener("mousemove", mouseMove);
           };
 
           const mouseUp = () => {
-            document.getElementById("main").removeEventListener("mouseup", mouseUp);
-            document.getElementById("main").removeEventListener("mousemove", mouseMove);
+            document.removeEventListener("mouseup", mouseUp);
+            document.removeEventListener("mousemove", mouseMove);
           };
 
-          document.getElementById("main").addEventListener("mouseup", mouseUp);
-          document.getElementById("main").addEventListener("mousemove", mouseMove);
+          document.addEventListener("mouseup", mouseUp);
+          document.addEventListener("mousemove", mouseMove);
         } else {
           if (target.classList.contains("selected"))
             target.classList.remove("selected");
@@ -794,8 +844,8 @@ document.addEventListener("mousedown", function(e) {
       } else if (e.ctrlKey || e.altKey || e.shiftKey) {
         openMenu(e);
       } else {
-        while (document.getElementById("main").getElementsByClassName("selected")[0])
-          document.getElementById("main").getElementsByClassName("selected")[0].classList.remove("selected");
+        while (document.getElementsByClassName("selected")[0])
+          document.getElementsByClassName("selected")[0].classList.remove("selected");
         mouseDrag(e.pageX, e.pageY);
       }
     } else if (!document.getElementById("mirror") && e.target.classList.contains("element") && (path.includes(document.getElementById("periodic-table")) || path.includes(document.getElementById("bottom-container")))) {
