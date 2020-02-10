@@ -69,8 +69,8 @@ function mouseDrag(x, y) {
 }
 
 function followCursor(target) {
-  const elements = document.querySelectorAll("#main > .element.selected");
   const molecules = document.getElementsByClassName("molecule");
+  const elements = document.querySelectorAll("#main > .element.selected");
 
   const mouseMove = function(e) {
     const x = e.movementX;
@@ -99,14 +99,12 @@ function followCursor(target) {
           line.setAttribute("y1", id.y1);
           line.setAttribute("y2", id.y2);
         }
-        const moleculeElements = selectedMolecules[i].children;
-        for (let j = 0; j < moleculeElements.length; j++) { // FIX
-          const element = moleculeElements[j];
-          const id = element.id;
-          elementDict[element.id].left += x;
-          elementDict[element.id].top += y;
-
-          element.style.transform = "translate(" + elementDict[element.id].left + "px," + elementDict[element.id].top + "px)";
+        const moleculeElements = moleculeDict[selectedMolecules[i].id.substring(1)];
+        for (let j = 0; j < moleculeElements.element.length; j++) {
+          const id = moleculeElements.element[j];
+          elementDict[id].left += x;
+          elementDict[id].top += y;
+          document.getElementById(id).style.transform = "translate(" + elementDict[id].left + "px," + elementDict[id].top + "px)";
         }
       }
     });
@@ -195,8 +193,7 @@ function openMenu(e) {
     } else if (e.target.id === "main") {
       document.getElementById("menu-options").getElementsByClassName("option")[0].innerHTML = '<svg width="24" height="24" viewBox="0 0 24 24"><path fill="#656565" d="M9,3V4H4V6H5V19A2,2 0 0,0 7,21H17A2,2 0 0,0 19,19V6H20V4H15V3H9M7,6H17V19H7V6M9,8V17H11V8H9M13,8V17H15V8H13Z"/></svg><span>Clear Lab</span>';
       document.getElementById("menu-options").getElementsByClassName("option")[0].onclick = () => {
-        document.getElementById("svg").innerHTML = "";
-        document.getElementById("main").innerHTML = document.getElementById("svg").outerHTML;
+        document.getElementById("main").innerHTML = "";
         elementDict = [];
         lineDict = [];
         moleculeDict = [];
@@ -345,51 +342,64 @@ function openMenu(e) {
               const m2 = ele2.parentElement;
               let molecule;
               let changeLocation = [];
-              let changeLocationLine;
+              let changeLocationLine = [];
               if (m1.classList.contains("molecule")) {
                 molecule = m1;
                 if (m2.classList.contains("molecule") && m1 !== m2) {
-                  changeLocation = [...m2.children];
+                  const m2Lines = m2.getElementsByClassName("svg")[0].children;
+                  for (let i = 0; i < m2Lines.length; i++)
+                    molecule.getElementsByClassName("svg")[0].appendChild(m2Lines[i]);
+                  m2.getElementsByClassName("svg")[0].remove();
+
+                  for (let i = 0; i < m2.children.length; i++) { //SOMETHINGS WRONG
+                    changeLocation.push(m2.children[i].id);
+                    molecule.appendChild(m2.children[i]);
+                  }
                   changeLocationLine = [...moleculeDict[m2.id.substring(1)].line];
-                  while (m2.children.length != 0)
-                    molecule.appendChild(m2.children[0]);
-                  moleculeDict[m1.id.substring(1)].line.push(changeLocationLine);
+
+                  moleculeDict[m1.id.substring(1)].line.push(...changeLocationLine);
+                  moleculeDict[m1.id.substring(1)].element.push(...changeLocation);
                   moleculeDict[m2.id.substring(1)] = undefined;
                   m2.remove();
                 } else {
                   molecule.appendChild(ele2);
+                  moleculeDict[molecule.id].element.push(ele2.id);
                 }
               } else if (m2.classList.contains("molecule")) {
                 molecule = m2;
                 molecule.appendChild(ele1);
+                moleculeDict[molecule.id.substring(1)].element.push(ele1.id);
               } else {
-                console.log("here")
                 molecule = document.createElement("div");
+                const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+                svg.classList.add("svg");
                 molecule.classList.add("molecule");
+                molecule.appendChild(svg);
                 molecule.appendChild(ele1);
                 molecule.appendChild(ele2);
                 document.getElementById("main").appendChild(molecule);
-              }
 
-              if (molecule.id) {
-                moleculeDict[molecule.id.substring(1)].line.push(index);
-              } else {
                 let moleculeIndex = moleculeDict.findIndex(i => i === undefined)
                 if (moleculeIndex === -1)
                   moleculeIndex = moleculeDict.length;
                 molecule.id = "m" + moleculeIndex;
                 moleculeDict[moleculeIndex] = {
-                  "line": [index]
+                  "line": [],
+                  "element": [ele1.id, ele2.id]
                 }
               }
 
-              const svg = document.getElementById("svg");
+              if (molecule.id) {
+                moleculeDict[molecule.id.substring(1)].line.push(index);
+              }
+
               const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
               line.id = "#" + index;
               const currentLine = lineDict[index] = {
                 ele1: ele1.id,
                 ele2: ele2.id
               }
+              const svg = molecule.getElementsByClassName("svg")[0];
               svg.appendChild(line);
               const placement1 = elementDict[ele1.id];
               const placement2 = elementDict[ele2.id];
@@ -403,27 +413,24 @@ function openMenu(e) {
                 const diffX = x - placement2.left;
                 const diffY = y - placement2.top;
                 for (let i = 0; i < changeLocation.length; i++) {
-                  const coord = elementDict[changeLocation[i].id];
+                  const coord = elementDict[changeLocation[i]];
                   coord.left += diffX;
                   coord.top += diffY;
-                  changeLocation[i].style.transform = "translate(" + coord.left + "px," + coord.top + "px)";
+                  document.getElementById(changeLocation[i]).style.transform = "translate(" + coord.left + "px," + coord.top + "px)";
                 }
 
-                if (changeLocationLine !== null) {
-                  let lines = changeLocationLine;
-
-                  for (let i = 0; i < lines.length; i++) {
-                    const moveLine = document.getElementById("#" + lines[i]);
-                    const id = lineDict[lines[i]];
-                    id.x1 += diffX;
-                    id.y1 += diffY;
-                    id.x2 += diffX;
-                    id.y2 += diffY;
-                    moveLine.setAttribute("x1", id.x1);
-                    moveLine.setAttribute("y1", id.y1);
-                    moveLine.setAttribute("x2", id.x2);
-                    moveLine.setAttribute("y2", id.y2);
-                  }
+                for (let i = 0; i < changeLocationLine.length; i++) {
+                  const moveLine = document.getElementById("#" + changeLocationLine[i]);
+                  console.log(changeLocationLine[i])
+                  const id = lineDict[changeLocationLine[i]];
+                  id.x1 += diffX;
+                  id.y1 += diffY;
+                  id.x2 += diffX;
+                  id.y2 += diffY;
+                  moveLine.setAttribute("x1", id.x1);
+                  moveLine.setAttribute("y1", id.y1);
+                  moveLine.setAttribute("x2", id.x2);
+                  moveLine.setAttribute("y2", id.y2);
                 }
               } else {
                 elementDict[ele2.id].left = x;
