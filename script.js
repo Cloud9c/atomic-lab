@@ -6,7 +6,7 @@ d=d.width===d.height?1.412*d.width:Math.sqrt(d.width*d.width+d.height*d.height);
 a.textContent='/*rippleJS*/.rippleJS,.rippleJS.fill::after{position:absolute;top:0;left:0;right:0;bottom:0}.rippleJS{display:block;overflow:hidden;border-radius:inherit;-webkit-mask-image:-webkit-radial-gradient(circle,#fff,#000)}.rippleJS.fill::after{content:""}.rippleJS.fill{border-radius:1000000px}.rippleJS .ripple{position:absolute;border-radius:100%;background:currentColor;opacity:.2;width:0;height:0;-webkit-transition:-webkit-transform .4s ease-out,opacity .4s ease-out;transition:transform .4s ease-out,opacity .4s ease-out;-webkit-transform:scale(0);transform:scale(0);pointer-events:none;-webkit-touch-callout:none;-webkit-user-select:none;-khtml-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}.rippleJS .ripple.held{opacity:.4;-webkit-transform:scale(1);transform:scale(1)}.rippleJS .ripple.done{opacity:0}',
 document.head.insertBefore(a,document.head.firstChild));p()}"complete"===document.readyState?c():window.addEventListener("load",c)})()})();
 
-let animate, elementDict, lineDict, moleculeDict;
+let animate, elementDict, lineDict;
 const atomDict = JSON.parse("[[1.008,2.2],[4.0026,0],[6.94,0.98],[9.0112,1.57],[10.81,2.04],[12.011,2.55],[14.007,3.04],[15.999,3.44],[18.998,3.98],[20.18,0],[22.99,0.93],[24.305,1.31],[26.982,1.61],[28.085,1.9],[30.974,2.19],[32.06,2.58],[35.45,3.16],[39.948,0],[39.098,0.82],[40.078,1],[44.956,1.36],[47.867,1.54],[50.942,1.63],[51.996,1.66],[54.938,1.55],[55.845,1.83],[58.933,1.88],[58.693,1.91],[63.546,1.9],[65.38,1.65],[69.723,1.81],[72.63,2.01],[74.992,2.18],[78.971,2.55],[79.904,2.96],[83.798,3],[85.468,0.82],[87.62,0.95],[88.906,1.22],[91.224,1.33],[92.906,1.6],[95.95,2.16],[98,1.9],[101.07,2.2],[102.91,2.28],[106.42,2.2],[107.87,1.93],[112.41,1.69],[114.82,1.78],[118.71,1.96],[121.76,2.05],[127.6,2.1],[126.9,2.66],[131.29,2.6],[132.91,0.79],[137.33,0.89],[138.91,1.1],[140.12,1.12],[140.91,1.13],[144.24,1.14],[145,1.13],[150.36,1.17],[151.96,1.2],[157.25,1.2],[158.93,1.1],[162.5,1.22],[164.93,1.23],[167.26,1.24],[168.93,1.25],[173.05,1.1],[174.97,1.27],[178.49,1.3],[180.95,1.5],[183.84,2.36],[186.21,1.9],[190.23,2.2],[192.22,2.2],[195.08,2.28],[196.97,2.54],[200.59,2],[204.38,1.62],[207.2,1.87],[208.98,2.02],[209,2],[210,2.2],[222,2.2],[223,0.79],[226,0.9],[227,1.1],[232.04,1.3],[231.04,1.5],[238.03,1.38],[237,1.36],[244,1.28],[243,1.13],[247,1.28],[247,1.3],[251,1.3],[252,1.3],[257,1.3],[258,1.3],[259,1.3],[266,1.3],[267,0],[268,0],[269,0],[270,0],[270,0],[278,0],[281,0],[282,0],[285,0],[286,0],[289,0],[290,0],[293,0],[294,0],[294,0]]");
 
 window.addEventListener("load", () => {
@@ -20,11 +20,9 @@ window.addEventListener("load", () => {
 
     lineDict = JSON.parse(localStorage.getItem("lineDict"));
     elementDict = JSON.parse(localStorage.getItem("elementDict"));
-    moleculeDict = JSON.parse(localStorage.getItem("moleculeDict"));
   } else {
     elementDict = [];
     lineDict = [];
-    moleculeDict = [];
   }
 });
 
@@ -85,23 +83,22 @@ function followCursor(target) {
         element.style.transform = "translate(" + elementDict[element.id].left + "px," + elementDict[element.id].top + "px)";
       }
       for (let i = 0; i < selectedMolecules.length; i++) {
-        const sm = moleculeDict[selectedMolecules[i].id.substring(1)].line
-        for (let j = 0; j < sm.length; j++) {
-          const line = document.getElementById("#" + sm[j]);
-          const id = lineDict[sm[j]];
+        const lines = selectedMolecules[i].getElementsByClassName("svg")[0].children
+        for (let j = 0; j < lines.length; j++) {
+          const id = lineDict[lines[j].id.substring(1)];
           id.x1 += x;
           id.x2 += x;
           id.y1 += y;
           id.y2 += y;
 
-          line.setAttribute("x1", id.x1);
-          line.setAttribute("x2", id.x2);
-          line.setAttribute("y1", id.y1);
-          line.setAttribute("y2", id.y2);
+          lines[j].setAttribute("x1", id.x1);
+          lines[j].setAttribute("x2", id.x2);
+          lines[j].setAttribute("y1", id.y1);
+          lines[j].setAttribute("y2", id.y2);
         }
-        const moleculeElements = moleculeDict[selectedMolecules[i].id.substring(1)];
-        for (let j = 0; j < moleculeElements.element.length; j++) {
-          const id = moleculeElements.element[j];
+        const elements = selectedMolecules[i].getElementsByClassName("element");
+        for (let j = 0; j < elements.length; j++) {
+          const id = elements[j].id;
           elementDict[id].left += x;
           elementDict[id].top += y;
           document.getElementById(id).style.transform = "translate(" + elementDict[id].left + "px," + elementDict[id].top + "px)";
@@ -115,7 +112,7 @@ function followCursor(target) {
       elements[i].style.boxShadow = "";
 
     const shadows = document.getElementsByClassName("m-shadow");
-    while (shadows.length !== 0)
+    while (shadows.length > 0)
       shadows[0].classList.remove("m-shadow");
 
     target.style.cursor = "";
@@ -124,14 +121,10 @@ function followCursor(target) {
   }
 
   for (let i = 0; i < molecules.length; i++) {
-    const lines = moleculeDict[molecules[i].id.substring(1)].line;
     for (let j = 0; j < molecules[i].children.length; j++) {
       if (molecules[i].children[j].classList.contains("selected")) {
         molecules[i].classList.add("selected");
         molecules[i].classList.add("m-shadow");
-        for (let k = 0; k < lines.length; k++) {
-          document.getElementById("#" + lines[k]).classList.add("selected");
-        }
         break;
       }
     }
@@ -196,7 +189,6 @@ function openMenu(e) {
         document.getElementById("main").innerHTML = "";
         elementDict = [];
         lineDict = [];
-        moleculeDict = [];
         toggleMenu("none", e);
       };
     } else if ((e.target.parentElement.id === "main" || e.target.parentElement.classList.contains("molecule")) && e.target.classList.contains("element")) {
@@ -211,9 +203,13 @@ function openMenu(e) {
 
       if (selected[1]) {
         document.getElementById("menu-options").getElementsByClassName("option")[0].onclick = () => {
-          const elements = document.querySelectorAll("#main > .element.selected");
           const molecules = document.querySelectorAll(".molecule.selected");
+          const elements = document.querySelectorAll("#main .element.selected");
           for (let i = 0; i < elements.length; i++) {
+            if (elements[i].parentElement.classList.contains("molecule") & elements[i].parentElement.classList.contains("selected")) {
+              elements[i].classList.remove("selected");
+              continue;
+            }
             const clone = elements[i].cloneNode(true);
             elements[i].classList.remove("selected");
             document.getElementById("main").appendChild(clone);
@@ -228,7 +224,7 @@ function openMenu(e) {
               "an": oldElement.an,
               "left": oldElement.left + 16,
               "top": oldElement.top + 16,
-              "line": []
+              "lines": []
             }
             const currentElement = elementDict[index];
             clone.style.transform = "translate(" + currentElement.left + "px," + currentElement.top + "px)";
@@ -240,7 +236,7 @@ function openMenu(e) {
 
             const elements = molecules[i].children;
             const switchElements = {};
-            for (let j = 0; j < elements.length; j++) {
+            for (let j = 1; j < elements.length; j++) {
               let index = elementDict.findIndex(i => i === undefined)
               if (index === -1)
                 index = elementDict.length;
@@ -249,82 +245,74 @@ function openMenu(e) {
                 "an": elementDict[elements[j].id].an,
                 "left": elementDict[elements[j].id].left + 16,
                 "top": elementDict[elements[j].id].top + 16,
-                "line": elementDict[elements[j].id].line
+                "lines": elementDict[elements[j].id].lines
               };
               switchElements[elements[j].id] = index;
               clone.children[j].id = index;
               clone.children[j].style.transform = "translate(" + elementDict[index].left + "px," + elementDict[index].top + "px)";
             }
 
-            const lines = moleculeDict[molecules[i].id.substring(1)].line;
+            const lines = molecules[i].getElementsByClassName("svg")[0].children;
             const switchLines = {};
             for (let j = 0; j < lines.length; j++) {
               let index = lineDict.findIndex(i => i === undefined)
               if (index === -1)
                 index = lineDict.length;
+              const id = lines[j].id.substring(1);
               lineDict[index] = {
-                "x1": lineDict[lines[j]].x1 + 16,
-                "y1": lineDict[lines[j]].y1 + 16,
-                "x2": lineDict[lines[j]].x2 + 16,
-                "y2": lineDict[lines[j]].y2 + 16
+                "ele1": lineDict[id].ele1,
+                "ele2": lineDict[id].ele2,
+                "x1": lineDict[id].x1 + 16,
+                "y1": lineDict[id].y1 + 16,
+                "x2": lineDict[id].x2 + 16,
+                "y2": lineDict[id].y2 + 16
               }
-              switchLines[lines[j]] = index;
-              let newLine = document.getElementById("#" + lines[j]).cloneNode(true);
+              switchLines[id] = index;
+              let newLine = clone.getElementsByClassName("svg")[0].children[j];
               newLine.id = "#" + index;
               newLine.setAttribute("x1", lineDict[index].x1);
               newLine.setAttribute("y1", lineDict[index].y1);
               newLine.setAttribute("x2", lineDict[index].x2);
               newLine.setAttribute("y2", lineDict[index].y2);
-              
-              document.getElementById("svg").appendChild(newLine);
+
+              lines[j].classList.remove("selected");
             }
 
-            console.log(elementDict)
+            const cloneLines = clone.getElementsByClassName("svg")[0].children;
+            for (let j = 0; j < cloneLines.length; j++) {
+              let ele1 = lineDict[cloneLines[j].id.substring(1)].ele1;
+              let ele2 = lineDict[cloneLines[j].id.substring(1)].ele2;
+              lineDict[cloneLines[j].id.substring(1)].ele1 = switchElements[ele1];
+              lineDict[cloneLines[j].id.substring(1)].ele2 = switchElements[ele2];
+            }
 
-            for (let j = 0; j < clone.children.length; j++) {
+            for (let j = 1; j < clone.children.length; j++) {
               let convertedLine = [];
               const child = clone.children[j];
-              for (let k = 0; k < elementDict[child.id].line.length; k++) {
-                console.log(switchLines[elementDict[child.id].line[k]])
-                convertedLine.push(switchLines[elementDict[child.id].line[k]]);
+              for (let k = 0; k < elementDict[child.id].lines.length; k++) {
+                convertedLine.push(switchLines[elementDict[child.id].lines[k]]);
               }
-              elementDict[child.id].line = convertedLine;
-            }
-
-            for (let j = 0; j < lines.length; j++) {
-
-            }
-
-            let index = moleculeDict.findIndex(i => i === undefined)
-            if (index === -1)
-              index = moleculeDict.length;
-            clone.id = "m" + index;
-
-            moleculeDict[index] = {
-              "line": [Object.values(switchLines)]
+              elementDict[child.id].lines = convertedLine;
             }
             
-            for (let j = 0; j < molecules[i].children.length; j++) {
+            for (let j = 1; j < molecules[i].children.length; j++) {
               molecules[i].children[j].classList.remove("selected");
-            }
-            for (let j = 0; j < moleculeDict[molecules[i].id.substring(1)].line.length; j++) {
-              document.getElementById("#" + moleculeDict[molecules[i].id.substring(1)].line[j]).classList.remove("selected")
             }
           }
           toggleMenu("none", e);
         };
-        if (selected.length === 2) {
+        const allElements = document.querySelectorAll("#main .element.selected");
+        if (allElements.length === 2) {
           let ele1 = e.target;
-          let ele2 = selected[0] === e.target ? selected[1] : selected[0];
+          let ele2 = allElements[0] === e.target ? allElements[1] : allElements[0];
           if ((ele2.parentElement.classList.contains("molecule") && !ele1.parentElement.classList.contains("molecules")) || atomDict[elementDict[ele2.id].an] < atomDict[elementDict[ele1.id].an]) {
             const temp = ele2;
             ele2 = ele1;
             ele1 = temp;
           }
 
-          const dataLine1 = elementDict[ele1.id].line;
-          const dataLine2 = elementDict[ele2.id].line;
-          console.log(elementDict[ele2.id])
+          const dataLine1 = elementDict[ele1.id].lines;
+          const dataLine2 = elementDict[ele2.id].lines;
 
           if (dataLine1.length === 0 || dataLine2.length === 0 || !dataLine1.some(r => dataLine2.includes(r))) {
             document.getElementById("menu-options").getElementsByClassName("option")[2].innerHTML = document.getElementById("menu-options").getElementsByClassName("option")[1].innerHTML;
@@ -346,29 +334,24 @@ function openMenu(e) {
               if (m1.classList.contains("molecule")) {
                 molecule = m1;
                 if (m2.classList.contains("molecule") && m1 !== m2) {
-                  const m2Lines = m2.getElementsByClassName("svg")[0].children;
-                  for (let i = 0; i < m2Lines.length; i++)
+                  const m2Lines =  [...m2.getElementsByClassName("svg")[0].children];
+                  for (let i = 0; i < m2Lines.length; i++){
                     molecule.getElementsByClassName("svg")[0].appendChild(m2Lines[i]);
+                    changeLocationLine.push(m2Lines[i].id);
+                  }
                   m2.getElementsByClassName("svg")[0].remove();
 
-                  for (let i = 0; i < m2.children.length; i++) { //SOMETHINGS WRONG
-                    changeLocation.push(m2.children[i].id);
-                    molecule.appendChild(m2.children[i]);
+                  while (m2.children[0]) {
+                    changeLocation.push(m2.children[0].id);
+                    molecule.appendChild(m2.children[0]);
                   }
-                  changeLocationLine = [...moleculeDict[m2.id.substring(1)].line];
-
-                  moleculeDict[m1.id.substring(1)].line.push(...changeLocationLine);
-                  moleculeDict[m1.id.substring(1)].element.push(...changeLocation);
-                  moleculeDict[m2.id.substring(1)] = undefined;
                   m2.remove();
                 } else {
                   molecule.appendChild(ele2);
-                  moleculeDict[molecule.id].element.push(ele2.id);
                 }
               } else if (m2.classList.contains("molecule")) {
                 molecule = m2;
                 molecule.appendChild(ele1);
-                moleculeDict[molecule.id.substring(1)].element.push(ele1.id);
               } else {
                 molecule = document.createElement("div");
                 const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
@@ -378,19 +361,6 @@ function openMenu(e) {
                 molecule.appendChild(ele1);
                 molecule.appendChild(ele2);
                 document.getElementById("main").appendChild(molecule);
-
-                let moleculeIndex = moleculeDict.findIndex(i => i === undefined)
-                if (moleculeIndex === -1)
-                  moleculeIndex = moleculeDict.length;
-                molecule.id = "m" + moleculeIndex;
-                moleculeDict[moleculeIndex] = {
-                  "line": [],
-                  "element": [ele1.id, ele2.id]
-                }
-              }
-
-              if (molecule.id) {
-                moleculeDict[molecule.id.substring(1)].line.push(index);
               }
 
               const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
@@ -420,9 +390,8 @@ function openMenu(e) {
                 }
 
                 for (let i = 0; i < changeLocationLine.length; i++) {
-                  const moveLine = document.getElementById("#" + changeLocationLine[i]);
-                  console.log(changeLocationLine[i])
-                  const id = lineDict[changeLocationLine[i]];
+                  const moveLine = document.getElementById(changeLocationLine[i]);
+                  const id = lineDict[changeLocationLine[i].substring(1)];
                   id.x1 += diffX;
                   id.y1 += diffY;
                   id.x2 += diffX;
@@ -463,7 +432,7 @@ function openMenu(e) {
             "an": elementDict[e.target.id].an,
             "left": elementDict[e.target.id].left + 16,
             "top": elementDict[e.target.id].top + 16,
-            "line": []
+            "lines": []
           }
 
           clone.style.transform = "translate(" + elementDict[index].left + "px," + elementDict[index].top + "px)";
@@ -477,41 +446,94 @@ function openMenu(e) {
         const molecules = document.querySelectorAll("#main > .molecule.selected");
         for (let i = 0; i < molecules.length; i++) {
           const elements = molecules[i].children;
-          const lines = moleculeDict[molecules[i].id.substring(1)].line;
+          const lines = molecules[i].getElementsByClassName("svg")[0].children;
           for (let j = 0; j < elements.length; j++) {
             elementDict[elements[j].id] = undefined;
-            elements[j].remove();
           }
           for (let j = 0; j < lines.length; j++) {
-            lineDict[lines[j]] = undefined;
-            document.getElementById("#" + lines[j]).remove();
+            lineDict[lines[j].id.substring(1)] = undefined;
           }
-          moleculeDict[molecules[i].id.substring(1)] = undefined;
           molecules[i].remove();
         }
         const elements = document.querySelectorAll("#main .element.selected");
+        const check = [];
         for (let i = 0; i < elements.length; i++) {
           let element = elementDict[elements[i].id];
-          if (element.line.length > 0) {
-            for (let j = 0; j < element.line.length; j++) {
-              lineDict[element.line[j]] = undefined;
-              document.getElementById("#" + element.line[j]).remove();
+          if (element.lines.length > 0) {
+            if (check.indexOf(elements[i].parentElement) < 0) {
+              check.push(elements[i].parentElement);
             }
-            let molecule = moleculeDict[elements[i].parentElement.id.substring(1)];
-            console.log(molecule)
-            molecule.line = molecule.line.filter((el) => !element.line.includes(el));
+
+            while (element.lines.length > 0) {
+              const line = element.lines[0];
+              document.getElementById("#" + line).remove();
+              let ele1 = elementDict[lineDict[line].ele1].lines;
+              let ele2 = elementDict[lineDict[line].ele2].lines;
+              ele1 = ele1.splice(ele1.indexOf(line), 1);
+              ele2 = ele2.splice(ele2.indexOf(line), 1);
+              lineDict[line] = undefined;
+            }
           }
-          element = undefined;
+          elementDict[elements[i].id] = undefined;
           elements[i].remove();
         }
-        const checkMolecules = document.getElementsByClassName("molecule");
-        for (let i = 0; i < checkMolecules.length; i++) {
-          if (checkMolecules[i].children.length === 1) {
-            const molecule = checkMolecules[i];
-            document.getElementById("main").appendChild(molecule.children[0]);
-            moleculeDict[molecule.id.substring(1)] = undefined;
-            molecule.remove();
+
+        for (let i = 0; i < check.length; i++) {
+          let elements = [...check[i].children];
+          elements.shift();
+          while (elements.length > 0) {
+            let temp = [];
+            let newLines = [];
+            let nodes = [elements[0]];
+            let branching = true;
+            while (branching) {
+              let newNodes = [];
+              for (let j = 0; j < nodes.length; j++) {
+                const lines = elementDict[nodes[j].id].lines;
+                newLines.push(...lines);
+                for (let k = 0; k < lines.length; k++) {
+                  const ele1 = document.getElementById(lineDict[lines[k]].ele1);
+                  const ele2 = document.getElementById(lineDict[lines[k]].ele2);
+                  if (temp.indexOf(ele1) < 0) {
+                    temp.push(ele1);
+                    newNodes.push(ele1);
+                  }
+                  if (temp.indexOf(ele2) < 0) {
+                    temp.push(ele2);
+                    newNodes.push(ele2);
+                  }
+                }
+                if (temp.indexOf(nodes[j]) < 0) {
+                  temp.push(nodes[j]);
+                }
+              }
+              if (newNodes.length === 0) {
+                branching = false;
+              } else {
+                nodes = newNodes.slice(0);
+              }
+            }
+            let molecule;
+            if (temp.length > 1) {
+              molecule = document.createElement("div");
+              const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+              svg.classList.add("svg");
+              molecule.classList.add("molecule");
+              molecule.appendChild(svg);
+              for (let j = 0; j < temp.length; j++) {
+                molecule.appendChild(temp[j]);
+              }
+              for (let j = 0; j < newLines.length; j++) {
+                newLines = [...new Set(newLines)];
+                svg.appendChild(document.getElementById("#" + newLines[j]));
+              }
+            } else {
+              molecule = temp[0];
+            }
+            document.getElementById("main").appendChild(molecule)
+            elements = elements.filter((el) => !temp.includes(el));
           }
+          check[i].remove();
         }
         toggleMenu("none", e);
       };
@@ -650,7 +672,7 @@ function createElement(target, x, y, table) {
       "an": +newElement.getAttribute("data-an"),
       "top": +top.slice(0, -2),
       "left": +left.slice(0, -2),
-      "line": []
+      "lines": []
     };
 
     newElement.id = index;
@@ -793,7 +815,6 @@ document.addEventListener("keydown", () => {
       if (event.key === "a" || event.key === "A") {
         const elements = document.querySelectorAll("#main > .element");
         const molecules = document.getElementsByClassName("molecule");
-        const lines = document.getElementById("svg").children;
 
         for (let i = 0; i < elements.length; i++) {
           elements[i].classList.add("selected")
@@ -801,10 +822,6 @@ document.addEventListener("keydown", () => {
 
         for (let i = 0; i < molecules.length; i++) {
           molecules[i].classList.add("selected")
-        }
-
-        for (let i = 0; i < lines.length; i++) {
-          lines[i].classList.add("selected")
         }
       }
   }
@@ -884,7 +901,6 @@ function saveProgress() {
   localStorage.setItem("main", document.getElementById("main").innerHTML.replace(/\r?\n|\r/g, ""));
   localStorage.setItem("lineDict", JSON.stringify(lineDict));
   localStorage.setItem("elementDict", JSON.stringify(elementDict));
-  localStorage.setItem("moleculeDict", JSON.stringify(moleculeDict));
 }
 
 window.addEventListener("beforeunload", saveProgress);

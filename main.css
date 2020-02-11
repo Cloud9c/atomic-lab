@@ -196,7 +196,7 @@
 	box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23), inset 0 0 0 1px #FC5185;
 }
 
-.svg > line.selected {
+#main > .molecule.selected > .svg > line {
 	stroke: #FC5185;
 }
 
