@@ -163,37 +163,152 @@ function toggleMenu(command, e) {
   }
 }
 
+function createBond(ele1, ele2) {
+  const dataLine1 = elementDict[ele1.id].lines;
+  const dataLine2 = elementDict[ele2.id].lines;
+
+  let index = lineDict.findIndex(i => i === undefined)
+  if (index === -1)
+    index = lineDict.length;
+
+  dataLine1.push(index);
+  dataLine2.push(index);
+
+  const m1 = ele1.parentElement;
+  const m2 = ele2.parentElement;
+  let molecule;
+  let changeLocation = [];
+  let changeLocationLine = [];
+  if (m1.classList.contains("molecule")) {
+    molecule = m1;
+    if (m2.classList.contains("molecule") && m1 !== m2) {
+      const m2Lines =  [...m2.getElementsByClassName("svg")[0].children];
+      for (let i = 0; i < m2Lines.length; i++){
+        molecule.getElementsByClassName("svg")[0].appendChild(m2Lines[i]);
+        changeLocationLine.push(m2Lines[i].id);
+      }
+      m2.getElementsByClassName("svg")[0].remove();
+
+      while (m2.children[0]) {
+        changeLocation.push(m2.children[0].id);
+        molecule.appendChild(m2.children[0]);
+      }
+      m2.remove();
+    } else {
+      molecule.appendChild(ele2);
+    }
+  } else if (m2.classList.contains("molecule")) {
+    molecule = m2;
+    molecule.appendChild(ele1);
+  } else {
+    molecule = document.createElement("div");
+    const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    svg.classList.add("svg");
+    molecule.classList.add("molecule");
+    molecule.appendChild(svg);
+    molecule.appendChild(ele1);
+    molecule.appendChild(ele2);
+    document.getElementById("main").appendChild(molecule);
+  }
+
+  const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+  line.id = "#" + index;
+  const currentLine = lineDict[index] = {
+    ele1: ele1.id,
+    ele2: ele2.id
+  }
+  const svg = molecule.getElementsByClassName("svg")[0];
+  svg.appendChild(line);
+  const placement1 = elementDict[ele1.id];
+  const placement2 = elementDict[ele2.id];
+
+  const rad = Math.PI / 2 - Math.atan2(placement2.left - placement1.left, placement2.top - placement1.top);
+
+  const x = +placement1.left + (30 + ele1.offsetWidth) * Math.cos(rad);
+  const y = +placement1.top + (30 + ele1.offsetWidth) * Math.sin(rad);
+
+  if (changeLocation[0]) {
+    const diffX = x - placement2.left;
+    const diffY = y - placement2.top;
+    for (let i = 0; i < changeLocation.length; i++) {
+      const coord = elementDict[changeLocation[i]];
+      coord.left += diffX;
+      coord.top += diffY;
+      document.getElementById(changeLocation[i]).style.transform = "translate(" + coord.left + "px," + coord.top + "px)";
+    }
+
+    for (let i = 0; i < changeLocationLine.length; i++) {
+      const moveLine = document.getElementById(changeLocationLine[i]);
+      const id = lineDict[changeLocationLine[i].substring(1)];
+      id.x1 += diffX;
+      id.y1 += diffY;
+      id.x2 += diffX;
+      id.y2 += diffY;
+      moveLine.setAttribute("x1", id.x1);
+      moveLine.setAttribute("y1", id.y1);
+      moveLine.setAttribute("x2", id.x2);
+      moveLine.setAttribute("y2", id.y2);
+    }
+  } else {
+    elementDict[ele2.id].left = x;
+    elementDict[ele2.id].top = y;
+    ele2.style.transform = "translate(" + x + "px," + y + "px)";
+  }
+  currentLine.x1 = placement1.left + ele1.offsetWidth / 2;
+  currentLine.y1 = placement1.top + ele1.offsetHeight / 2;
+  currentLine.x2 = x + ele1.offsetWidth / 2;
+  currentLine.y2 = y + ele1.offsetHeight / 2;
+  line.setAttribute("x1", currentLine.x1);
+  line.setAttribute("y1", currentLine.y1);
+  line.setAttribute("x2", currentLine.x2);
+  line.setAttribute("y2", currentLine.y2);
+}
+
 function openMenu(e) {
   e.preventDefault();
   if (!e.path.includes(document.getElementById("menu-options"))) {
-    document.getElementById("menu-options").getElementsByClassName("option")[0].innerHTML = "";
-    document.getElementById("menu-options").getElementsByClassName("option")[1].innerHTML = "";
-    document.getElementById("menu-options").getElementsByClassName("option")[2].innerHTML = "";
+    const options = document.getElementsByClassName("option");
+    const content = document.getElementsByClassName("menu-content");
+    const icons = document.getElementsByClassName("menu-icon");
+
+    content[0].textContent = "";
+    content[1].textContent = "";
+    content[2].textContent = "";
+
+    icons[0].removeAttribute("d");
+    icons[1].removeAttribute("d");
+    icons[2].removeAttribute("d");
 
     if (e.target.id === "hotbar") {
-      document.getElementById("menu-options").getElementsByClassName("option")[0].innerHTML = '<svg width="24" height="24" viewBox="0 0 24 24"><path fill="#656565" d="M9,3V4H4V6H5V19A2,2 0 0,0 7,21H17A2,2 0 0,0 19,19V6H20V4H15V3H9M7,6H17V19H7V6M9,8V17H11V8H9M13,8V17H15V8H13Z"/></svg><span>Clear All Slots</span>';
-      document.getElementById("menu-options").getElementsByClassName("option")[0].onclick = () => {
+      icons[0].setAttribute("d", "M9,3V4H4V6H5V19A2,2 0 0,0 7,21H17A2,2 0 0,0 19,19V6H20V4H15V3H9M7,6H17V19H7V6M9,8V17H11V8H9M13,8V17H15V8H13Z");
+      content[0].textContent = "Clear All Slots";
+      options[0].onclick = () => {
         for (let i = 0; i < 9; i++)
           document.getElementById("hotbar").getElementsByClassName("slot")[i].innerHTML = "";
         toggleMenu("none", e);
       };
     } else if (e.target.parentElement.classList.contains("slot")) {
-      document.getElementById("menu-options").getElementsByClassName("option")[0].innerHTML = '<svg width="24" height="24" viewBox="0 0 24 24"><path fill="#656565" d="M9,3V4H4V6H5V19A2,2 0 0,0 7,21H17A2,2 0 0,0 19,19V6H20V4H15V3H9M7,6H17V19H7V6M9,8V17H11V8H9M13,8V17H15V8H13Z"/></svg><span>Clear Slot</span>';
-      document.getElementById("menu-options").getElementsByClassName("option")[0].onclick = () => {
+      icons[0].setAttribute("d", "M9,3V4H4V6H5V19A2,2 0 0,0 7,21H17A2,2 0 0,0 19,19V6H20V4H15V3H9M7,6H17V19H7V6M9,8V17H11V8H9M13,8V17H15V8H13Z");
+      content[0].textContent = "Clear Slot";
+      options[0].onclick = () => {
         e.target.parentElement.innerHTML = "";
         toggleMenu("none", e);
       };
     } else if (e.target.id === "main") {
-      document.getElementById("menu-options").getElementsByClassName("option")[0].innerHTML = '<svg width="24" height="24" viewBox="0 0 24 24"><path fill="#656565" d="M9,3V4H4V6H5V19A2,2 0 0,0 7,21H17A2,2 0 0,0 19,19V6H20V4H15V3H9M7,6H17V19H7V6M9,8V17H11V8H9M13,8V17H15V8H13Z"/></svg><span>Clear Lab</span>';
-      document.getElementById("menu-options").getElementsByClassName("option")[0].onclick = () => {
+      icons[0].setAttribute("d", "M9,3V4H4V6H5V19A2,2 0 0,0 7,21H17A2,2 0 0,0 19,19V6H20V4H15V3H9M7,6H17V19H7V6M9,8V17H11V8H9M13,8V17H15V8H13Z");
+      content[0].textContent = "Clear Lab";
+      options[0].onclick = () => {
         document.getElementById("main").innerHTML = "";
         elementDict = [];
         lineDict = [];
         toggleMenu("none", e);
       };
     } else if ((e.target.parentElement.id === "main" || e.target.parentElement.classList.contains("molecule")) && e.target.classList.contains("element")) {
-      document.getElementById("menu-options").getElementsByClassName("option")[0].innerHTML = '<svg width="24" height="24" viewBox="0 0 24 24"><path fill="#656565" d="M19 21H8V7h11m0-2H8a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2m-3-4H4a2 2 0 0 0-2 2v14h2V3h12V1z"/></svg><span>Duplicate</span>';
-      document.getElementById("menu-options").getElementsByClassName("option")[1].innerHTML = '<svg width="24" height="24" viewBox="0 0 24 24"><path fill="#656565" d="M9,3V4H4V6H5V19A2,2 0 0,0 7,21H17A2,2 0 0,0 19,19V6H20V4H15V3H9M7,6H17V19H7V6M9,8V17H11V8H9M13,8V17H15V8H13Z"/></svg><span>Remove</span>';
+      icons[0].setAttribute("d", "M19 21H8V7h11m0-2H8a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2m-3-4H4a2 2 0 0 0-2 2v14h2V3h12V1z");
+      content[0].textContent = "Duplicate";
+      icons[1].setAttribute("d", "M9,3V4H4V6H5V19A2,2 0 0,0 7,21H17A2,2 0 0,0 19,19V6H20V4H15V3H9M7,6H17V19H7V6M9,8V17H11V8H9M13,8V17H15V8H13Z");
+      content[1].textContent = "Remove";
+
       const selected = document.getElementsByClassName("selected");
       if (!e.target.classList.contains("selected"))
         while (selected[0])
@@ -202,7 +317,7 @@ function openMenu(e) {
       let placement = 1;
 
       if (selected[1]) {
-        document.getElementById("menu-options").getElementsByClassName("option")[0].onclick = () => {
+        options[0].onclick = () => {
           const molecules = document.querySelectorAll(".molecule.selected");
           const elements = document.querySelectorAll("#main .element.selected");
           for (let i = 0; i < elements.length; i++) {
@@ -315,111 +430,15 @@ function openMenu(e) {
           const dataLine2 = elementDict[ele2.id].lines;
 
           if (dataLine1.length === 0 || dataLine2.length === 0 || !dataLine1.some(r => dataLine2.includes(r))) {
-            document.getElementById("menu-options").getElementsByClassName("option")[2].innerHTML = document.getElementById("menu-options").getElementsByClassName("option")[1].innerHTML;
-            document.getElementById("menu-options").getElementsByClassName("option")[1].innerHTML = '<svg width="24" height="24" viewBox="0 0 24 24"><path fill="#656565" d="M18,19C16.89,19 16,18.1 16,17C16,15.89 16.89,15 18,15A2,2 0 0,1 20,17A2,2 0 0,1 18,19M18,13A4,4 0 0,0 14,17A4,4 0 0,0 18,21A4,4 0 0,0 22,17A4,4 0 0,0 18,13M12,11.1A1.9,1.9 0 0,0 10.1,13A1.9,1.9 0 0,0 12,14.9A1.9,1.9 0 0,0 13.9,13A1.9,1.9 0 0,0 12,11.1M6,19C4.89,19 4,18.1 4,17C4,15.89 4.89,15 6,15A2,2 0 0,1 8,17A2,2 0 0,1 6,19M6,13A4,4 0 0,0 2,17A4,4 0 0,0 6,21A4,4 0 0,0 10,17A4,4 0 0,0 6,13M12,4A2,2 0 0,1 14,6A2,2 0 0,1 12,8C10.89,8 10,7.1 10,6C10,4.89 10.89,4 12,4M12,10A4,4 0 0,0 16,6A4,4 0 0,0 12,2A4,4 0 0,0 8,6A4,4 0 0,0 12,10Z"/></svg><span>Create bond</span>';
-            document.getElementById("menu-options").getElementsByClassName("option")[1].onclick = () => {
-              let index = lineDict.findIndex(i => i === undefined)
-              if (index === -1)
-                index = lineDict.length;
-
-
-              dataLine1.push(index);
-              dataLine2.push(index);
-
-              const m1 = ele1.parentElement;
-              const m2 = ele2.parentElement;
-              let molecule;
-              let changeLocation = [];
-              let changeLocationLine = [];
-              if (m1.classList.contains("molecule")) {
-                molecule = m1;
-                if (m2.classList.contains("molecule") && m1 !== m2) {
-                  const m2Lines =  [...m2.getElementsByClassName("svg")[0].children];
-                  for (let i = 0; i < m2Lines.length; i++){
-                    molecule.getElementsByClassName("svg")[0].appendChild(m2Lines[i]);
-                    changeLocationLine.push(m2Lines[i].id);
-                  }
-                  m2.getElementsByClassName("svg")[0].remove();
-
-                  while (m2.children[0]) {
-                    changeLocation.push(m2.children[0].id);
-                    molecule.appendChild(m2.children[0]);
-                  }
-                  m2.remove();
-                } else {
-                  molecule.appendChild(ele2);
-                }
-              } else if (m2.classList.contains("molecule")) {
-                molecule = m2;
-                molecule.appendChild(ele1);
-              } else {
-                molecule = document.createElement("div");
-                const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-                svg.classList.add("svg");
-                molecule.classList.add("molecule");
-                molecule.appendChild(svg);
-                molecule.appendChild(ele1);
-                molecule.appendChild(ele2);
-                document.getElementById("main").appendChild(molecule);
-              }
-
-              const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
-              line.id = "#" + index;
-              const currentLine = lineDict[index] = {
-                ele1: ele1.id,
-                ele2: ele2.id
-              }
-              const svg = molecule.getElementsByClassName("svg")[0];
-              svg.appendChild(line);
-              const placement1 = elementDict[ele1.id];
-              const placement2 = elementDict[ele2.id];
-
-              const rad = Math.PI / 2 - Math.atan2(placement2.left - placement1.left, placement2.top - placement1.top);
-
-              const x = +placement1.left + (30 + ele1.offsetWidth) * Math.cos(rad);
-              const y = +placement1.top + (30 + ele1.offsetWidth) * Math.sin(rad);
-
-              if (changeLocation[0]) {
-                const diffX = x - placement2.left;
-                const diffY = y - placement2.top;
-                for (let i = 0; i < changeLocation.length; i++) {
-                  const coord = elementDict[changeLocation[i]];
-                  coord.left += diffX;
-                  coord.top += diffY;
-                  document.getElementById(changeLocation[i]).style.transform = "translate(" + coord.left + "px," + coord.top + "px)";
-                }
-
-                for (let i = 0; i < changeLocationLine.length; i++) {
-                  const moveLine = document.getElementById(changeLocationLine[i]);
-                  const id = lineDict[changeLocationLine[i].substring(1)];
-                  id.x1 += diffX;
-                  id.y1 += diffY;
-                  id.x2 += diffX;
-                  id.y2 += diffY;
-                  moveLine.setAttribute("x1", id.x1);
-                  moveLine.setAttribute("y1", id.y1);
-                  moveLine.setAttribute("x2", id.x2);
-                  moveLine.setAttribute("y2", id.y2);
-                }
-              } else {
-                elementDict[ele2.id].left = x;
-                elementDict[ele2.id].top = y;
-                ele2.style.transform = "translate(" + x + "px," + y + "px)";
-              }
-              currentLine.x1 = placement1.left + ele1.offsetWidth / 2;
-              currentLine.y1 = placement1.top + ele1.offsetHeight / 2;
-              currentLine.x2 = x + ele1.offsetWidth / 2;
-              currentLine.y2 = y + ele1.offsetHeight / 2;
-              line.setAttribute("x1", currentLine.x1);
-              line.setAttribute("y1", currentLine.y1);
-              line.setAttribute("x2", currentLine.x2);
-              line.setAttribute("y2", currentLine.y2);
-            };
+            options[2].innerHTML = options[1].innerHTML;
+            icons[1].setAttribute("d", "M18,19C16.89,19 16,18.1 16,17C16,15.89 16.89,15 18,15A2,2 0 0,1 20,17A2,2 0 0,1 18,19M18,13A4,4 0 0,0 14,17A4,4 0 0,0 18,21A4,4 0 0,0 22,17A4,4 0 0,0 18,13M12,11.1A1.9,1.9 0 0,0 10.1,13A1.9,1.9 0 0,0 12,14.9A1.9,1.9 0 0,0 13.9,13A1.9,1.9 0 0,0 12,11.1M6,19C4.89,19 4,18.1 4,17C4,15.89 4.89,15 6,15A2,2 0 0,1 8,17A2,2 0 0,1 6,19M6,13A4,4 0 0,0 2,17A4,4 0 0,0 6,21A4,4 0 0,0 10,17A4,4 0 0,0 6,13M12,4A2,2 0 0,1 14,6A2,2 0 0,1 12,8C10.89,8 10,7.1 10,6C10,4.89 10.89,4 12,4M12,10A4,4 0 0,0 16,6A4,4 0 0,0 12,2A4,4 0 0,0 8,6A4,4 0 0,0 12,10Z");
+            content[1].textContent = "Create Bond";
+            options[1].onclick = () => createBond(ele1, ele2);
             placement++;
           }
         }
       } else {
-        document.getElementById("menu-options").getElementsByClassName("option")[0].onclick = () => {
+        options[0].onclick = () => {
           const clone = e.target.cloneNode(true);
           document.getElementById("main").appendChild(clone);
 
@@ -442,7 +461,7 @@ function openMenu(e) {
         };
         e.target.classList.add("selected");
       }
-      document.getElementById("menu-options").getElementsByClassName("option")[placement].onclick = () => {
+      options[placement].onclick = () => {
         const molecules = document.querySelectorAll("#main > .molecule.selected");
         for (let i = 0; i < molecules.length; i++) {
           const elements = molecules[i].children;
@@ -539,7 +558,7 @@ function openMenu(e) {
       };
     }
 
-    if (document.getElementById("menu-options").getElementsByClassName("option")[0].innerHTML.length > 0)
+    if (options[0].innerHTML.length > 0)
       toggleMenu("block", e);
   }
 }
