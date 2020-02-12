@@ -16,68 +16,72 @@
         font-style: normal;
         font-weight: 400;
         font-display: swap;
-        src: local('Roboto'), local('Roboto-Regular'), url(https://fonts.gstatic.com/s/roboto/v20/KFOmCnqEu92Fr1Mu4mxKKTU1Kg.woff2) format('woff2');
+        src: local(Roboto), local(Roboto-Regular), url(https://fonts.gstatic.com/s/roboto/v20/KFOmCnqEu92Fr1Mu4mxKKTU1Kg.woff2) format("woff2");
         unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
       }
-      
+
       #rack-dialog {
         position: absolute;
         width: 100%;
-        height: calc( 100% - 95px);
+        height: calc(100% - 95px);
         display: none;
       }
 
-      html,
-      body {
+      #main,
+      body,
+      html {
+        height: 100%;
         margin: 0;
+      }
+
+      body,
+      html {
         font-family: 'Roboto', sans-serif;
         counter-reset: element;
         overflow: hidden;
-        user-select: none;
         -webkit-touch-callout: none;
         -webkit-user-select: none;
         -moz-user-select: none;
         -ms-user-select: none;
         user-select: none;
-        height: 100%;
         width: 100%;
-        color: rgba(0,0,0,.87);
+        color: rgba(0, 0, 0, .87);
       }
 
       #main {
-        height: 100%;
         background: #f5f5f5;
         background-size: 39px 39px;
         background-position: center;
         background-image: linear-gradient(to right, #e8e8e8 1px, transparent 1px), linear-gradient(to bottom, #e8e8e8 1px, transparent 1px);
-        margin: 0;
         position: relative;
         display: flex;
       }
 
+      #header,
       #toolbar {
         position: absolute;
         top: 16px;
+      }
+
+      #toolbar {
         right: 16px;
         display: flex;
         flex-direction: column;
         z-index: 1;
       }
 
-      #toolbar > button {
-        border: none;
+      #toolbar>button {
+        border: 0;
       }
 
       #header {
-        position: absolute;
-        top: 16px;
         left: 16px;
       }
 
       #install {
         display: none;
-        border: 1px solid rgba(0,0,0,.87);
-        background: none;
+        border: 1px solid rgba(0, 0, 0, .87);
+        background: 0 0;
         padding: 0 16px;
         line-height: 34px;
         border-radius: 4px;
@@ -86,20 +90,20 @@
       }
 
       #reaction-rate {
-        background: #364F6B;
+        background: #364f6b;
         margin: 16px auto;
         padding: 15px 10px;
         border-radius: 4px;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, .3);
       }
 
       #react {
-        background: #FC5185;
+        background: #fc5185;
       }
 
       .slider-text {
-        color: white;
-        line-height: 0.75em;
+        color: #fff;
+        line-height: .75em;
         height: 12px;
         display: flex;
         font-size: 16px;
@@ -108,8 +112,8 @@
 
       #slider {
         width: 3px;
-        border-left: 6px solid #364F6B;
-        border-right: 6px solid #364F6B;
+        border-left: 6px solid #364f6b;
+        border-right: 6px solid #364f6b;
         height: 100px;
         background: linear-gradient(#e8e8e8 50%, #3fc1c9 50%);
         margin: 16px auto;
@@ -117,7 +121,8 @@
         cursor: pointer;
       }
 
-      #slider > svg {
+      #slider-thumb,
+      #slider>svg {
         position: absolute;
         top: 38px;
         left: -26px;
@@ -128,31 +133,31 @@
         height: 15px;
         left: -6px;
         top: 43px;
-        position: absolute;
         background: #3fc1c9;
         border-radius: 50%;
-        transition: box-shadow 0.2s ease;
+        transition: box-shadow .2s ease;
       }
 
       .icon-button {
         float: right;
         width: 58px;
         height: 58px;
-        background: #364F6B;
+        background: #364f6b;
         border-radius: 50%;
         display: flex;
-        box-shadow: 0px 3px 5px -1px rgba(0, 0, 0, 0.2), 0px 6px 10px 0px rgba(0, 0, 0, 0.14), 0px 1px 18px 0px rgba(0, 0, 0, 0.12);
-        transition: box-shadow 280ms cubic-bezier(0.4, 0, 0.2, 1), opacity 15ms linear 30ms, transform 270ms 0ms cubic-bezier(0, 0, 0.2, 1);
+        box-shadow: 0 3px 5px -1px rgba(0, 0, 0, .2), 0 6px 10px 0 rgba(0, 0, 0, .14), 0 1px 18px 0 rgba(0, 0, 0, .12);
+        transition: box-shadow 280ms cubic-bezier(.4, 0, .2, 1), opacity 15ms linear 30ms, transform 270ms 0ms cubic-bezier(0, 0, .2, 1);
         cursor: pointer;
         position: relative;
       }
 
-      .icon-button:hover, .icon-button:focus {
-        box-shadow: 0px 5px 5px -3px rgba(0, 0, 0, 0.2), 0px 8px 10px 1px rgba(0, 0, 0, 0.14), 0px 3px 14px 2px rgba(0, 0, 0, 0.12);
+      .icon-button:focus,
+      .icon-button:hover {
+        box-shadow: 0 5px 5px -3px rgba(0, 0, 0, .2), 0 8px 10px 1px rgba(0, 0, 0, .14), 0 3px 14px 2px rgba(0, 0, 0, .12);
       }
 
       .icon-button:active {
-        box-shadow: 0px 7px 8px -4px rgba(0, 0, 0, 0.2), 0px 12px 17px 2px rgba(0, 0, 0, 0.14), 0px 5px 22px 4px rgba(0, 0, 0, 0.12);
+        box-shadow: 0 7px 8px -4px rgba(0, 0, 0, .2), 0 12px 17px 2px rgba(0, 0, 0, .14), 0 5px 22px 4px rgba(0, 0, 0, .12);
       }
 
       .icon-button svg {
@@ -172,18 +177,18 @@
       #hotbar {
         display: flex;
         margin: 0 auto;
-        padding: 10px 10px;
+        padding: 10px;
         background: #364f6b;
         border-top-right-radius: 25px;
         border-top-left-radius: 25px;
-        box-shadow: 0 2px 4px rgba(0,0,0,.5);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, .5);
         pointer-events: all;
       }
 
       .slot {
         width: 75px;
         height: 75px;
-        background: white;
+        background: #fff;
         border-radius: 50%;
         margin: 0 4px;
         position: relative;
@@ -201,29 +206,46 @@
         color: #fc5185;
       }
 
-      #footer span {
+      .slash {
         padding: 0 6px;
       }
 
-      @media all and (max-width: 1320px) and (min-width: 850px) {
+      @media all and (max-width:1500px) {
+        #remove-1 {
+          display: none;
+        }
+      }
+
+      @media all and (max-width:1320px) and (min-width:850px) {
         .slot {
           width: 60px;
           height: 60px;
         }
       }
 
-      @media all and (max-width: 850px) {
+      @media all and (max-width:1000px) {
+        #footer {
+          display: none;
+        }
+      }
+
+      @media all and (max-width:1200px) {
+        #remove-2 {
+          display: none;
+        }
+      }
+
+      @media all and (max-width:850px) {
         #header {
           display: none;
         }
-        
         .slot {
           width: 50px;
           height: 50px;
         }
       }
 
-      @media all and (max-width: 650px) {
+      @media all and (max-width:650px) {
         .slot:nth-child(n+7) {
           display: none;
         }
@@ -650,7 +672,18 @@
         <div class="slot" tabindex="0"></div>
       </div>
     </div>
-    <div id="footer">Atomic Lab<span>/</span>Created by <a href="https://www.echou.xyz">Erik Chou</a><span>/</span>MIT License</div>
+    <div id="footer">
+      <span id="remove-1">
+        Atomic Lab
+        <span class="slash">/</span>
+      </span>
+      Created by
+      <a href="https://www.echou.xyz">Erik Chou</a>
+      <span id="remove-2">
+        <span class="slash">/</span>
+        MIT License
+      <span>
+    </div>
     <div id="menu" tabindex="0">
       <ul id="menu-options">
         <li class="option">

@@ -718,7 +718,7 @@ document.getElementById("close").addEventListener("click", overlayToggle);
 document.getElementById("clear-progress").addEventListener("click", () => {
   window.removeEventListener("beforeunload", saveProgress);
   localStorage.clear();
-  location.reload();
+  location.reload(true);
 });
 
 document.getElementById("react").addEventListener("click", () => {
