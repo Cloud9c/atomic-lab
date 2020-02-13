@@ -7,7 +7,7 @@
 	}
 }
 
-@keyframes opacityInverse {
+@keyframes opacity-inverse {
 	0% {
 		opacity: 1
 	}
@@ -79,7 +79,9 @@
 
 #periodic-table::-webkit-scrollbar {
 	background-color: transparent;
-	position: absolute
+	position: absolute;
+	width: 16px;
+	height: 16px
 }
 
 #periodic-table::-webkit-scrollbar-track {
@@ -266,17 +268,17 @@ body[grabbing] .element:hover {
 	user-select: none
 }
 
-#helium {
+.helium {
 	grid-column-start: 18
 }
 
-#aluminium,
-#boron {
+.aluminium,
+.boron {
 	grid-column-start: 13
 }
 
-#cerium,
-#thorium {
+.cerium,
+.thorium {
 	grid-column-start: 4
 }
 
@@ -382,16 +384,19 @@ body[grabbing] .element:hover {
 	ol#periodic-table:before {
 		display: none
 	}
-	#aluminium,
-	#boron,
-	#cerium,
-	#helium,
-	#thorium {
+	.aluminium,
+	.boron,
+	.cerium,
+	.helium,
+	.thorium {
 		grid-column-start: auto
 	}
 	#periodic-table {
 		grid-template-columns: repeat(7, 1fr);
-		margin: 48px 16px 16px
+		margin: 48px 20px 16px
+	}
+	#periodic-table[scrollbar] {
+		margin-right: 4px;
 	}
 	#periodic-table>.element abbr:after {
 		content: attr(title);
@@ -407,9 +412,6 @@ body[grabbing] .element:hover {
 	#periodic-table {
 		grid-template-columns: repeat(6, 1fr)
 	}
-	li.element>abbr {
-		font-size: 20px
-	}
 	#main .element {
 		height: 48px;
 		width: 48px
@@ -423,6 +425,9 @@ body[grabbing] .element:hover {
 @media all and (max-width:750px) {
 	#periodic-table {
 		grid-template-columns: repeat(4, 1fr)
+	}
+	#periodic-table li.element abbr:after {
+		font-size: 14px
 	}
 }
 

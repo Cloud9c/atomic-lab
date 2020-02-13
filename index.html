@@ -12,242 +12,242 @@
     <link rel="manifest" href="manifest.webmanifest">
     <style>
       @font-face {
+        font-display: swap;
         font-family: 'Roboto';
         font-style: normal;
         font-weight: 400;
-        font-display: swap;
         src: local(Roboto), local(Roboto-Regular), url(https://fonts.gstatic.com/s/roboto/v20/KFOmCnqEu92Fr1Mu4mxKKTU1Kg.woff2) format("woff2");
-        unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+        unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD
       }
 
       #rack-dialog {
-        position: absolute;
-        width: 100%;
-        height: calc(100% - 95px);
         display: none;
+        height: calc(100% - 95px);
+        position: absolute;
+        width: 100%
       }
 
       #main,
       body,
       html {
         height: 100%;
-        margin: 0;
+        margin: 0
       }
 
       body,
       html {
-        font-family: 'Roboto', sans-serif;
-        counter-reset: element;
-        overflow: hidden;
-        -webkit-touch-callout: none;
-        -webkit-user-select: none;
         -moz-user-select: none;
         -ms-user-select: none;
-        user-select: none;
-        width: 100%;
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
         color: rgba(0, 0, 0, .87);
+        counter-reset: element;
+        font-family: 'Roboto', sans-serif;
+        overflow: hidden;
+        user-select: none;
+        width: 100%
       }
 
       #main {
         background: #f5f5f5;
-        background-size: 39px 39px;
-        background-position: center;
         background-image: linear-gradient(to right, #e8e8e8 1px, transparent 1px), linear-gradient(to bottom, #e8e8e8 1px, transparent 1px);
-        position: relative;
+        background-position: center;
+        background-size: 39px 39px;
         display: flex;
+        position: relative
       }
 
       #header,
       #toolbar {
         position: absolute;
-        top: 16px;
+        top: 16px
       }
 
       #toolbar {
-        right: 16px;
         display: flex;
         flex-direction: column;
-        z-index: 1;
+        right: 16px;
+        z-index: 1
       }
 
       #toolbar>button {
-        border: 0;
+        border: 0
       }
 
       #header {
-        left: 16px;
+        left: 16px
       }
 
       #install {
-        display: none;
-        border: 1px solid rgba(0, 0, 0, .87);
         background: 0 0;
-        padding: 0 16px;
-        line-height: 34px;
+        border: 1px solid rgba(0, 0, 0, .87);
         border-radius: 4px;
         cursor: pointer;
-        position: relative;
+        display: none;
+        line-height: 34px;
+        padding: 0 16px;
+        position: relative
       }
 
       #reaction-rate {
         background: #364f6b;
-        margin: 16px auto;
-        padding: 15px 10px;
         border-radius: 4px;
         box-shadow: 0 2px 4px rgba(0, 0, 0, .3);
+        margin: 16px auto;
+        padding: 15px 10px
       }
 
       #react {
-        background: #fc5185;
+        background: #fc5185
       }
 
       .slider-text {
         color: #fff;
-        line-height: .75em;
-        height: 12px;
         display: flex;
         font-size: 16px;
-        margin: auto;
+        height: 12px;
+        line-height: .75em;
+        margin: auto
       }
 
       #slider {
-        width: 3px;
+        background: linear-gradient(#e8e8e8 50%, #3fc1c9 50%);
         border-left: 6px solid #364f6b;
         border-right: 6px solid #364f6b;
+        cursor: pointer;
         height: 100px;
-        background: linear-gradient(#e8e8e8 50%, #3fc1c9 50%);
         margin: 16px auto;
         position: relative;
-        cursor: pointer;
+        width: 3px
       }
 
       #slider-thumb,
       #slider>svg {
-        position: absolute;
-        top: 38px;
         left: -26px;
+        position: absolute;
+        top: 38px
       }
 
       #slider-thumb {
-        width: 15px;
+        background: #3fc1c9;
+        border-radius: 50%;
         height: 15px;
         left: -6px;
         top: 43px;
-        background: #3fc1c9;
-        border-radius: 50%;
         transition: box-shadow .2s ease;
+        width: 15px
       }
 
       .icon-button {
-        float: right;
-        width: 58px;
-        height: 58px;
         background: #364f6b;
         border-radius: 50%;
-        display: flex;
         box-shadow: 0 3px 5px -1px rgba(0, 0, 0, .2), 0 6px 10px 0 rgba(0, 0, 0, .14), 0 1px 18px 0 rgba(0, 0, 0, .12);
-        transition: box-shadow 280ms cubic-bezier(.4, 0, .2, 1), opacity 15ms linear 30ms, transform 270ms 0ms cubic-bezier(0, 0, .2, 1);
         cursor: pointer;
+        display: flex;
+        float: right;
+        height: 58px;
         position: relative;
+        transition: box-shadow 280ms cubic-bezier(.4, 0, .2, 1), opacity 15ms linear 30ms, transform 270ms 0ms cubic-bezier(0, 0, .2, 1);
+        width: 58px
       }
 
       .icon-button:focus,
       .icon-button:hover {
-        box-shadow: 0 5px 5px -3px rgba(0, 0, 0, .2), 0 8px 10px 1px rgba(0, 0, 0, .14), 0 3px 14px 2px rgba(0, 0, 0, .12);
+        box-shadow: 0 5px 5px -3px rgba(0, 0, 0, .2), 0 8px 10px 1px rgba(0, 0, 0, .14), 0 3px 14px 2px rgba(0, 0, 0, .12)
       }
 
       .icon-button:active {
-        box-shadow: 0 7px 8px -4px rgba(0, 0, 0, .2), 0 12px 17px 2px rgba(0, 0, 0, .14), 0 5px 22px 4px rgba(0, 0, 0, .12);
+        box-shadow: 0 7px 8px -4px rgba(0, 0, 0, .2), 0 12px 17px 2px rgba(0, 0, 0, .14), 0 5px 22px 4px rgba(0, 0, 0, .12)
       }
 
       .icon-button svg {
-        width: 24px;
         margin: auto;
+        width: 24px
       }
 
       #bottom-container {
-        position: absolute;
         bottom: 0;
-        z-index: 2;
         display: flex;
-        width: 100%;
         pointer-events: none;
+        position: absolute;
+        width: 100%;
+        z-index: 2
       }
 
       #hotbar {
+        background: #364f6b;
+        border-top-left-radius: 25px;
+        border-top-right-radius: 25px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, .5);
         display: flex;
         margin: 0 auto;
         padding: 10px;
-        background: #364f6b;
-        border-top-right-radius: 25px;
-        border-top-left-radius: 25px;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, .5);
-        pointer-events: all;
+        pointer-events: all
       }
 
       .slot {
-        width: 75px;
-        height: 75px;
         background: #fff;
         border-radius: 50%;
+        display: flex;
+        height: 75px;
         margin: 0 4px;
         position: relative;
-        display: flex;
+        width: 75px
       }
 
       #footer {
-        position: absolute;
         bottom: 14px;
-        right: 14px;
         font-size: 14px;
+        position: absolute;
+        right: 14px
       }
 
       #footer a {
-        color: #fc5185;
+        color: #fc5185
       }
 
       .slash {
-        padding: 0 6px;
+        padding: 0 6px
       }
 
       @media all and (max-width:1500px) {
         #remove-1 {
-          display: none;
+          display: none
         }
       }
 
       @media all and (max-width:1320px) and (min-width:850px) {
         .slot {
-          width: 60px;
           height: 60px;
+          width: 60px
         }
       }
 
       @media all and (max-width:1000px) {
         #footer {
-          display: none;
+          display: none
         }
       }
 
       @media all and (max-width:1200px) {
         #remove-2 {
-          display: none;
+          display: none
         }
       }
 
       @media all and (max-width:850px) {
         #header {
-          display: none;
+          display: none
         }
         .slot {
-          width: 50px;
           height: 50px;
+          width: 50px
         }
       }
 
       @media all and (max-width:650px) {
         .slot:nth-child(n+7) {
-          display: none;
+          display: none
         }
       }
     </style>
@@ -276,7 +276,7 @@
             <div id="atomic-name">Name</div>
             <div id="atomic-mass">Atomic Mass</div>
           </li>
-          <li class="element noble-gas" id="helium" data-an="2">
+          <li class="element noble-gas helium" data-an="2">
             <abbr title="Helium"><span>He</span></abbr>
           </li>
           <li class="element alkali" data-an="3">
@@ -285,7 +285,7 @@
           <li class="element alkaline" data-an="4">
             <abbr title="Beryllium"><span>Be</span></abbr>
           </li>
-          <li class="element metalloid" id="boron" data-an="5">
+          <li class="element metalloid boron" data-an="5">
             <abbr title="Boron"><span>B</span></abbr>
           </li>
           <li class="element nonmetal" data-an="6">
@@ -309,7 +309,7 @@
           <li class="element alkaline" data-an="12">
             <abbr title="Magnesium"><span>Mg</span></abbr>
           </li>
-          <li class="element" id="aluminium" data-an="13">
+          <li class="element aluminium" data-an="13">
             <abbr title="Aluminium"><span>Al</span></abbr>
           </li>
           <li class="element metalloid" data-an="14">
@@ -444,7 +444,7 @@
           <li class="element lanthanide" data-an="57">
             <abbr title="Lanthanum"><span>La</span></abbr>
           </li>
-          <li class="element lanthanide" id="cerium" data-an="58">
+          <li class="element lanthanide cerium" data-an="58">
             <abbr title="Cerium"><span>Ce</span></abbr>
           </li>
           <li class="element lanthanide" data-an="59">
@@ -486,7 +486,7 @@
           <li class="element lanthanide" data-an="71">
             <abbr title="Lutetium"><span>Lu</span></abbr>
           </li>
-          <li class="element" id="hafnium" data-an="72">
+          <li class="element" data-an="72">
             <abbr title="Hafnium"><span>Hf</span></abbr>
           </li>
           <li class="element" data-an="73">
@@ -540,7 +540,7 @@
           <li class="element actinide" data-an="89">
             <abbr title="Actinium"><span>Ac</span></abbr>
           </li>
-          <li class="element actinide" id="thorium" data-an="90">
+          <li class="element actinide thorium" data-an="90">
             <abbr title="Thorium"><span>Th</span></abbr>
           </li>
           <li class="element actinide" data-an="91">
@@ -582,7 +582,7 @@
           <li class="element actinide" data-an="103">
             <abbr title="Lawrencium"><span>Lr</span></abbr>
           </li>
-          <li class="element" id="rutherfordium" data-an="104">
+          <li class="element" data-an="104">
             <abbr title="Rutherfordium"><span>Rf</span></abbr>
           </li>
           <li class="element" data-an="105">

@@ -12,14 +12,53 @@ const atomDict = JSON.parse("[[1.008,2.2],[4.0026,0],[6.94,0.98],[9.0112,1.57],[
 window.addEventListener("load", () => {
   if (localStorage.getItem("slot") !== null) {
     const slot = localStorage.getItem("slot").split(";");
-
     for (let i = 0; i < 9; i++)
-      document.getElementById("hotbar").getElementsByClassName("slot")[i].innerHTML = slot[i];
-
-    document.getElementById("main").innerHTML = localStorage.getItem("main");
+      if (slot[i] != undefined) {
+        document.getElementById("hotbar").getElementsByClassName("slot")[i].appendChild(document.getElementById("periodic-table").getElementsByClassName("element")[slot[i] - 1].cloneNode(true));
+    }
 
     lineDict = JSON.parse(localStorage.getItem("lineDict"));
     elementDict = JSON.parse(localStorage.getItem("elementDict"));
+
+    const mainContent = JSON.parse(localStorage.getItem("mainContent"));
+    for (let i = 0; i < mainContent.length; i++) {
+      if (mainContent[i].length === 1) {
+        const id = mainContent[i];
+        const element = document.getElementById("periodic-table").getElementsByClassName("element")[elementDict[id].an - 1].cloneNode(true);
+        element.removeAttribute("data-an");
+
+        element.id = id;
+        element.style.transform = "translate(" + elementDict[id].left + "px, " + elementDict[id].top + "px)";
+        document.getElementById("main").appendChild(element);
+      } else {
+        const molecule = document.createElement("div");
+        const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+        molecule.classList.add("molecule");
+        svg.classList.add("svg");
+        molecule.appendChild(svg);
+        for (let j = 0; j < mainContent[i][0].length; j++) {
+          const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+          const id = mainContent[i][0][j].substring(1);
+          line.id = "#" + id;
+          line.setAttribute("x1", lineDict[id].x1);
+          line.setAttribute("y1", lineDict[id].y1);
+          line.setAttribute("x2", lineDict[id].x2);
+          line.setAttribute("y2", lineDict[id].y2);
+          svg.appendChild(line);
+        }
+        for (let j = 0; j < mainContent[i][1].length; j++) {
+          const id = mainContent[i][1][j];
+          const element = document.getElementById("periodic-table").getElementsByClassName("element")[elementDict[id].an - 1].cloneNode(true);
+          element.removeAttribute("data-an");
+
+          element.id = id;
+          element.style.transform = "translate(" + elementDict[id].left + "px, " + elementDict[id].top + "px)";
+          molecule.appendChild(element);
+        }
+        console.log(molecule)
+        document.getElementById("main").appendChild(molecule);
+      }
+    }
   } else {
     elementDict = [];
     lineDict = [];
@@ -189,9 +228,9 @@ function createBond(ele1, ele2) {
       }
       m2.getElementsByClassName("svg")[0].remove();
 
-      while (m2.children[0]) {
-        changeLocation.push(m2.children[0].id);
-        molecule.appendChild(m2.children[0]);
+      while (m2.firstChild) {
+        changeLocation.push(m2.firstChild.id);
+        molecule.appendChild(m2.firstChild);
       }
       m2.remove();
     } else {
@@ -224,8 +263,8 @@ function createBond(ele1, ele2) {
 
   const rad = Math.PI / 2 - Math.atan2(placement2.left - placement1.left, placement2.top - placement1.top);
 
-  const x = +placement1.left + (30 + ele1.offsetWidth) * Math.cos(rad);
-  const y = +placement1.top + (30 + ele1.offsetWidth) * Math.sin(rad);
+  const x = Math.round(+placement1.left + (ele1.offsetWidth*1.4) * Math.cos(rad));
+  const y = Math.round(+placement1.top + (ele1.offsetWidth*1.4) * Math.sin(rad));
 
   if (changeLocation[0]) {
     const diffX = x - placement2.left;
@@ -558,23 +597,38 @@ function openMenu(e) {
       };
     }
 
-    if (options[0].innerHTML.length > 0)
+    if (content[0].textContent.length > 0)
       toggleMenu("block", e);
   }
 }
 
-function overlayToggle() {
-  if (document.getElementById("overlay").style.display === "none" || document.getElementById("overlay").style.display === "") {
-    document.getElementById("overlay").style.display = "initial";
-    document.getElementById("rack-dialog").style.display = "flex";
-    document.getElementById("overlay").style.animation = "opacity 0.25s forwards";
-    document.getElementById("rack-dialog").children[0].style.animation = "opacity 0.25s forwards";
+function scrollbarToggle() {
+  const periodicTable = document.getElementById("periodic-table");
+
+  if (periodicTable.scrollHeight > periodicTable.clientHeight) {
+    periodicTable.setAttribute("scrollbar", "");
   } else {
-    document.getElementById("overlay").style.animation = "opacityInverse 0.25s forwards";
-    document.getElementById("rack-dialog").children[0].style.animation = "opacityInverse 0.25s forwards";
+    periodicTable.removeAttribute("scrollbar");
+  }
+}
+
+function overlayToggle() {
+  const overlayStyles = document.getElementById("overlay").style;
+  const rack = document.getElementById("rack-dialog");
+
+  if (overlayStyles.display === "none" || overlayStyles.display === "") {
+    overlayStyles.display = "initial";
+    rack.style.display = "flex";
+    overlayStyles.animation = "opacity 0.25s forwards";
+    rack.firstElementChild.style.animation = "opacity 0.25s forwards";
+
+    scrollbarToggle();
+  } else {
+    overlayStyles.animation = "opacity-inverse 0.25s forwards";
+    rack.firstElementChild.style.animation = "opacity-inverse 0.25s forwards";
     setTimeout(() => {
-      document.getElementById("rack-dialog").style.display = "none";
-      document.getElementById("overlay").style.display = "none";
+      rack.style.display = "none";
+      overlayStyles.display = "none";
     }, 500);
   }
 }
@@ -659,7 +713,8 @@ function createElement(target, x, y, table) {
       tempElement.id = "";
       tempElement.parentElement.classList.add("pulse");
       setTimeout(() => {
-        tempElement.parentElement.classList.remove("pulse");
+        if (tempElement.parentElement)
+          tempElement.parentElement.classList.remove("pulse");
       }, 500);
     }
     document.removeEventListener("mousemove", tableMove);
@@ -689,8 +744,8 @@ function createElement(target, x, y, table) {
 
     elementDict[index] = {
       "an": +newElement.getAttribute("data-an"),
-      "top": +top.slice(0, -2),
-      "left": +left.slice(0, -2),
+      "top": Math.round(+top.slice(0, -2)),
+      "left": Math.round(+left.slice(0, -2)),
       "lines": []
     };
 
@@ -781,8 +836,8 @@ document.getElementById("periodic-table").addEventListener("mouseover", () => {
     if (event.target.parentElement.id === "periodic-table") {
       const atomicNumber = event.target.getAttribute("data-an");
       document.getElementById("atomic-number").textContent = atomicNumber;
-      document.getElementById("atomic-symbol").textContent = event.target.children[0].textContent;
-      document.getElementById("atomic-name").textContent = event.target.children[0].getAttribute("title");
+      document.getElementById("atomic-symbol").textContent = event.target.firstElementChild.textContent;
+      document.getElementById("atomic-name").textContent = event.target.firstElementChild.getAttribute("title");
       document.getElementById("atomic-mass").textContent = atomDict[atomicNumber][0];
       if (atomDict[atomicNumber][0] % 1 === 0)
         document.getElementById("atomic-mass").textContent = "(" + document.getElementById("atomic-mass").textContent + ")";
@@ -848,11 +903,15 @@ document.addEventListener("keydown", () => {
 
 document.getElementById("slider").addEventListener("mousedown", sliderAdjust);
 
+document.addEventListener("contextmenu", openMenu);
+
 document.addEventListener("mousedown", function(e) {
   const path = e.path;
   if (!path.includes(document.getElementById("menu"))) {
     toggleMenu("none", e);
   }
+
+  console.log(e)
 
   if (e.button === 0) {
     if (path.includes(document.getElementById("main"))) {
@@ -884,8 +943,6 @@ document.addEventListener("mousedown", function(e) {
           else
             target.classList.add("selected");
         }
-      } else if (e.ctrlKey || e.altKey || e.shiftKey) {
-        openMenu(e);
       } else {
         while (document.getElementsByClassName("selected")[0])
           document.getElementsByClassName("selected")[0].classList.remove("selected");
@@ -909,19 +966,39 @@ document.addEventListener("mousedown", function(e) {
   }
 });
 
-document.addEventListener("contextmenu", openMenu);
-
 function saveProgress() {
   let slot = "";
+  let mainContent = [];
+  const main = document.getElementById("main").children;
+  for (let i = 0; i < main.length; i++) {
+    let current = main[i];
+    if (current.classList.contains("element")) {
+      mainContent.push(current.id);
+    } else {
+      let current = main[i].children;
+      let molecule = [[], []];
+      for (let j = 0; j < current[0].children.length; j++) {
+        molecule[0].push(current[0].children[j].id);
+      }
+      for (let j = 1; j < current.length; j++) {
+        molecule[1].push(current[j].id);
+      }
+      mainContent.push(molecule);
+    }
+  }
+
   for (let i = 0; i < 9; i++)
-    slot += document.getElementById("hotbar").getElementsByClassName("slot")[i].innerHTML + ";";
+    slot += document.getElementById("hotbar").getElementsByClassName("slot")[i].firstChild.getAttribute("data-an") + ";";
 
   localStorage.setItem("slot", slot);
-  localStorage.setItem("main", document.getElementById("main").innerHTML.replace(/\r?\n|\r/g, ""));
   localStorage.setItem("lineDict", JSON.stringify(lineDict));
   localStorage.setItem("elementDict", JSON.stringify(elementDict));
+  localStorage.setItem("mainContent", JSON.stringify(mainContent));
+
+  return mainContent
 }
 
+window.addEventListener("resize", scrollbarToggle);
 window.addEventListener("beforeunload", saveProgress);
 
 window.addEventListener("beforeinstallprompt", function(e) {
