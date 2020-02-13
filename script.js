@@ -13,7 +13,7 @@ window.addEventListener("load", () => {
   if (localStorage.getItem("slot") !== null) {
     const slot = localStorage.getItem("slot").split(";");
     for (let i = 0; i < 9; i++)
-      if (slot[i] != undefined) {
+      if (slot[i] != "") {
         console.log(slot[i]);
         document.getElementById("hotbar").getElementsByClassName("slot")[i].appendChild(document.getElementById("periodic-table").getElementsByClassName("element")[slot[i] - 1].cloneNode(true));
     }
