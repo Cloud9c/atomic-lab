@@ -989,7 +989,7 @@ function saveProgress() {
   }
 
   for (let i = 0; i < 9; i++) {
-    let element = document.getElementById("hotbar").getElementsByClassName("slot")[i].firstChild
+    let element = document.getElementById("hotbar").getElementsByClassName("slot")[i].firstChild;
     if (element)
       element = element.getAttribute("data-an");
     else
