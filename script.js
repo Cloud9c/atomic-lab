@@ -987,15 +987,19 @@ function saveProgress() {
     }
   }
 
-  for (let i = 0; i < 9; i++)
-    slot += document.getElementById("hotbar").getElementsByClassName("slot")[i].firstChild.getAttribute("data-an") + ";";
+  for (let i = 0; i < 9; i++) {
+    let element = document.getElementById("hotbar").getElementsByClassName("slot")[i].firstChild
+    if (element)
+      element = element.getAttribute("data-an");
+    else
+      element = "";
+    slot += element + ";";
+  }
 
   localStorage.setItem("slot", slot);
   localStorage.setItem("lineDict", JSON.stringify(lineDict));
   localStorage.setItem("elementDict", JSON.stringify(elementDict));
   localStorage.setItem("mainContent", JSON.stringify(mainContent));
-
-  return mainContent
 }
 
 window.addEventListener("resize", scrollbarToggle);
