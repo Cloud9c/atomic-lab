@@ -7,13 +7,14 @@ a.textContent='/*rippleJS*/.rippleJS,.rippleJS.fill::after{position:absolute;top
 document.head.insertBefore(a,document.head.firstChild));p()}"complete"===document.readyState?c():window.addEventListener("load",c)})()})();
 
 let animate, elementDict, lineDict;
-const atomDict = JSON.parse("[[1.008,2.2],[4.0026,0],[6.94,0.98],[9.0112,1.57],[10.81,2.04],[12.011,2.55],[14.007,3.04],[15.999,3.44],[18.998,3.98],[20.18,0],[22.99,0.93],[24.305,1.31],[26.982,1.61],[28.085,1.9],[30.974,2.19],[32.06,2.58],[35.45,3.16],[39.948,0],[39.098,0.82],[40.078,1],[44.956,1.36],[47.867,1.54],[50.942,1.63],[51.996,1.66],[54.938,1.55],[55.845,1.83],[58.933,1.88],[58.693,1.91],[63.546,1.9],[65.38,1.65],[69.723,1.81],[72.63,2.01],[74.992,2.18],[78.971,2.55],[79.904,2.96],[83.798,3],[85.468,0.82],[87.62,0.95],[88.906,1.22],[91.224,1.33],[92.906,1.6],[95.95,2.16],[98,1.9],[101.07,2.2],[102.91,2.28],[106.42,2.2],[107.87,1.93],[112.41,1.69],[114.82,1.78],[118.71,1.96],[121.76,2.05],[127.6,2.1],[126.9,2.66],[131.29,2.6],[132.91,0.79],[137.33,0.89],[138.91,1.1],[140.12,1.12],[140.91,1.13],[144.24,1.14],[145,1.13],[150.36,1.17],[151.96,1.2],[157.25,1.2],[158.93,1.1],[162.5,1.22],[164.93,1.23],[167.26,1.24],[168.93,1.25],[173.05,1.1],[174.97,1.27],[178.49,1.3],[180.95,1.5],[183.84,2.36],[186.21,1.9],[190.23,2.2],[192.22,2.2],[195.08,2.28],[196.97,2.54],[200.59,2],[204.38,1.62],[207.2,1.87],[208.98,2.02],[209,2],[210,2.2],[222,2.2],[223,0.79],[226,0.9],[227,1.1],[232.04,1.3],[231.04,1.5],[238.03,1.38],[237,1.36],[244,1.28],[243,1.13],[247,1.28],[247,1.3],[251,1.3],[252,1.3],[257,1.3],[258,1.3],[259,1.3],[266,1.3],[267,0],[268,0],[269,0],[270,0],[270,0],[278,0],[281,0],[282,0],[285,0],[286,0],[289,0],[290,0],[293,0],[294,0],[294,0]]");
+let factor = 1;
+const atomDict = JSON.parse("[[],[1.008,2.2],[4.0026,0],[6.94,0.98],[9.0112,1.57],[10.81,2.04],[12.011,2.55],[14.007,3.04],[15.999,3.44],[18.998,3.98],[20.18,0],[22.99,0.93],[24.305,1.31],[26.982,1.61],[28.085,1.9],[30.974,2.19],[32.06,2.58],[35.45,3.16],[39.948,0],[39.098,0.82],[40.078,1],[44.956,1.36],[47.867,1.54],[50.942,1.63],[51.996,1.66],[54.938,1.55],[55.845,1.83],[58.933,1.88],[58.693,1.91],[63.546,1.9],[65.38,1.65],[69.723,1.81],[72.63,2.01],[74.992,2.18],[78.971,2.55],[79.904,2.96],[83.798,3],[85.468,0.82],[87.62,0.95],[88.906,1.22],[91.224,1.33],[92.906,1.6],[95.95,2.16],[98,1.9],[101.07,2.2],[102.91,2.28],[106.42,2.2],[107.87,1.93],[112.41,1.69],[114.82,1.78],[118.71,1.96],[121.76,2.05],[127.6,2.1],[126.9,2.66],[131.29,2.6],[132.91,0.79],[137.33,0.89],[138.91,1.1],[140.12,1.12],[140.91,1.13],[144.24,1.14],[145,1.13],[150.36,1.17],[151.96,1.2],[157.25,1.2],[158.93,1.1],[162.5,1.22],[164.93,1.23],[167.26,1.24],[168.93,1.25],[173.05,1.1],[174.97,1.27],[178.49,1.3],[180.95,1.5],[183.84,2.36],[186.21,1.9],[190.23,2.2],[192.22,2.2],[195.08,2.28],[196.97,2.54],[200.59,2],[204.38,1.62],[207.2,1.87],[208.98,2.02],[209,2],[210,2.2],[222,2.2],[223,0.79],[226,0.9],[227,1.1],[232.04,1.3],[231.04,1.5],[238.03,1.38],[237,1.36],[244,1.28],[243,1.13],[247,1.28],[247,1.3],[251,1.3],[252,1.3],[257,1.3],[258,1.3],[259,1.3],[266,1.3],[267,0],[268,0],[269,0],[270,0],[270,0],[278,0],[281,0],[282,0],[285,0],[286,0],[289,0],[290,0],[293,0],[294,0],[294,0]]");
 
 window.addEventListener("load", () => {
   if (localStorage.getItem("slot") !== null) {
-    const slot = localStorage.getItem("slot").split(";");
+    const slot = JSON.parse(localStorage.getItem("slot"));
     for (let i = 0; i < 9; i++)
-      if (!isNaN(slot[i])) {
+      if (slot[i] > 0) {
         document.getElementById("hotbar").getElementsByClassName("slot")[i].appendChild(document.getElementById("periodic-table").getElementsByClassName("element")[slot[i] - 1].cloneNode(true));
     }
 
@@ -55,7 +56,6 @@ window.addEventListener("load", () => {
           element.style.transform = "translate(" + elementDict[id].left + "px, " + elementDict[id].top + "px)";
           molecule.appendChild(element);
         }
-        console.log(molecule)
         document.getElementById("main").appendChild(molecule);
       }
     }
@@ -378,7 +378,9 @@ function openMenu(e) {
               "an": oldElement.an,
               "left": oldElement.left + 16,
               "top": oldElement.top + 16,
-              "lines": []
+              "lines": [],
+              "startX": oldElement.left + 16,
+              "startY": oldElement.top + 16,
             }
             const currentElement = elementDict[index];
             clone.style.transform = "translate(" + currentElement.left + "px," + currentElement.top + "px)";
@@ -399,7 +401,9 @@ function openMenu(e) {
                 "an": elementDict[elements[j].id].an,
                 "left": elementDict[elements[j].id].left + 16,
                 "top": elementDict[elements[j].id].top + 16,
-                "lines": elementDict[elements[j].id].lines
+                "lines": elementDict[elements[j].id].lines,
+                "startX": elementDict[elements[j].id].left + 16,
+                "startY": elementDict[elements[j].id].top + 16,
               };
               switchElements[elements[j].id] = index;
               clone.children[j].id = index;
@@ -490,7 +494,9 @@ function openMenu(e) {
             "an": elementDict[e.target.id].an,
             "left": elementDict[e.target.id].left + 16,
             "top": elementDict[e.target.id].top + 16,
-            "lines": []
+            "lines": [],
+            "startX": elementDict[e.target.id].left + 16,
+            "startY": elementDict[e.target.id].top + 16,
           }
 
           clone.style.transform = "translate(" + elementDict[index].left + "px," + elementDict[index].top + "px)";
@@ -646,10 +652,9 @@ function sliderAdjust(e) {
         pos = 93;
       else if (pos < 53 && pos > 33)
         pos = 43;
-      target.style.top = pos + "px";
 
-      if (pos < 0)
-        pos = 0;
+      factor = (-pos -7)/100 + 1.5;
+      target.style.top = pos + "px";
 
       document.getElementById("slider").style.background = "linear-gradient(#e8e8e8 " + pos + "%, #3fc1c9 " + pos + "%)";
     };
@@ -746,7 +751,9 @@ function createElement(target, x, y, table) {
       "an": +newElement.getAttribute("data-an"),
       "top": Math.round(+top.slice(0, -2)),
       "left": Math.round(+left.slice(0, -2)),
-      "lines": []
+      "lines": [],
+      "startX": Math.round(+left.slice(0, -2)),
+      "startY": Math.round(+top.slice(0, -2)),
     };
 
     newElement.id = index;
@@ -777,32 +784,69 @@ document.getElementById("clear-progress").addEventListener("click", () => {
 });
 
 document.getElementById("react").addEventListener("click", () => {
-  let elements;
+  const elements = document.getElementById("main").getElementsByClassName("element");
 
-  if (animate) {
+  const cancel = (reset) => {
     window.cancelAnimationFrame(animate);
     animate = undefined;
+    document.getElementById("main").classList.remove("frame");
 
-    const elements = document.getElementById("main").getElementsByClassName("element");
-    for (let i = 0; i < elements.length; i++) {
-      elementDict[i].left = elementDict[i].startX;
-      elementDict[i].top = elementDict[i].startY;
-      elements[i].style.transform = "translate(" + elementDict[i].left + "px, " + elementDict[i].top + "px)";
-      elements[i].style.transition = "transform 0.5s";
-    }
-
-    setTimeout(() => {
+    if (reset) {
       for (let i = 0; i < elements.length; i++) {
-        elements[i].style.transition = "";
+        const id = elementDict[elements[i].id];
+        id.left = id.startX;
+        id.top = id.startY;
+        elements[i].style.transform = "translate(" + id.left + "px, " + id.top + "px)";
+        elements[i].style.transition = "transform 0.5s";
       }
-    }, 500);
+
+      setTimeout(() => {
+        for (let i = 0; i < elements.length; i++) {
+          elements[i].style.transition = "";
+        }
+      }, 500);
+    }
+  }
+
+  if (animate) {
+    cancel(true);
 
   } else if (document.getElementById("main").getElementsByClassName("element").length > 1) {
+    const width = elements[0].offsetWidth;
+    document.getElementById("main").classList.add("frame");
+    const frame = () => {
+      let keepGoing = false;
+      for (let i = 0; i < elements.length; i++) {
+        const id = elementDict[elements[i].id];
+        const others = [...elements];
+        others.splice(i, 1);
+        const en = atomDict[id.an][1];
+        for (let j = 0; j < others.length; j++) {
+          const id2 = elementDict[others[j].id];
+          const diffX = id2.left - id.left;
+          const diffY = id2.top - id.top;
+          const distance = Math.sqrt(Math.pow(diffX, 2) + Math.pow(diffY, 2));
+          if (distance > width) {
+            keepGoing = true;
+            id.left += en * diffX / Math.pow(distance, 2) * factor * 150;
+            id.top += en * diffY / Math.pow(distance, 2) * factor * 150;
+          }
+        }
+        elements[i].style.transform = "translate(" + id.left + "px," + id.top + "px)";
+      }
+
+      if (keepGoing)
+        animate = window.requestAnimationFrame(frame);
+      else {
+        cancel(false);
+      }
+    }
+
     animate = requestAnimationFrame(frame);
-    const elements = document.getElementById("main").getElementsByClassName("element");
     for (let i = 0; i < elements.length; i++) {
-      elementDict[i].startX = elementDict[i].left;
-      elementDict[i].startY = elementDict[i].top;
+      const id = elements[i].id;
+      elementDict[id].startX = elementDict[id].left;
+      elementDict[id].startY = elementDict[id].top;
     }
   } else {
     const snackbar = document.getElementById("snackbar");
@@ -820,14 +864,6 @@ document.getElementById("react").addEventListener("click", () => {
     };
 
     document.getElementById("snackbar-close").addEventListener("click", closeSnackBar);
-  }
-
-  function frame() {
-    const elements = document.getElementById("main").getElementsByClassName("element");
-    for (let i = 0; i < elements.length; i++) {
-      elements[i].style.transform = "translate(" + ++elementDict[i].left + "px," + ++elementDict[i].top + "px)";
-    }
-    animate = window.requestAnimationFrame(frame);
   }
 });
 
@@ -911,18 +947,21 @@ document.addEventListener("mousedown", function(e) {
     toggleMenu("none", e);
   }
 
-  console.log(e)
-
   if (e.button === 0) {
     if (path.includes(document.getElementById("main"))) {
       const target = e.target;
+      const selected = document.getElementsByClassName("selected");
       if (target.classList.contains("element")) {
         if (!e.ctrlKey && !e.altKey && !e.shiftKey) {
-          if (document.getElementsByClassName("selected").length < 2 || !e.target.classList.contains("selected"))
-            while (document.getElementsByClassName("selected")[0])
-              document.getElementsByClassName("selected")[0].classList.remove("selected");
+          if (selected.length < 2 || !e.target.classList.contains("selected"))
+            while (selected[0])
+              selected[0].classList.remove("selected");
 
           target.classList.add("selected");
+          if (target.parentElement.id === "main")
+            document.getElementById("main").appendChild(target);
+          else
+            document.getElementById("main").appendChild(target.parentElement);
 
           const mouseMove = () => {
             followCursor(e.target);
@@ -944,8 +983,8 @@ document.addEventListener("mousedown", function(e) {
             target.classList.add("selected");
         }
       } else {
-        while (document.getElementsByClassName("selected")[0])
-          document.getElementsByClassName("selected")[0].classList.remove("selected");
+        while (selected[0])
+          selected[0].classList.remove("selected");
         mouseDrag(e.pageX, e.pageY);
       }
     } else if (!document.getElementById("mirror") && e.target.classList.contains("element") && (path.includes(document.getElementById("periodic-table")) || path.includes(document.getElementById("bottom-container")))) {
@@ -967,7 +1006,7 @@ document.addEventListener("mousedown", function(e) {
 });
 
 function saveProgress() {
-  let slot = "";
+  let slot = [];
   let mainContent = [];
   const main = document.getElementById("main").children;
   for (let i = 0; i < main.length; i++) {
@@ -990,13 +1029,12 @@ function saveProgress() {
   for (let i = 0; i < 9; i++) {
     let element = document.getElementById("hotbar").getElementsByClassName("slot")[i].firstChild;
     if (element)
-      element = element.getAttribute("data-an");
+      slot.push(element.getAttribute("data-an"));
     else
-      element = "";
-    slot += element + ";";
+      slot.push(0);
   }
 
-  localStorage.setItem("slot", slot);
+  localStorage.setItem("slot", JSON.stringify(slot));
   localStorage.setItem("lineDict", JSON.stringify(lineDict));
   localStorage.setItem("elementDict", JSON.stringify(elementDict));
   localStorage.setItem("mainContent", JSON.stringify(mainContent));
