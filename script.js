@@ -23,7 +23,7 @@ window.addEventListener("load", () => {
 
     const mainContent = JSON.parse(localStorage.getItem("mainContent"));
     for (let i = 0; i < mainContent.length; i++) {
-      if (mainContent[i].length === 1) {
+      if (typeof mainContent[i] === "string") {
         const id = mainContent[i];
         const element = document.getElementById("periodic-table").getElementsByClassName("element")[elementDict[id].an - 1].cloneNode(true);
         element.removeAttribute("data-an");
@@ -686,7 +686,7 @@ function createElement(target, x, y, table) {
   document.body.appendChild(newElement);
 
   let left = x - newElement.offsetWidth / 2;
-  let top = y - newElement.offsetWidth / 1.25;
+  let top = y - newElement.offsetWidth / 2;
   newElement.style.left = left + "px";
   newElement.style.top = top + "px";
   document.body.setAttribute("grabbing", "");
