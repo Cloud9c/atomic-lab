@@ -942,7 +942,7 @@ document.getElementById("slider").addEventListener("mousedown", sliderAdjust);
 document.addEventListener("contextmenu", openMenu);
 
 document.addEventListener("mousedown", function(e) {
-  const path = e.path;
+  const path = [].slice.call(e.path);
   if (!path.includes(document.getElementById("menu"))) {
     toggleMenu("none", e);
   }

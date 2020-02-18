@@ -60,22 +60,12 @@
 	}
 }
 
-@keyframes frame {
-	0%,
-	to {
-		box-shadow: inset 0 0 0 3px rgba(252, 81, 133, 1)
-	}
-	50% {
-		box-shadow: inset 0 0 0 3px rgba(252, 81, 133, 0.5)
-	}
-}
-
 .pulse {
 	animation: pulse .7s
 }
 
 .frame {
-	animation: frame 2s infinite;
+	border-top: 4px solid #fc5185;
 }
 
 :focus {
