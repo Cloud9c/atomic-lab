@@ -339,8 +339,8 @@ body[grabbing] .element:hover {
 		width: 60px
 	}
 	body>.element {
-		height: 72px!important;
-		width: 72px!important
+		height: 72px;
+		width: 72px
 	}
 }
 
@@ -358,7 +358,7 @@ body[grabbing] .element:hover {
 	.element>abbr {
 		font-size: 20px
 	}
-	#main .element {
+	body>.element, #main .element {
 		height: 60px;
 		width: 60px
 	}
@@ -376,15 +376,11 @@ body[grabbing] .element:hover {
 	#atomic-name {
 		font-size: 12px
 	}
-	body>.element {
-		height: 60px!important;
-		width: 60px!important
-	}
 }
 
 @media all and (max-width:949px) {
-	#closeup,
-	#periodic-table>.element abbr span,
+	#closeup/*,
+	#periodic-table>.element abbr span*/,
 	ol#periodic-table:before {
 		display: none
 	}
@@ -402,10 +398,10 @@ body[grabbing] .element:hover {
 	#periodic-table[scrollbar] {
 		margin-right: 4px;
 	}
-	#periodic-table>.element abbr:after {
+/*	#periodic-table>.element abbr:after {
 		content: attr(title);
 		font-size: 16px
-	}
+	}*/
 	ol#periodic-table>.element:nth-child(n+58):nth-last-child(n+48),
 	ol#periodic-table>.element:nth-child(n+90):nth-last-child(n+16) {
 		grid-row-start: auto
@@ -416,13 +412,9 @@ body[grabbing] .element:hover {
 	#periodic-table {
 		grid-template-columns: repeat(6, 1fr)
 	}
-	#main .element {
+	body>.element, #main .element {
 		height: 48px;
 		width: 48px
-	}
-	body>.element {
-		height: 48px!important;
-		width: 48px!important
 	}
 }
 
@@ -430,9 +422,9 @@ body[grabbing] .element:hover {
 	#periodic-table {
 		grid-template-columns: repeat(4, 1fr)
 	}
-	#periodic-table li.element abbr:after {
+/*	#periodic-table li.element abbr:after {
 		font-size: 14px
-	}
+	}*/
 }
 
 @media all and (max-width:650px) {

@@ -378,9 +378,7 @@ function openMenu(e) {
               "an": oldElement.an,
               "left": oldElement.left + 16,
               "top": oldElement.top + 16,
-              "lines": [],
-              "startX": oldElement.left + 16,
-              "startY": oldElement.top + 16,
+              "lines": []
             }
             const currentElement = elementDict[index];
             clone.style.transform = "translate(" + currentElement.left + "px," + currentElement.top + "px)";
@@ -401,9 +399,7 @@ function openMenu(e) {
                 "an": elementDict[elements[j].id].an,
                 "left": elementDict[elements[j].id].left + 16,
                 "top": elementDict[elements[j].id].top + 16,
-                "lines": elementDict[elements[j].id].lines,
-                "startX": elementDict[elements[j].id].left + 16,
-                "startY": elementDict[elements[j].id].top + 16,
+                "lines": elementDict[elements[j].id].lines
               };
               switchElements[elements[j].id] = index;
               clone.children[j].id = index;
@@ -494,9 +490,7 @@ function openMenu(e) {
             "an": elementDict[e.target.id].an,
             "left": elementDict[e.target.id].left + 16,
             "top": elementDict[e.target.id].top + 16,
-            "lines": [],
-            "startX": elementDict[e.target.id].left + 16,
-            "startY": elementDict[e.target.id].top + 16,
+            "lines": []
           }
 
           clone.style.transform = "translate(" + elementDict[index].left + "px," + elementDict[index].top + "px)";
@@ -685,8 +679,9 @@ function createElement(target, x, y, table) {
   newElement.id = "mirror";
   document.body.appendChild(newElement);
 
-  let left = x - newElement.offsetWidth / 2;
-  let top = y - newElement.offsetWidth / 2;
+  const pos = target.getBoundingClientRect();
+  let left = pos.left;
+  let top = pos.top;
   newElement.style.left = left + "px";
   newElement.style.top = top + "px";
   document.body.setAttribute("grabbing", "");
@@ -751,9 +746,7 @@ function createElement(target, x, y, table) {
       "an": +newElement.getAttribute("data-an"),
       "top": Math.round(+top.slice(0, -2)),
       "left": Math.round(+left.slice(0, -2)),
-      "lines": [],
-      "startX": Math.round(+left.slice(0, -2)),
-      "startY": Math.round(+top.slice(0, -2)),
+      "lines": []
     };
 
     newElement.id = index;
@@ -786,30 +779,14 @@ document.getElementById("clear-progress").addEventListener("click", () => {
 document.getElementById("react").addEventListener("click", () => {
   const elements = document.getElementById("main").getElementsByClassName("element");
 
-  const cancel = (reset) => {
+  const cancel = () => {
     window.cancelAnimationFrame(animate);
     animate = undefined;
     document.getElementById("main").classList.remove("frame");
-
-    if (reset) {
-      for (let i = 0; i < elements.length; i++) {
-        const id = elementDict[elements[i].id];
-        id.left = id.startX;
-        id.top = id.startY;
-        elements[i].style.transform = "translate(" + id.left + "px, " + id.top + "px)";
-        elements[i].style.transition = "transform 0.5s";
-      }
-
-      setTimeout(() => {
-        for (let i = 0; i < elements.length; i++) {
-          elements[i].style.transition = "";
-        }
-      }, 500);
-    }
   }
 
   if (animate) {
-    cancel(true);
+    cancel();
 
   } else if (document.getElementById("main").getElementsByClassName("element").length > 1) {
     const width = elements[0].offsetWidth;
@@ -838,16 +815,11 @@ document.getElementById("react").addEventListener("click", () => {
       if (keepGoing)
         animate = window.requestAnimationFrame(frame);
       else {
-        cancel(false);
+        cancel();
       }
     }
 
     animate = requestAnimationFrame(frame);
-    for (let i = 0; i < elements.length; i++) {
-      const id = elements[i].id;
-      elementDict[id].startX = elementDict[id].left;
-      elementDict[id].startY = elementDict[id].top;
-    }
   } else {
     const snackbar = document.getElementById("snackbar");
     snackbar.className = "show";
