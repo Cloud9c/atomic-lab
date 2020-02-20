@@ -924,8 +924,8 @@ document.addEventListener("mousedown", function(e) {
       const target = e.target;
       const selected = document.getElementsByClassName("selected");
       if (target.classList.contains("element")) {
-        if (!e.ctrlKey && !e.altKey && !e.shiftKey) {
-          if (selected.length < 2 || !e.target.classList.contains("selected"))
+        if (!e.altKey && !e.shiftKey) {
+          if (!e.target.classList.contains("selected"))
             while (selected[0])
               selected[0].classList.remove("selected");
 
