@@ -250,6 +250,12 @@
           display: none
         }
       }
+
+      @media all and (max-width:550px) {
+        .slot:nth-child(n+6) {
+          display: none
+        }
+      }
     </style>
     <link rel="preload" href="main.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="main.css"></noscript>
@@ -275,6 +281,7 @@
             <div id="atomic-symbol">Symbol</div>
             <div id="atomic-name">Name</div>
             <div id="atomic-mass">Atomic Mass</div>
+            <span id="electron-config">ee</span>
           </li>
           <li class="element noble-gas helium" data-an="2">
             <abbr title="Helium"><span>He</span></abbr>
@@ -309,7 +316,7 @@
           <li class="element alkaline" data-an="12">
             <abbr title="Magnesium"><span>Mg</span></abbr>
           </li>
-          <li class="element aluminium" data-an="13">
+          <li class="element aluminium poor-metal" data-an="13">
             <abbr title="Aluminium"><span>Al</span></abbr>
           </li>
           <li class="element metalloid" data-an="14">
@@ -363,7 +370,7 @@
           <li class="element" data-an="30">
             <abbr title="Zinc"><span>Zn</span></abbr>
           </li>
-          <li class="element" data-an="31">
+          <li class="element poor-metal" data-an="31">
             <abbr title="Gallium"><span>Ga</span></abbr>
           </li>
           <li class="element metalloid" data-an="32">
@@ -417,10 +424,10 @@
           <li class="element" data-an="48">
             <abbr title="Cadmium"><span>Cd</span></abbr>
           </li>
-          <li class="element" data-an="49">
+          <li class="element poor-metal" data-an="49">
             <abbr title="Indium"><span>In</span></abbr>
           </li>
-          <li class="element" data-an="50">
+          <li class="element poor-metal" data-an="50">
             <abbr title="Tin"><span>Sn</span></abbr>
           </li>
           <li class="element metalloid" data-an="51">
@@ -513,19 +520,19 @@
           <li class="element" data-an="80">
             <abbr title="Mercury"><span>Hg</span></abbr>
           </li>
-          <li class="element" data-an="81">
+          <li class="element poor-metal" data-an="81">
             <abbr title="Thallium"><span>Tl</span></abbr>
           </li>
-          <li class="element" data-an="82">
+          <li class="element poor-metal" data-an="82">
             <abbr title="Lead"><span>Pb</span></abbr>
           </li>
-          <li class="element" data-an="83">
+          <li class="element poor-metal" data-an="83">
             <abbr title="Bismuth"><span>Bi</span></abbr>
           </li>
-          <li class="element" data-an="84">
+          <li class="element metalloid" data-an="84">
             <abbr title="Polonium"><span>Po</span></abbr>
           </li>
-          <li class="element metalloid" data-an="85">
+          <li class="element nonmetal" data-an="85">
             <abbr title="Astatine"><span>At</span></abbr>
           </li>
           <li class="element noble-gas" data-an="86">
@@ -597,34 +604,34 @@
           <li class="element" data-an="108">
             <abbr title="Hassium"><span>Hs</span></abbr>
           </li>
-          <li class="element unknown" data-an="109">
+          <li class="element" data-an="109">
             <abbr title="Meitnerium"><span>Mt</span></abbr>
           </li>
-          <li class="element unknown" data-an="110">
+          <li class="element" data-an="110">
             <abbr title="Darmstadtium"><span>Ds</span></abbr>
           </li>
-          <li class="element unknown" data-an="111">
+          <li class="element" data-an="111">
             <abbr title="Roentgenium"><span>Rg</span></abbr>
           </li>
           <li class="element" data-an="112">
             <abbr title="Copernicium"><span>Cn</span></abbr>
           </li>
-          <li class="element unknown" data-an="113">
+          <li class="element poor-metal" data-an="113">
             <abbr title="Nihonium"><span>Nh</span></abbr>
           </li>
-          <li class="element unknown" data-an="114">
+          <li class="element poor-metal" data-an="114">
             <abbr title="Flerovium"><span>Fl</span></abbr>
           </li>
-          <li class="element unknown" data-an="115">
+          <li class="element poor-metal" data-an="115">
             <abbr title="Moscovium"><span>Mc</span></abbr>
           </li>
-          <li class="element unknown" data-an="116">
+          <li class="element poor-metal" data-an="116">
             <abbr title="Livermorium"><span>Lv</span></abbr>
           </li>
-          <li class="element unknown" data-an="117">
+          <li class="element nonmetal" data-an="117">
             <abbr title="Tennessine"><span>Ts</span></abbr>
           </li>
-          <li class="element unknown" data-an="118">
+          <li class="element noble-gas" data-an="118">
             <abbr title="Oganesson"><span>Og</span></abbr>
           </li>
         </ol>

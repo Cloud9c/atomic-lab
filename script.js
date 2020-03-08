@@ -8,15 +8,17 @@ document.head.insertBefore(a,document.head.firstChild));p()}"complete"===documen
 
 let animate, elementDict, lineDict;
 let factor = 1;
-const atomDict = JSON.parse("[[],[1.008,2.2],[4.0026,0],[6.94,0.98],[9.0112,1.57],[10.81,2.04],[12.011,2.55],[14.007,3.04],[15.999,3.44],[18.998,3.98],[20.18,0],[22.99,0.93],[24.305,1.31],[26.982,1.61],[28.085,1.9],[30.974,2.19],[32.06,2.58],[35.45,3.16],[39.948,0],[39.098,0.82],[40.078,1],[44.956,1.36],[47.867,1.54],[50.942,1.63],[51.996,1.66],[54.938,1.55],[55.845,1.83],[58.933,1.88],[58.693,1.91],[63.546,1.9],[65.38,1.65],[69.723,1.81],[72.63,2.01],[74.992,2.18],[78.971,2.55],[79.904,2.96],[83.798,3],[85.468,0.82],[87.62,0.95],[88.906,1.22],[91.224,1.33],[92.906,1.6],[95.95,2.16],[98,1.9],[101.07,2.2],[102.91,2.28],[106.42,2.2],[107.87,1.93],[112.41,1.69],[114.82,1.78],[118.71,1.96],[121.76,2.05],[127.6,2.1],[126.9,2.66],[131.29,2.6],[132.91,0.79],[137.33,0.89],[138.91,1.1],[140.12,1.12],[140.91,1.13],[144.24,1.14],[145,1.13],[150.36,1.17],[151.96,1.2],[157.25,1.2],[158.93,1.1],[162.5,1.22],[164.93,1.23],[167.26,1.24],[168.93,1.25],[173.05,1.1],[174.97,1.27],[178.49,1.3],[180.95,1.5],[183.84,2.36],[186.21,1.9],[190.23,2.2],[192.22,2.2],[195.08,2.28],[196.97,2.54],[200.59,2],[204.38,1.62],[207.2,1.87],[208.98,2.02],[209,2],[210,2.2],[222,2.2],[223,0.79],[226,0.9],[227,1.1],[232.04,1.3],[231.04,1.5],[238.03,1.38],[237,1.36],[244,1.28],[243,1.13],[247,1.28],[247,1.3],[251,1.3],[252,1.3],[257,1.3],[258,1.3],[259,1.3],[266,1.3],[267,0],[268,0],[269,0],[270,0],[270,0],[278,0],[281,0],[282,0],[285,0],[286,0],[289,0],[290,0],[293,0],[294,0],[294,0]]");
+
+//pt format: "AtomicMass","ElectronConfiguration","Electronegativity","AtomicRadius","IonizationEnergy","ElectronAffinity","OxidationStates"
+
+let pt = JSON.parse('[[],[1.008,"1s1",2.2,120,13.598,0.754,[1,-1]],[4.0026,"1s2",null,140,24.587,null,[0]],[7.0,"[He]2s1",0.98,182,5.392,0.618,[1]],[9.012183,"[He]2s2",1.57,153,9.323,null,[2]],[10.81,"[He]2s22p1",2.04,192,8.298,0.277,[3]],[12.011,"[He]2s22p2",2.55,170,11.26,1.263,[4,2,-4]],[14.007,"[He]2s22p3",3.04,155,14.534,null,[5,4,3,2,1,-1,-2,-3]],[15.999,"[He]2s22p4",3.44,152,13.618,1.461,[-2]],[18.99840316,"[He]2s22p5",3.98,135,17.423,3.339,[-1]],[20.18,"[He]2s22p6",null,154,21.565,null,[0]],[22.9897693,"[Ne]3s1",0.93,227,5.139,0.548,[1]],[24.305,"[Ne]3s2",1.31,173,7.646,null,[2]],[26.981538,"[Ne]3s23p1",1.61,184,5.986,0.441,[3]],[28.085,"[Ne]3s23p2",1.9,210,8.152,1.385,[4,2,-4]],[30.973762,"[Ne]3s23p3",2.19,180,10.487,0.746,[5,3,-3]],[32.07,"[Ne]3s23p4",2.58,180,10.36,2.077,[6,4,-2]],[35.45,"[Ne]3s23p5",3.16,175,12.968,3.617,[7,5,1,-1]],[39.9,"[Ne]3s23p6",null,188,15.76,null,[0]],[39.098,"[Ar]4s1",0.82,275,4.341,0.501,[1]],[40.08,"[Ar]4s2",1,231,6.113,null,[2]],[44.95591,"[Ar]4s23d1",1.36,211,6.561,0.188,[3]],[47.87,"[Ar]4s23d2",1.54,187,6.828,0.079,[4,3,2]],[50.941,"[Ar]4s23d3",1.63,179,6.746,0.525,[5,4,3,2]],[51.996,"[Ar]3d54s1",1.66,189,6.767,0.666,[6,3,2]],[54.93804,"[Ar]4s23d5",1.55,197,7.434,null,[7,4,3,2]],[55.84,"[Ar]4s23d6",1.83,194,7.902,0.163,[3,2]],[58.93319,"[Ar]4s23d7",1.88,192,7.881,0.661,[3,2]],[58.693,"[Ar]4s23d8",1.91,163,7.64,1.156,[3,2]],[63.55,"[Ar]4s13d10",1.9,140,7.726,1.228,[2,1]],[65.4,"[Ar]4s23d10",1.65,139,9.394,null,[2]],[69.72,"[Ar]4s23d104p1",1.81,187,5.999,0.3,[3]],[72.63,"[Ar]4s23d104p2",2.01,211,7.9,1.35,[4,2]],[74.92159,"[Ar]4s23d104p3",2.18,185,9.815,0.81,[5,3,-3]],[78.97,"[Ar]4s23d104p4",2.55,190,9.752,2.021,[6,4,-2]],[79.9,"[Ar]4s23d104p5",2.96,183,11.814,3.365,[5,1,-1]],[83.8,"[Ar]4s23d104p6",3,202,14,null,[0]],[85.468,"[Kr]5s1",0.82,303,4.177,0.468,[1]],[87.6,"[Kr]5s2",0.95,249,5.695,null,[2]],[88.9058,"[Kr]5s24d1",1.22,219,6.217,0.307,[3]],[91.22,"[Kr]5s24d2",1.33,186,6.634,0.426,[4]],[92.9064,"[Kr]5s14d4",1.6,207,6.759,0.893,[5,3]],[96.0,"[Kr]5s14d5",2.16,209,7.092,0.746,[6]],[97.90721,"[Kr]5s24d5",1.9,209,7.28,0.55,[7,6,4]],[101.1,"[Kr]5s14d7",2.2,207,7.361,1.05,[3]],[102.9055,"[Kr]5s14d8",2.28,195,7.459,1.137,[3]],[106.4,"[Kr]4d10",2.2,202,8.337,0.557,[3,2]],[107.868,"[Kr]5s14d10",1.93,172,7.576,1.302,[1]],[112.41,"[Kr]5s24d10",1.69,158,8.994,null,[2]],[114.82,"[Kr]5s24d105p1",1.78,193,5.786,0.3,[3]],[118.71,"[Kr]5s24d105p2",1.96,217,7.344,1.2,[4,2]],[121.76,"[Kr]5s24d105p3",2.05,206,8.64,1.07,[5,3,-3]],[127.6,"[Kr]5s24d105p4",2.1,206,9.01,1.971,[6,4,-2]],[126.9045,"[Kr]5s24d105p5",2.66,198,10.451,3.059,[7,5,1,-1]],[131.29,"[Kr]5s24d105p6",2.6,216,12.13,null,[0]],[132.905452,"[Xe]6s1",0.79,343,3.894,0.472,[1]],[137.33,"[Xe]6s2",0.89,268,5.212,null,[2]],[138.9055,"[Xe]6s25d1",1.1,240,5.577,0.5,[3]],[140.12,"[Xe]6s24f15d1",1.12,235,5.539,0.5,[4,3]],[140.9077,"[Xe]6s24f3",1.13,239,5.464,null,[3]],[144.24,"[Xe]6s24f4",1.14,229,5.525,null,[3]],[144.91276,"[Xe]6s24f5",null,236,5.55,null,[3]],[150.4,"[Xe]6s24f6",1.17,229,5.644,null,[3,2]],[151.96,"[Xe]6s24f7",null,233,5.67,null,[3,2]],[157.2,"[Xe]6s24f75d1",1.2,237,6.15,null,[3]],[158.92535,"[Xe]6s24f9",null,221,5.864,null,[3]],[162.5,"[Xe]6s24f10",1.22,229,5.939,null,[3]],[164.93033,"[Xe]6s24f11",1.23,216,6.022,null,[3]],[167.26,"[Xe]6s24f12",1.24,235,6.108,null,[3]],[168.93422,"[Xe]6s24f13",1.25,227,6.184,null,[3]],[173.04,"[Xe]6s24f14",null,242,6.254,null,[3,2]],[174.967,"[Xe]6s24f145d1",1.27,221,5.426,null,[3]],[178.5,"[Xe]6s24f145d2",1.3,212,6.825,null,[4]],[180.9479,"[Xe]6s24f145d3",1.5,217,7.89,0.322,[5]],[183.8,"[Xe]6s24f145d4",2.36,210,7.98,0.815,[6]],[186.21,"[Xe]6s24f145d5",1.9,217,7.88,0.15,[7,6,4]],[190.2,"[Xe]6s24f145d6",2.2,216,8.7,1.1,[4,3]],[192.22,"[Xe]6s24f145d7",2.2,202,9.1,1.565,[4,3]],[195.08,"[Xe]6s14f145d9",2.28,209,9,2.128,[4,2]],[196.96657,"[Xe]6s14f145d10",2.54,166,9.226,2.309,[3,1]],[200.59,"[Xe]6s24f145d10",2,209,10.438,null,[2,1]],[204.383,"[Xe]6s24f145d106p1",1.62,196,6.108,0.2,[3,1]],[207,"[Xe]6s24f145d106p2",2.33,202,7.417,0.36,[4,2]],[208.9804,"[Xe]6s24f145d106p3",2.02,207,7.289,0.946,[5,3]],[208.98243,"[Xe]6s24f145d106p4",2,197,8.417,1.9,[4,2]],[209.98715,"[Xe]6s24f145d106p5",2.2,202,9.5,2.8,[7,5,3,1,-1]],[222.01758,"[Xe]6s24f145d106p6",null,220,10.745,null,[0]],[223.01973,"[Rn]7s1",0.7,348,3.9,0.47,[1]],[226.02541,"[Rn]7s2",0.9,283,5.279,null,[2]],[227.02775,"[Rn]7s26d1",1.1,260,5.17,null,[3]],[232.038,"[Rn]7s26d2",1.3,237,6.08,null,[4]],[231.0359,"[Rn]7s25f26d1",1.5,243,5.89,null,[5,4]],[238.0289,"[Rn]7s25f36d1",1.38,240,6.194,null,[6,5,4,3]],[237.04817,"[Rn]7s25f46d1",1.36,221,6.266,null,[6,5,4,3]],[244.0642,"[Rn]7s25f6",1.28,243,6.06,null,[6,5,4,3]],[243.06138,"[Rn]7s25f7",1.3,244,5.993,null,[6,5,4,3]],[247.07035,"[Rn]7s25f76d1",1.3,245,6.02,null,[3]],[247.07031,"[Rn]7s25f9",1.3,244,6.23,null,[4,3]],[251.07959,"[Rn]7s25f10",1.3,245,6.3,null,[3]],[252.083,"[Rn]7s25f11",1.3,245,6.42,null,[3]],[257.09511,"[Rn]5f127s2",1.3,null,6.5,null,[3]],[258.09843,"[Rn]7s25f13",1.3,null,6.58,null,[3,2]],[259.101,"[Rn]7s25f14",1.3,null,6.65,null,[3,2]],[262.11,"[Rn]7s25f146d1",1.3,null,null,null,[3]],[267.122,"[Rn]7s25f146d2",null,null,null,null,[4]],[268.126,"[Rn]7s25f146d3",null,null,null,null,[5,4,3]],[271.134,"[Rn]7s25f146d4",null,null,null,null,[6,5,4,3,0]],[274.144,"[Rn]7s25f146d5",null,null,null,null,[7,5,4,3]],[277.152,"[Rn]7s25f146d6",null,null,null,null,[8,6,5,4,3,2]],[278.156,"[Rn]7s25f146d7",null,null,null,null,[9,8,6,4,3,1]],[281.165,"[Rn]7s25f146d8",null,null,null,null,[8,6,4,2,0]],[282.169,"[Rn]7s25f146d9",null,null,null,null,[5,3,1,-1]],[285.177,"[Rn]7s25f146d10",null,null,null,null,[2,1,0]],[286.183,"[Rn]5f146d107s27p1",null,null,null,null,[null]],[289.191,"[Rn]7s27p25f146d10",null,null,null,null,[6,4,2,1,0]],[290.196,"[Rn]7s27p35f146d10",null,null,null,null,[3,1]],[293.205,"[Rn]7s27p45f146d10",null,null,null,null,[4,2,-2]],[294.211,"[Rn]7s27p55f146d10",null,null,null,null,[5,3,1,-1]],[294.214,"[Rn]7s27p65f146d10",null,null,null,null,[6,4,2,1,0,-1]]]');
 
 window.addEventListener("load", () => {
-  if (localStorage.getItem("slot") !== null) {
+  if (localStorage.getItem("slot")) {
     const slot = JSON.parse(localStorage.getItem("slot"));
     for (let i = 0; i < 9; i++)
-      if (slot[i] > 0) {
+      if (slot[i] > 0)
         document.getElementById("hotbar").getElementsByClassName("slot")[i].appendChild(document.getElementById("periodic-table").getElementsByClassName("element")[slot[i] - 1].cloneNode(true));
-    }
 
     lineDict = JSON.parse(localStorage.getItem("lineDict"));
     elementDict = JSON.parse(localStorage.getItem("elementDict"));
@@ -459,7 +461,7 @@ function openMenu(e) {
         if (allElements.length === 2) {
           let ele1 = e.target;
           let ele2 = allElements[0] === e.target ? allElements[1] : allElements[0];
-          if ((ele2.parentElement.classList.contains("molecule") && !ele1.parentElement.classList.contains("molecules")) || atomDict[elementDict[ele2.id].an] < atomDict[elementDict[ele1.id].an]) {
+          if ((ele2.parentElement.classList.contains("molecule") && !ele1.parentElement.classList.contains("molecules")) || pt[elementDict[ele2.id].an][2] < pt[elementDict[ele1.id].an][2]) {
             const temp = ele2;
             ele2 = ele1;
             ele1 = temp;
@@ -736,18 +738,28 @@ function createElement(target, x, y, table) {
     document.removeEventListener("mouseup", hotbarMouseUp);
     const left = newElement.style.left;
     const top = newElement.style.top;
-    newElement.style = "transform: translate(" + left + "," + top + ")";
+    const an = +newElement.getAttribute("data-an");
+    const reduction = Math.log(pt[an][3]/120)*0.5;
+    let width = 75;
+    if (document.body.offsetWidth < 851) {
+      width = 48;
+    } else if (document.body.offsetWidth < 1321) {
+      width = 60;
+    }
+    width = width + width * reduction;
 
     let index = elementDict.findIndex(i => i === undefined)
     if (index === -1)
       index = elementDict.length;
 
     elementDict[index] = {
-      "an": +newElement.getAttribute("data-an"),
+      "an": an,
       "top": Math.round(+top.slice(0, -2)),
       "left": Math.round(+left.slice(0, -2)),
       "lines": []
     };
+
+    newElement.style = "width: " + width + "px; height: " + width + "px;transform: translate(" + left + "," + top + ")";
 
     newElement.id = index;
     newElement.removeAttribute("data-an");
@@ -797,7 +809,8 @@ document.getElementById("react").addEventListener("click", () => {
         const id = elementDict[elements[i].id];
         const others = [...elements];
         others.splice(i, 1);
-        const en = atomDict[id.an][1];
+        console.log(id.an)
+        const en = pt[id.an][2];
         for (let j = 0; j < others.length; j++) {
           const id2 = elementDict[others[j].id];
           const diffX = id2.left - id.left;
@@ -846,9 +859,10 @@ document.getElementById("periodic-table").addEventListener("mouseover", () => {
       document.getElementById("atomic-number").textContent = atomicNumber;
       document.getElementById("atomic-symbol").textContent = event.target.firstElementChild.textContent;
       document.getElementById("atomic-name").textContent = event.target.firstElementChild.getAttribute("title");
-      document.getElementById("atomic-mass").textContent = atomDict[atomicNumber][0];
-      if (atomDict[atomicNumber][0] % 1 === 0)
-        document.getElementById("atomic-mass").textContent = "(" + document.getElementById("atomic-mass").textContent + ")";
+      document.getElementById("atomic-mass").textContent = pt[atomicNumber][0];
+      if (atomicNumber == 3 || atomicNumber == 42) {
+        document.getElementById("atomic-mass").textContent = document.getElementById("atomic-mass").textContent + ".0"
+      }
       document.getElementById("closeup").style.background = getComputedStyle(event.target).background;
     } else {
       document.getElementById("atomic-number").textContent = "Atomic No.";
