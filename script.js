@@ -31,7 +31,7 @@ window.addEventListener("load", () => {
         element.removeAttribute("data-an");
 
         element.id = id;
-        element.style.transform = "translate(" + elementDict[id].left + "px, " + elementDict[id].top + "px)";
+        element.style = "width:" + elementDict[id].size + "px;height:" + elementDict[id].size + "px;transform:translate(" + elementDict[id].left + "px, " + elementDict[id].top + "px)";
         document.getElementById("main").appendChild(element);
       } else {
         const molecule = document.createElement("div");
@@ -380,7 +380,8 @@ function openMenu(e) {
               "an": oldElement.an,
               "left": oldElement.left + 16,
               "top": oldElement.top + 16,
-              "lines": []
+              "lines": [],
+              "size": oldElement.size
             }
             const currentElement = elementDict[index];
             clone.style.transform = "translate(" + currentElement.left + "px," + currentElement.top + "px)";
@@ -401,7 +402,8 @@ function openMenu(e) {
                 "an": elementDict[elements[j].id].an,
                 "left": elementDict[elements[j].id].left + 16,
                 "top": elementDict[elements[j].id].top + 16,
-                "lines": elementDict[elements[j].id].lines
+                "lines": elementDict[elements[j].id].lines,
+                "size": elementDict[elements[j].id].size
               };
               switchElements[elements[j].id] = index;
               clone.children[j].id = index;
@@ -492,7 +494,8 @@ function openMenu(e) {
             "an": elementDict[e.target.id].an,
             "left": elementDict[e.target.id].left + 16,
             "top": elementDict[e.target.id].top + 16,
-            "lines": []
+            "lines": [],
+            "size": elementDict[e.target.id].size
           }
 
           clone.style.transform = "translate(" + elementDict[index].left + "px," + elementDict[index].top + "px)";
@@ -682,11 +685,30 @@ function createElement(target, x, y, table) {
   document.body.appendChild(newElement);
 
   const pos = target.getBoundingClientRect();
+  let width;
   let left = pos.left;
   let top = pos.top;
+  document.body.setAttribute("grabbing", "");
+
+  if (!table) {
+    const an = +newElement.getAttribute("data-an");
+    const reduction = Math.log(pt[an][3]/120)*0.5;
+
+    let oldWidth = 75;
+    if (document.body.offsetWidth < 851)
+      oldWidth = 48;
+    else if (document.body.offsetWidth < 1321)
+      oldWidth = 60;
+
+    width = oldWidth + oldWidth * reduction;
+    const change = (width - oldWidth)/2;
+    newElement.style = "width:" + width + "px;height:" + width + "px;left:" + left + "px;top:" + top + "px";
+    left -= change;
+    top -= change;
+  }
+
   newElement.style.left = left + "px";
   newElement.style.top = top + "px";
-  document.body.setAttribute("grabbing", "");
 
   function tableMove(e) {
     left = left + e.movementX;
@@ -728,7 +750,6 @@ function createElement(target, x, y, table) {
   function hotbarMove(e) {
     left = left + e.movementX;
     top = top + e.movementY;
-
     newElement.style.left = left + "px";
     newElement.style.top = top + "px";
   }
@@ -736,33 +757,24 @@ function createElement(target, x, y, table) {
   function hotbarMouseUp() {
     document.removeEventListener("mousemove", hotbarMove);
     document.removeEventListener("mouseup", hotbarMouseUp);
-    const left = newElement.style.left;
-    const top = newElement.style.top;
-    const an = +newElement.getAttribute("data-an");
-    const reduction = Math.log(pt[an][3]/120)*0.5;
-    let width = 75;
-    if (document.body.offsetWidth < 851) {
-      width = 48;
-    } else if (document.body.offsetWidth < 1321) {
-      width = 60;
-    }
-    width = width + width * reduction;
 
     let index = elementDict.findIndex(i => i === undefined)
     if (index === -1)
       index = elementDict.length;
 
     elementDict[index] = {
-      "an": an,
-      "top": Math.round(+top.slice(0, -2)),
-      "left": Math.round(+left.slice(0, -2)),
-      "lines": []
+      "an": +newElement.getAttribute("data-an"),
+      "top": top,
+      "left": left,
+      "lines": [],
+      "size": width
     };
-
-    newElement.style = "width: " + width + "px; height: " + width + "px;transform: translate(" + left + "," + top + ")";
 
     newElement.id = index;
     newElement.removeAttribute("data-an");
+    newElement.style.transform = "translate(" + left + "px," + top + "px)";
+    newElement.style.left = "";
+    newElement.style.top = "";
 
     document.getElementById("main").appendChild(newElement);
     document.body.removeAttribute("grabbing");
@@ -809,13 +821,12 @@ document.getElementById("react").addEventListener("click", () => {
         const id = elementDict[elements[i].id];
         const others = [...elements];
         others.splice(i, 1);
-        console.log(id.an)
-        const en = pt[id.an][2];
         for (let j = 0; j < others.length; j++) {
           const id2 = elementDict[others[j].id];
           const diffX = id2.left - id.left;
           const diffY = id2.top - id.top;
           const distance = Math.sqrt(Math.pow(diffX, 2) + Math.pow(diffY, 2));
+          const en = pt[id2.an][2];
           if (distance > width) {
             keepGoing = true;
             id.left += en * diffX / Math.pow(distance, 2) * factor * 150;
@@ -827,9 +838,8 @@ document.getElementById("react").addEventListener("click", () => {
 
       if (keepGoing)
         animate = window.requestAnimationFrame(frame);
-      else {
+      else
         cancel();
-      }
     }
 
     animate = requestAnimationFrame(frame);
@@ -853,30 +863,34 @@ document.getElementById("react").addEventListener("click", () => {
 });
 
 document.getElementById("periodic-table").addEventListener("mouseover", () => {
-  if (event.target.classList.contains("element")) {
-    if (event.target.parentElement.id === "periodic-table") {
-      const atomicNumber = event.target.getAttribute("data-an");
-      document.getElementById("atomic-number").textContent = atomicNumber;
-      document.getElementById("atomic-symbol").textContent = event.target.firstElementChild.textContent;
-      document.getElementById("atomic-name").textContent = event.target.firstElementChild.getAttribute("title");
-      document.getElementById("atomic-mass").textContent = pt[atomicNumber][0];
-      if (atomicNumber == 3 || atomicNumber == 42) {
-        document.getElementById("atomic-mass").textContent = document.getElementById("atomic-mass").textContent + ".0"
-      }
-      document.getElementById("closeup").style.background = getComputedStyle(event.target).background;
-    } else {
-      document.getElementById("atomic-number").textContent = "Atomic No.";
-      document.getElementById("atomic-symbol").textContent = "Symbol";
-      document.getElementById("atomic-name").textContent = "Name";
-      document.getElementById("atomic-mass").textContent = "Atomic Mass";
-      document.getElementById("closeup").style.background = "";
+  if (event.target.classList.contains("element") && event.target.parentElement.id === "periodic-table") {
+    const atomicNumber = event.target.getAttribute("data-an");
+    document.getElementById("atomic-number").textContent = atomicNumber;
+    document.getElementById("atomic-symbol").textContent = event.target.firstElementChild.textContent;
+    document.getElementById("atomic-name").textContent = event.target.firstElementChild.getAttribute("title");
+    document.getElementById("atomic-mass").textContent = pt[atomicNumber][0];
+    if (atomicNumber == 3 || atomicNumber == 42) {
+      document.getElementById("atomic-mass").textContent = document.getElementById("atomic-mass").textContent + ".0"
     }
+    document.getElementById("closeup").style.background = getComputedStyle(event.target).background;
+
+    let config = pt[atomicNumber][1];
+
+    for (let i = 1; i < config.length; i++) {
+      if (i+1 === config.length || config.charCodeAt(i+1) < 64 && config[i] >= "0" && config[i] <= "9") {
+          config = config.substring(0, i) + "<sup>" + config[i] + "</sup>" + config.substring(i+1);
+          i += 11;
+      }
+    }
+
+    document.getElementById("electron-config").innerHTML = config;
   } else {
     document.getElementById("atomic-number").textContent = "Atomic No.";
     document.getElementById("atomic-symbol").textContent = "Symbol";
     document.getElementById("atomic-name").textContent = "Name";
     document.getElementById("atomic-mass").textContent = "Atomic Mass";
     document.getElementById("closeup").style.background = "";
+    document.getElementById("electron-config").textContent = "";
   }
 });
 
