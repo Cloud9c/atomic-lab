@@ -256,7 +256,7 @@ body[grabbing] .element:hover {
 
 #electron-config {
 	position: absolute;
-	bottom: -20%;
+	bottom: -24%;
 	left: 0;
 }
 
@@ -369,11 +369,15 @@ body[grabbing] .element:hover {
 		width: 60px
 	}
 	#closeup {
-		grid-column: 4/7;
+		grid-column: 4/8;
 		grid-row: 1/3
 	}
 	#electron-config {
-		display: none;
+		bottom: auto;
+		left: auto;
+		top: 4px;
+		right: 8px;
+		font-size: 12px;
 	}
 	#atomic-mass,
 	#atomic-number {

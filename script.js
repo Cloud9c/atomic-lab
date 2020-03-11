@@ -693,7 +693,7 @@ function createElement(target, x, y, table) {
   if (!table) {
     const an = +newElement.getAttribute("data-an");
     const reduction = Math.log(pt[an][3]/120)*0.5;
-
+    console.log(pt[an][3])
     let oldWidth = 75;
     if (document.body.offsetWidth < 851)
       oldWidth = 48;
@@ -724,6 +724,7 @@ function createElement(target, x, y, table) {
       const hoverArray = document.querySelectorAll(":hover");
       const hoverElement = hoverArray[hoverArray.length - 1];
       if (hoverElement.classList.contains("slot")) {
+        console.log("here")
         const tempElement = target.cloneNode(true);
         tempElement.id = "temp";
         hoverElement.innerHTML = tempElement.outerHTML;
