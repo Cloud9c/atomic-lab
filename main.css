@@ -121,10 +121,8 @@
 	border: 1px solid rgba(0, 0, 0, .12);
 	border-radius: 50%;
 	box-shadow: 0 2px 1px -1px rgba(0, 0, 0, .2), 0 1px 1px 0 rgba(0, 0, 0, .14), 0 1px 3px 0 rgba(0, 0, 0, .12);
-	height: 72px;
 	pointer-events: all;
-	position: absolute;
-	width: 72px
+	position: absolute
 }
 
 #rack-dialog>div {
@@ -364,7 +362,7 @@ body[grabbing] .element:hover {
 	.element>abbr {
 		font-size: 20px
 	}
-	body>.element, #main .element {
+	body>.element {
 		height: 60px;
 		width: 60px
 	}
@@ -424,7 +422,7 @@ body[grabbing] .element:hover {
 	#periodic-table {
 		grid-template-columns: repeat(14, 1fr)
 	}
-	body>.element, #main .element {
+	body>.element {
 		height: 48px;
 		width: 48px
 	}
