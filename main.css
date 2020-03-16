@@ -356,6 +356,9 @@ body[grabbing] .element:hover {
 }
 
 @media all and (max-width:1320px) {
+	#main {
+		transform: scale(0.833);
+	}
 	#periodic-table>.element:before {
 		content: none
 	}
@@ -419,6 +422,9 @@ body[grabbing] .element:hover {
 }
 
 @media all and (max-width:850px) {
+	#main {
+		transform: scale(0.666);
+	}
 	#periodic-table {
 		grid-template-columns: repeat(14, 1fr)
 	}
