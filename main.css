@@ -116,6 +116,10 @@
 	width: 0
 }
 
+#main {
+	transform-origin: 0 0;
+}
+
 #main .element {
 	backface-visibility: hidden;
 	border: 1px solid rgba(0, 0, 0, .12);
@@ -359,6 +363,10 @@ body[grabbing] .element:hover {
 	#main {
 		transform: scale(0.833);
 	}
+	.molecule .svg {
+		width: 120.1vw;
+		height: 120.1vh;
+	}
 	#periodic-table>.element:before {
 		content: none
 	}
@@ -424,6 +432,10 @@ body[grabbing] .element:hover {
 @media all and (max-width:850px) {
 	#main {
 		transform: scale(0.666);
+	}
+	.molecule .svg {
+		width: 150.1vw;
+		height: 150.1vh;
 	}
 	#periodic-table {
 		grid-template-columns: repeat(14, 1fr)

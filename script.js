@@ -119,8 +119,18 @@ function followCursor(target) {
   const elements = document.querySelectorAll("#main > .element.selected");
 
   const mouseMove = function(e) {
-    const x = e.movementX;
-    const y = e.movementY;
+    let x = e.movementX;
+    let y = e.movementY;
+
+    if (window.innerWidth < 851) {
+      x *= 1.5;
+      y *= 1.5;
+    }
+    else if (window.innerWidth < 1321) {
+      x *= 1.2;
+      y *= 1.2;
+    }
+
     window.requestAnimationFrame(() => {
       for (let i = 0; i < elements.length; i++) {
         const element = elements[i];
