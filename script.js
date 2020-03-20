@@ -221,6 +221,10 @@ function toggleMenu(command, e) {
   }
 }
 
+function getBondLength(an1, an2) {
+  return (pt[an1][3] + pt[an2][3]) * 0.4 - 0.09 * (pt[an1][2] - pt[an2][2]);
+}
+
 function createBond(ele1, ele2) {
   const dataLine1 = elementDict[ele1.id].lines;
   const dataLine2 = elementDict[ele2.id].lines;
@@ -280,7 +284,7 @@ function createBond(ele1, ele2) {
   const placement1 = elementDict[ele1.id];
   const placement2 = elementDict[ele2.id];
 
-  const distance = ((pt[placement1.an][3] + pt[placement2.an][3]) * 0.4 - 0.09 * (pt[placement1.an][2] - pt[placement2.an][2]));
+  const distance = getBondLength(placement1.an, placement2.an);
   const rad = Math.PI / 2 - Math.atan2(placement2.left - placement1.left, placement2.top - placement1.top);
 
   const x = Math.round(+placement1.left + distance * Math.cos(rad));
@@ -766,6 +770,14 @@ function createElement(target, x, y, table) {
     document.removeEventListener("mousemove", hotbarMove);
     document.removeEventListener("mouseup", hotbarMouseUp);
 
+    let scale = getComputedStyle(document.getElementById("main")).transform.match(/[\d|.+]+/g);
+
+    if (scale) {
+      scaleFactor = +scale[0];
+      top *= 1/scaleFactor;
+      left *= 1/scaleFactor;
+    }
+
     let index = elementDict.findIndex(i => i === undefined)
     if (index === -1)
       index = elementDict.length;
@@ -809,20 +821,20 @@ document.getElementById("clear-progress").addEventListener("click", () => {
 });
 
 document.getElementById("react").addEventListener("click", () => {
-  const elements = document.getElementById("main").getElementsByClassName("element");
+  let elements = document.querySelectorAll("#main > .element");
 
   const cancel = () => {
     window.cancelAnimationFrame(animate);
     animate = undefined;
-    document.getElementById("main").classList.remove("frame");
+    document.body.classList.remove("frame");
   }
 
   if (animate) {
     cancel();
 
-  } else if (document.getElementById("main").getElementsByClassName("element").length > 1) {
+  } else if (elements.length > 1) {
     const width = elements[0].offsetWidth;
-    document.getElementById("main").classList.add("frame");
+    document.body.classList.add("frame");
     const frame = () => {
       let keepGoing = false;
       for (let i = 0; i < elements.length; i++) {
@@ -835,17 +847,22 @@ document.getElementById("react").addEventListener("click", () => {
           const diffY = id2.top - id.top;
           const distance = Math.sqrt(Math.pow(diffX, 2) + Math.pow(diffY, 2));
           const en = pt[id2.an][2];
-          if (distance > width) {
+          if (distance > getBondLength(id.an, id2.an)) {
             keepGoing = true;
             id.left += en * diffX / Math.pow(distance, 2) * factor * 150;
             id.top += en * diffY / Math.pow(distance, 2) * factor * 150;
+          } else {
+            createBond(elements[i], others[j]);
+            console.log(elements)
           }
         }
         elements[i].style.transform = "translate(" + id.left + "px," + id.top + "px)";
       }
 
-      if (keepGoing)
+      if (keepGoing) {
+        elements = document.querySelectorAll("#main > .element");
         animate = window.requestAnimationFrame(frame);
+      }
       else
         cancel();
     }
