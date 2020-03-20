@@ -360,7 +360,12 @@ body[grabbing] .element:hover {
 }
 
 @media all and (max-width:1320px) {
-	#main, #mirror {
+	#main {
+		transform: scale(0.833);
+		width: 120%;
+		height: 120%;
+	}
+	#mirror {
 		transform: scale(0.833);
 	}
 	.molecule .svg {
@@ -430,7 +435,12 @@ body[grabbing] .element:hover {
 }
 
 @media all and (max-width:850px) {
-	#main, #mirror {
+	#main {
+		transform: scale(0.666);
+		width: 150%;
+		height: 150%;
+	}
+	#mirror {
 		transform: scale(0.666);
 	}
 	.molecule .svg {

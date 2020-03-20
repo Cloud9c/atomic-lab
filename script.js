@@ -773,7 +773,7 @@ function createElement(target, x, y, table) {
     let scale = getComputedStyle(document.getElementById("main")).transform.match(/[\d|.+]+/g);
 
     if (scale) {
-      scaleFactor = +scale[0];
+      const scaleFactor = +scale[0];
       top *= 1/scaleFactor;
       left *= 1/scaleFactor;
     }
@@ -851,12 +851,11 @@ document.getElementById("react").addEventListener("click", () => {
             keepGoing = true;
             id.left += en * diffX / Math.pow(distance, 2) * factor * 150;
             id.top += en * diffY / Math.pow(distance, 2) * factor * 150;
-          } else {
+            elements[i].style.transform = "translate(" + id.left + "px," + id.top + "px)";
+          } else if (elements[i].parentElement.id === "main" || others[j].parentElement.id === "main") {
             createBond(elements[i], others[j]);
-            console.log(elements)
           }
         }
-        elements[i].style.transform = "translate(" + id.left + "px," + id.top + "px)";
       }
 
       if (keepGoing) {
