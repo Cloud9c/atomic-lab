@@ -84,7 +84,7 @@ function mouseDrag(x, y) {
     target.style.width = Math.abs(e.pageX - x) + "px";
     target.style.height = Math.abs(e.pageY - y) + "px";
 
-    window.requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
       if (e.pageX < x)
         target.style.left = e.pageX + "px";
       if (e.pageY < y)
@@ -115,8 +115,8 @@ function mouseDrag(x, y) {
 }
 
 function followCursor(target) {
-  const molecules = document.getElementsByClassName("molecule");
-  const elements = document.querySelectorAll("#main > .element.selected");
+  let molecules = document.getElementsByClassName("molecule");
+  let elements = document.querySelectorAll("#main > .element.selected");
 
   const mouseMove = function(e) {
     let x = e.movementX;
@@ -131,14 +131,17 @@ function followCursor(target) {
       y *= 1.2;
     }
 
-    window.requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
       for (let i = 0; i < elements.length; i++) {
         const element = elements[i];
         const id = element.id;
         elementDict[element.id].left += x;
         elementDict[element.id].top += y;
-
         element.style.transform = "translate(" + elementDict[element.id].left + "px," + elementDict[element.id].top + "px)";
+        if (element.parentElement.classList.contains("molecule")) {
+          element.style.boxShadow = "";
+          element.parentElement.classList.add("selected");
+        }
       }
       for (let i = 0; i < selectedMolecules.length; i++) {
         const lines = selectedMolecules[i].getElementsByClassName("svg")[0].children
@@ -162,6 +165,8 @@ function followCursor(target) {
           document.getElementById(id).style.transform = "translate(" + elementDict[id].left + "px," + elementDict[id].top + "px)";
         }
       }
+      selectedMolecules = document.querySelectorAll(".molecule.selected");
+      elements = document.querySelectorAll("#main > .element.selected");
     });
   }
 
@@ -188,7 +193,7 @@ function followCursor(target) {
     }
   }
 
-  const selectedMolecules = document.querySelectorAll(".molecule.selected");
+  let selectedMolecules = document.querySelectorAll(".molecule.selected");
 
   document.addEventListener("mousemove", mouseMove);
   document.addEventListener("mouseup", mouseUp);
@@ -700,7 +705,6 @@ function sliderAdjust(e) {
 
 function createElement(target, x, y, table) {
   const newElement = target.cloneNode(true);
-  newElement.id = "mirror";
   document.body.appendChild(newElement);
 
   const pos = target.getBoundingClientRect();
@@ -710,17 +714,25 @@ function createElement(target, x, y, table) {
   document.body.setAttribute("grabbing", "");
 
   if (!table) {
+    newElement.id = "mirror";
     const an = +newElement.getAttribute("data-an");
     const reduction = Math.log(pt[an][3]/120)*0.6;
     width = 72 + 72 * reduction;
-    const change = (width - 72)/2;
-    newElement.style = "width:" + width + "px;height:" + width + "px;left:" + left + "px;top:" + top + "px";
+    let change = (width - 72)/2;
+
+    let scale = getComputedStyle(document.getElementById("main")).transform.match(/[\d|.+]+/g);
+    if (scale) {
+      change *= +scale[0];
+    }
+
     left -= change;
     top -= change;
-  }
 
-  newElement.style.left = left + "px";
-  newElement.style.top = top + "px";
+    newElement.style = "width:" + width + "px;height:" + width + "px;left:" + left + "px;top:" + top + "px";
+  } else {
+    newElement.style.left = left + "px";
+    newElement.style.top = top + "px";
+  }
 
   function tableMove(e) {
     left = left + e.movementX;
@@ -771,7 +783,6 @@ function createElement(target, x, y, table) {
     document.removeEventListener("mouseup", hotbarMouseUp);
 
     let scale = getComputedStyle(document.getElementById("main")).transform.match(/[\d|.+]+/g);
-
     if (scale) {
       const scaleFactor = +scale[0];
       top *= 1/scaleFactor;
@@ -837,30 +848,34 @@ document.getElementById("react").addEventListener("click", () => {
     document.body.classList.add("frame");
     const frame = () => {
       let keepGoing = false;
-      for (let i = 0; i < elements.length; i++) {
-        const id = elementDict[elements[i].id];
-        const others = [...elements];
-        others.splice(i, 1);
-        for (let j = 0; j < others.length; j++) {
-          const id2 = elementDict[others[j].id];
-          const diffX = id2.left - id.left;
-          const diffY = id2.top - id.top;
-          const distance = Math.sqrt(Math.pow(diffX, 2) + Math.pow(diffY, 2));
-          const en = pt[id2.an][2];
-          if (distance > getBondLength(id.an, id2.an)) {
-            keepGoing = true;
-            id.left += en * diffX / Math.pow(distance, 2) * factor * 150;
-            id.top += en * diffY / Math.pow(distance, 2) * factor * 150;
-            elements[i].style.transform = "translate(" + id.left + "px," + id.top + "px)";
-          } else if (elements[i].parentElement.id === "main" || others[j].parentElement.id === "main") {
-            createBond(elements[i], others[j]);
+      try {
+        for (let i = 0; i < elements.length; i++) {
+          const id = elementDict[elements[i].id];
+          const others = [...elements];
+          others.splice(i, 1);
+          for (let j = 0; j < others.length; j++) {
+            const id2 = elementDict[others[j].id];
+            const diffX = id2.left - id.left;
+            const diffY = id2.top - id.top;
+            const distance = Math.sqrt(Math.pow(diffX, 2) + Math.pow(diffY, 2));
+            const en = pt[id2.an][2];
+            if (distance > getBondLength(id.an, id2.an)) {
+              keepGoing = true;
+              id.left += en * diffX / Math.pow(distance, 2) * factor * 150;
+              id.top += en * diffY / Math.pow(distance, 2) * factor * 150;
+              elements[i].style.transform = "translate(" + id.left + "px," + id.top + "px)";
+            } else if (elements[i].parentElement.id === "main" || others[j].parentElement.id === "main") {
+              createBond(elements[i], others[j]);
+            }
           }
         }
+      } catch {
+        cancel();
       }
 
       if (keepGoing) {
         elements = document.querySelectorAll("#main > .element");
-        animate = window.requestAnimationFrame(frame);
+        animate = requestAnimationFrame(frame);
       }
       else
         cancel();
@@ -1013,7 +1028,7 @@ document.addEventListener("mousedown", function(e) {
           selected[0].classList.remove("selected");
         mouseDrag(e.pageX, e.pageY);
       }
-    } else if (!document.getElementById("mirror") && e.target.classList.contains("element") && (path.includes(document.getElementById("periodic-table")) || path.includes(document.getElementById("bottom-container")))) {
+    } else if (e.target.classList.contains("element") && (path.includes(document.getElementById("periodic-table")) || path.includes(document.getElementById("bottom-container")))) {
       const mouseMove = () => {
         createElement(e.target, e.pageX, e.pageY, path.includes(document.getElementById("periodic-table")));
         document.removeEventListener("mouseup", mouseUp);

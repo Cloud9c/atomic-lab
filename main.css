@@ -361,11 +361,10 @@ body[grabbing] .element:hover {
 
 @media all and (max-width:1320px) {
 	#main {
-		transform: scale(0.833);
 		width: 120%;
 		height: 120%;
 	}
-	#mirror {
+	#main, #mirror {
 		transform: scale(0.833);
 	}
 	.molecule .svg {
@@ -377,6 +376,9 @@ body[grabbing] .element:hover {
 	}
 	.element>abbr {
 		font-size: 20px
+	}
+	#main .element abbr, #mirror abbr {
+		font-size: 24px;
 	}
 	body>.element {
 		height: 60px;
@@ -436,12 +438,14 @@ body[grabbing] .element:hover {
 
 @media all and (max-width:850px) {
 	#main {
-		transform: scale(0.666);
 		width: 150%;
 		height: 150%;
 	}
-	#mirror {
+	#main, #mirror {
 		transform: scale(0.666);
+	}
+	#main .element abbr, #mirror abbr {
+		font-size: 30px;
 	}
 	.molecule .svg {
 		width: 150.1vw;
@@ -478,9 +482,6 @@ body>.element {
 	border: 1px solid rgba(0, 0, 0, .12);
 	border-radius: 50%;
 	box-shadow: 0 10px 20px rgba(0, 0, 0, .19), 0 6px 6px rgba(0, 0, 0, .23)
-}
-
-#mirror {
 	margin: 0;
 	pointer-events: none;
 	position: absolute;
