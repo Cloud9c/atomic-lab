@@ -233,8 +233,7 @@ function toggleMenu(command, e) {
 }
 
 function getBondLength(an1, an2) {
-  console.log((pt[an1][3] + pt[an2][3] - 0.09 * (pt[an1][2] - pt[an2][2])))
-  return (pt[an1][3] + pt[an2][3] - 0.09 * (pt[an1][2] - pt[an2][2])) * 0.35249756885;
+  return (pt[an1][3] + pt[an2][3]) * 0.4 - 0.09 * (pt[an1][2] - pt[an2][2]);
 }
 
 function createBond(ele1, ele2) {
