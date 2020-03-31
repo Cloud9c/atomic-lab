@@ -134,35 +134,41 @@ function followCursor(target) {
     requestAnimationFrame(() => {
       for (let i = 0; i < elements.length; i++) {
         const element = elements[i];
-        const id = element.id;
-        elementDict[element.id].left += x;
-        elementDict[element.id].top += y;
-        element.style.transform = "translate(" + elementDict[element.id].left + "px," + elementDict[element.id].top + "px)";
-        if (element.parentElement.classList.contains("molecule")) {
+        if (element.classList.contains("selected")) {
+          const id = element.id;
+          elementDict[element.id].left += x;
+          elementDict[element.id].top += y;
+          element.style.transform = "translate(" + elementDict[element.id].left + "px," + elementDict[element.id].top + "px)";
+          if (element.parentElement.classList.contains("molecule")) {
+            element.style.boxShadow = "";
+            element.parentElement.classList.add("selected");
+          }
+        } else {
           element.style.boxShadow = "";
-          element.parentElement.classList.add("selected");
         }
       }
       for (let i = 0; i < selectedMolecules.length; i++) {
-        const lines = selectedMolecules[i].getElementsByClassName("svg")[0].children
-        for (let j = 0; j < lines.length; j++) {
-          const id = lineDict[lines[j].id.substring(1)];
-          id.x1 += x;
-          id.x2 += x;
-          id.y1 += y;
-          id.y2 += y;
+        if (selectedMolecules[i].classList.contains("selected")) {
+          const lines = selectedMolecules[i].getElementsByClassName("svg")[0].children
+          for (let j = 0; j < lines.length; j++) {
+            const id = lineDict[lines[j].id.substring(1)];
+            id.x1 += x;
+            id.x2 += x;
+            id.y1 += y;
+            id.y2 += y;
 
-          lines[j].setAttribute("x1", id.x1);
-          lines[j].setAttribute("x2", id.x2);
-          lines[j].setAttribute("y1", id.y1);
-          lines[j].setAttribute("y2", id.y2);
-        }
-        const elements = selectedMolecules[i].getElementsByClassName("element");
-        for (let j = 0; j < elements.length; j++) {
-          const id = elements[j].id;
-          elementDict[id].left += x;
-          elementDict[id].top += y;
-          document.getElementById(id).style.transform = "translate(" + elementDict[id].left + "px," + elementDict[id].top + "px)";
+            lines[j].setAttribute("x1", id.x1);
+            lines[j].setAttribute("x2", id.x2);
+            lines[j].setAttribute("y1", id.y1);
+            lines[j].setAttribute("y2", id.y2);
+          }
+          const elements = selectedMolecules[i].getElementsByClassName("element");
+          for (let j = 0; j < elements.length; j++) {
+            const id = elements[j].id;
+            elementDict[id].left += x;
+            elementDict[id].top += y;
+            document.getElementById(id).style.transform = "translate(" + elementDict[id].left + "px," + elementDict[id].top + "px)";
+          }
         }
       }
       selectedMolecules = document.querySelectorAll(".molecule.selected");
@@ -227,7 +233,8 @@ function toggleMenu(command, e) {
 }
 
 function getBondLength(an1, an2) {
-  return (pt[an1][3] + pt[an2][3]) * 0.4 - 0.09 * (pt[an1][2] - pt[an2][2]);
+  console.log((pt[an1][3] + pt[an2][3] - 0.09 * (pt[an1][2] - pt[an2][2])))
+  return (pt[an1][3] + pt[an2][3] - 0.09 * (pt[an1][2] - pt[an2][2])) * 0.35249756885;
 }
 
 function createBond(ele1, ele2) {
@@ -324,8 +331,8 @@ function createBond(ele1, ele2) {
   }
   currentLine.x1 = placement1.left + ele1.offsetWidth / 2;
   currentLine.y1 = placement1.top + ele1.offsetHeight / 2;
-  currentLine.x2 = x + ele1.offsetWidth / 2;
-  currentLine.y2 = y + ele1.offsetHeight / 2;
+  currentLine.x2 = x + ele2.offsetWidth / 2;
+  currentLine.y2 = y + ele2.offsetHeight / 2;
   line.setAttribute("x1", currentLine.x1);
   line.setAttribute("y1", currentLine.y1);
   line.setAttribute("x2", currentLine.x2);
@@ -407,7 +414,8 @@ function openMenu(e) {
               "an": oldElement.an,
               "left": oldElement.left + 16,
               "top": oldElement.top + 16,
-              "lines": []
+              "lines": [],
+              "oxidation": oldElement.oxidation
             }
             const currentElement = elementDict[index];
             clone.style.transform = "translate(" + currentElement.left + "px," + currentElement.top + "px)";
@@ -428,7 +436,8 @@ function openMenu(e) {
                 "an": elementDict[elements[j].id].an,
                 "left": elementDict[elements[j].id].left + 16,
                 "top": elementDict[elements[j].id].top + 16,
-                "lines": elementDict[elements[j].id].lines
+                "lines": elementDict[elements[j].id].lines,
+                "oxidation": elementDict[elements[j].id].oxidation
               };
               switchElements[elements[j].id] = index;
               clone.children[j].id = index;
@@ -519,7 +528,8 @@ function openMenu(e) {
             "an": elementDict[e.target.id].an,
             "left": elementDict[e.target.id].left + 16,
             "top": elementDict[e.target.id].top + 16,
-            "lines": []
+            "lines": [],
+            "oxidation": elementDict[e.target.id].oxidation
           }
 
           clone.style.transform = "translate(" + elementDict[index].left + "px," + elementDict[index].top + "px)";
@@ -722,7 +732,7 @@ function createElement(target, x, y, table) {
 
     let scale = getComputedStyle(document.getElementById("main")).transform.match(/[\d|.+]+/g);
     if (scale) {
-      change *= +scale[0];
+      change += 15.84/+scale[0] - 11.02;
     }
 
     left -= change;
@@ -784,21 +794,23 @@ function createElement(target, x, y, table) {
 
     let scale = getComputedStyle(document.getElementById("main")).transform.match(/[\d|.+]+/g);
     if (scale) {
-      const scaleFactor = +scale[0];
-      top *= 1/scaleFactor;
-      left *= 1/scaleFactor;
+      const scaleFactor = 1.025/+scale[0];
+      top *= scaleFactor;
+      left *= scaleFactor;
     }
 
     let index = elementDict.findIndex(i => i === undefined)
     if (index === -1)
       index = elementDict.length;
 
+    const an = +newElement.getAttribute("data-an");
+
     elementDict[index] = {
-      "an": +newElement.getAttribute("data-an"),
+      "an": an,
       "top": top,
       "left": left,
       "lines": [],
-      "size": width
+      "oxidation": 0
     };
 
     newElement.id = index;
@@ -852,19 +864,40 @@ document.getElementById("react").addEventListener("click", () => {
         for (let i = 0; i < elements.length; i++) {
           const id = elementDict[elements[i].id];
           const others = [...elements];
+          const en = pt[id.an][2];
           others.splice(i, 1);
           for (let j = 0; j < others.length; j++) {
             const id2 = elementDict[others[j].id];
             const diffX = id2.left - id.left;
             const diffY = id2.top - id.top;
             const distance = Math.sqrt(Math.pow(diffX, 2) + Math.pow(diffY, 2));
-            const en = pt[id2.an][2];
+            const en2 = pt[id2.an][2];
             if (distance > getBondLength(id.an, id2.an)) {
               keepGoing = true;
-              id.left += en * diffX / Math.pow(distance, 2) * factor * 150;
-              id.top += en * diffY / Math.pow(distance, 2) * factor * 150;
+              id.left += en2 * diffX / Math.pow(distance, 2) * factor * 150;
+              id.top += en2 * diffY / Math.pow(distance, 2) * factor * 150;
               elements[i].style.transform = "translate(" + id.left + "px," + id.top + "px)";
             } else if (elements[i].parentElement.id === "main" || others[j].parentElement.id === "main") {
+              elements[i].classList.remove("selected");
+              others[j].classList.remove("selected");
+              const enDiff = Math.abs(en2 - en);
+              if (enDiff <= 1.7) {
+                if (enDiff < 0.4)
+                  console.log("non-polar covalent")
+                else
+                  console.log("polar covalent")
+                id.oxidation += 1;
+                id2.oxidation += 1;
+              } else {
+                console.log("ionic")
+                if (en > en2) {
+                  id.oxidation += 1;
+                  id2.oxidation -= 1;
+                } else {
+                  id.oxidation -= 1;
+                  id2.oxidation += 1;
+                }
+              }
               createBond(elements[i], others[j]);
             }
           }
