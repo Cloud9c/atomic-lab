@@ -11,7 +11,7 @@
     {
       "src": "assets/splash.png",
       "type": "image/png",
-      "sizes": "512x512"
+      "sizes": "512x512" 
     }
   ],
   "start_url": "/atomic-lab/index.html",
